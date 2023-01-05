@@ -1,0 +1,4 @@
+See file:///C:/Users/ahunt/CORE2062%20Projects/CORE2023/build/tmp/compileFrcUserProgramReleaseExecutableFrcUserProgramCpp/output.txt for all output for compileFrcUserProgramReleaseExecutableFrcUserProgramCpp.
+compiling Robot.cpp successful.
+
+Finished compileFrcUserProgramReleaseExecutableFrcUserProgramCpp, see full log file:///C:/Users/ahunt/CORE2062%20Projects/CORE2023/build/tmp/compileFrcUserProgramReleaseExecutableFrcUserProgramCpp/output.txt.
