@@ -8,6 +8,7 @@
 
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
+#include <CORERobotLib.h>
 
 class Robot : public frc::TimedRobot {
  public:
