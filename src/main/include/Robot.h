@@ -5,29 +5,30 @@
 #pragma once
 
 #include <string>
-
+#include <iostream>
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
+#include <COREFramework/COREScheduler.h>
 #include <CORERobotLib.h>
 
-class Robot : public frc::TimedRobot {
+
+using namespace CORE;
+using namespace std;
+
+
+class Robot : public CORERobot {
  public:
+  Robot();
   void RobotInit() override;
-  void RobotPeriodic() override;
-  void AutonomousInit() override;
-  void AutonomousPeriodic() override;
   void TeleopInit() override;
-  void TeleopPeriodic() override;
-  void DisabledInit() override;
-  void DisabledPeriodic() override;
+  void Teleop() override;
+  void Test() override;
   void TestInit() override;
-  void TestPeriodic() override;
   void SimulationInit() override;
   void SimulationPeriodic() override;
+  static Robot * GetInstance();
 
  private:
-  frc::SendableChooser<std::string> m_chooser;
-  const std::string kAutoNameDefault = "Default";
-  const std::string kAutoNameCustom = "My Auto";
-  std::string m_autoSelected;
+ 
+  static Robot * m_instance;
 };
