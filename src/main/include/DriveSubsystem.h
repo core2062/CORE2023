@@ -19,19 +19,17 @@ enum class DriveSide{LEFT = 1, RIGHT = 2, BOTH = 3};
 class DriveSubsystem : public CORESubsystem {
 public:
 	DriveSubsystem();
-	void robotInit();
-	void teleopInit();
-	void teleop();
+	void RobotInit();
+	void TeleopInit();
+	void Teleop();
 	
 	double getRobotPosition();
-	void initTalons();
+	void InitTalons();
 	void setMotorSpeed(double speedInFraction, DriveSide whichSide);
 	void setMotorSpeed(double leftPercent, double rightPercent);
 	void resetEncoder();
 	void SetTalonMode(NeutralMode mode);
-	COREVector path;
-
-	// AHRS ahrs;
+	AHRS ahrs;
 
 private:
 	//m_analogSupplyVoltage used in calculation to get current PSI

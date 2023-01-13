@@ -1,7 +1,7 @@
 #include "DriveSubsystem.h"
 
 DriveSubsystem::DriveSubsystem() :
-		// ahrs(SPI::Port::kMXP),
+		ahrs(SPI::Port::kMXP),
 		m_analogPressureInput(0),
 		m_analogSupplyVoltage(1),
 		m_leftMaster(LEFT_FRONT_PORT),
@@ -16,24 +16,24 @@ DriveSubsystem::DriveSubsystem() :
 		m_compressor(frc::PneumaticsModuleType::REVPH) {
 }
 
-void DriveSubsystem::robotInit() {
+void DriveSubsystem::RobotInit() {
 	// Registers joystick axis and buttons, does inital setup for talons
 	driverJoystick->RegisterAxis(CORE::COREJoystick::LEFT_STICK_Y);
 	driverJoystick->RegisterAxis(CORE::COREJoystick::RIGHT_STICK_X);
 	driverJoystick->RegisterButton(CORE::COREJoystick::RIGHT_TRIGGER);
-    initTalons();
+    InitTalons();
 }
 
-void DriveSubsystem::teleopInit() {
+void DriveSubsystem::TeleopInit() {
 	// Sets ether drive values, inits talons
 	COREEtherDrive::SetAB(m_etherAValue.Get(), m_etherBValue.Get());
 	COREEtherDrive::SetQuickturn(m_etherQuickTurnValue.Get());
-	initTalons();
+	InitTalons();
 	m_compressor.EnableDigital();
 	SmartDashboard::PutString("Drive Controls", " Forward/Back: Left Stick \n Right/Left: Right Stick \n Shift: Right Trigger");
 }
 
-void DriveSubsystem::teleop() {
+void DriveSubsystem::Teleop() {
 	// Code for teleop. Sets motor speed based on the values for the joystick, runs compressor,
 	// Toggles gears
     double mag = -driverJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
@@ -46,7 +46,7 @@ void DriveSubsystem::teleop() {
 	SmartDashboard::PutNumber("Left side encoder", m_leftMaster.GetSelectedSensorPosition(0));
 	SmartDashboard::PutNumber("Right side encoder", m_rightMaster.GetSelectedSensorPosition(0));
 
-	// SmartDashboard::PutNumber("Robot Heading", ahrs.GetFusedHeading());
+	SmartDashboard::PutNumber("Robot Heading", ahrs.GetFusedHeading());
 	
 	SmartDashboard::PutNumber("Pressure", (250* (m_analogPressureInput.GetVoltage()/m_analogSupplyVoltage.GetVoltage())-25));
 
@@ -74,7 +74,7 @@ double DriveSubsystem::getRobotPosition() {
 	return m_rightMaster.GetSelectedSensorPosition(0);
 }
 
-void DriveSubsystem::initTalons() {
+void DriveSubsystem::InitTalons() {
 	// Sets up talons
 	m_leftMaster.Set(ControlMode::PercentOutput, 0);
 	m_leftSlave.Set(ControlMode::PercentOutput, 0);

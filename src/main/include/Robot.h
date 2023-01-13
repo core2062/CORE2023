@@ -11,6 +11,7 @@
 #include <COREFramework/COREScheduler.h>
 #include <CORERobotLib.h>
 
+#include "DriveSubsystem.h"
 #include "GrabberSubsystem.h"
 #include "ElevatorSubsystem.h"
 
@@ -29,6 +30,7 @@ class Robot : public CORERobot {
   void SimulationInit() override;
   void SimulationPeriodic() override;
   static Robot * GetInstance();
+  DriveSubsystem driveSubsystem;
   GrabberSubsystem grabberSubsystem;
   ElevatorSubsystem elevatorSubsystem;
  private:
