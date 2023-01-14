@@ -18,5 +18,5 @@ public:
     void Teleop() override;
 private:
 	TalonSRX m_leftMotor, m_rightMotor;
-    
+    double m_liftStart;
 };

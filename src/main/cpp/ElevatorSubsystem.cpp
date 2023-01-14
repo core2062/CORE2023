@@ -15,12 +15,7 @@ void ElevatorSubsystem::RobotInit(){
     m_leftMotor.SetNeutralMode(NeutralMode::Brake);
     m_rightMotor.SetNeutralMode(NeutralMode::Brake);
 
-    m_leftMotor.Follow(m_rightMotor);
-
-    m_rightMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, 0, 0);
-    m_rightMotor.SetSelectedSensorPosition(0, 0, 0);
-
-    m_rightMotor.SetSensorPhase(true);
+    m_liftStart = m_leftMotor.GetSelectedSensorPosition();
 }
 
 
