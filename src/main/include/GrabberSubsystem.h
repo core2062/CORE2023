@@ -17,4 +17,6 @@ public:
     void TeleopInit() override;
     void Teleop() override;
 private:
+    DoubleSolenoid m_clawActuator;
+    bool m_clawActive;
 };

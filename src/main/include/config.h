@@ -12,3 +12,7 @@
 
 /* Arm Ports */
 #define ARM_MOTOR_PORT 9
+
+/*solenoid Ports*/
+#define ACTUATOR_IN_PORT 1
+#define ACTUATOR_OUT_PORT 2
