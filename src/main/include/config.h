@@ -7,6 +7,8 @@
 #define LEFT_BACK_PORT 4
 
 /* Intake Ports */
+#define RIGHT_INTAKE 5
+#define LEFT_INTAKE 6
 
 /* Elevator Ports */
 #define LEFT_LIFT_PORT 7
