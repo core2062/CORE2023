@@ -1,14 +1,13 @@
 #pragma once
 
 #include <frc/Compressor.h>
-#include <frc/DoubleSolenoid.h>
 #include <frc/AnalogInput.h>
 #include <ctre/Phoenix.h>
-#include <ctre/phoenix/motorcontrol/TalonFXSensorCollection.h>
 #include <AHRS.h>
 #include <CORERobotLib.h>
 #include <COREFramework/COREScheduler.h>
 #include <COREUtilities/CORETimer.h>
+
 #include "Config.h"
 
 using namespace CORE;
