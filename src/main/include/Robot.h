@@ -12,6 +12,7 @@
 #include <CORERobotLib.h>
 
 #include "DriveSubsystem.h"
+#include "ArmSubsystem.h"
 #include "GrabberSubsystem.h"
 #include "ElevatorSubsystem.h"
 
@@ -30,7 +31,9 @@ class Robot : public CORERobot {
   void SimulationInit() override;
   void SimulationPeriodic() override;
   static Robot * GetInstance();
+  
   DriveSubsystem driveSubsystem;
+  ArmSubsystem armSubsystem;
   GrabberSubsystem grabberSubsystem;
   ElevatorSubsystem elevatorSubsystem;
  private:

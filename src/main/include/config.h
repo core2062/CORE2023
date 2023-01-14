@@ -9,6 +9,8 @@
 /* Intake Ports */
 
 /* Elevator Ports */
+#define LEFT_LIFT_PORT 7
+#define RIGHT_LIFT_PORT 8
 
 /* Arm Ports */
 #define ARM_MOTOR_PORT 9

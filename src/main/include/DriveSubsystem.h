@@ -18,9 +18,9 @@ enum class DriveSide{LEFT = 1, RIGHT = 2, BOTH = 3};
 class DriveSubsystem : public CORESubsystem {
 public:
 	DriveSubsystem();
-	void RobotInit();
-	void TeleopInit();
-	void Teleop();
+	void RobotInit() override;
+	void TeleopInit() override;
+	void Teleop() override;
 	
 	double getRobotPosition();
 	void InitTalons();
