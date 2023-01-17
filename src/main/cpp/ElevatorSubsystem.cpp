@@ -3,31 +3,34 @@
 using namespace CORE;
 
 ElevatorSubsystem::ElevatorSubsystem() : 
-        m_leftMotor(LEFT_LIFT_PORT),
-        m_rightMotor(RIGHT_LIFT_PORT), 
+        m_leftLiftMotor(LEFT_LIFT_PORT),
+        m_rightLiftMotor(RIGHT_LIFT_PORT), 
         m_liftSpeedModifier("Lift speed Modifier", 0.5){
 }
 
 
 void ElevatorSubsystem::RobotInit(){
-        m_leftMotor.Set(ControlMode::PercentOutput, 0);
-    m_rightMotor.Set(ControlMode::PercentOutput, 0);
+    m_leftLiftMotor.Set(ControlMode::PercentOutput, 0);
+    m_rightLiftMotor.Set(ControlMode::PercentOutput, 0);
 
-    m_leftMotor.SetNeutralMode(NeutralMode::Brake);
-    m_rightMotor.SetNeutralMode(NeutralMode::Brake);
-
-    m_liftStart = m_leftMotor.GetSelectedSensorPosition();
-    
+    m_leftLiftMotor.SetNeutralMode(NeutralMode::Brake);
+    m_rightLiftMotor.SetNeutralMode(NeutralMode::Brake);
 }
 
 
 void ElevatorSubsystem::TeleopInit() {
+    liftStart = m_leftLiftMotor.GetSelectedSensorPosition();
 }
 
 void ElevatorSubsystem::Teleop(){  
 }
 
 void ElevatorSubsystem::ElevatorSpeed(double liftSpeed) {
-    m_leftMotor.Set(ControlMode::PercentOutput, -liftSpeed);
-    m_rightMotor.Set(ControlMode::PercentOutput, liftSpeed);
+    m_leftLiftMotor.Set(ControlMode::PercentOutput, -liftSpeed);
+    m_rightLiftMotor.Set(ControlMode::PercentOutput, liftSpeed);
+}
+
+double ElevatorSubsystem::GetMotorPosition()
+{
+    return m_rightLiftMotor.GetSelectedSensorPosition();
 }

@@ -17,8 +17,9 @@ public:
     void TeleopInit() override;
     void Teleop() override;
     void ElevatorSpeed(double);
+    double GetMotorPosition();
+    double liftStart;
 private:
-	TalonSRX m_leftMotor, m_rightMotor;
-    double m_liftStart;
+	TalonSRX m_leftLiftMotor, m_rightLiftMotor;
     COREConstant<double> m_liftSpeedModifier;
 };

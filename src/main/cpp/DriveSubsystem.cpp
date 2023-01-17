@@ -4,10 +4,10 @@ DriveSubsystem::DriveSubsystem() :
 		ahrs(SPI::Port::kMXP),
 		m_analogPressureInput(0),
 		m_analogSupplyVoltage(1),
-		m_leftMaster(LEFT_FRONT_PORT),
-		m_rightMaster(RIGHT_FRONT_PORT),
-		m_leftSlave(LEFT_BACK_PORT),
-		m_rightSlave(RIGHT_BACK_PORT),
+		m_leftPrimary(LEFT_FRONT_PORT),
+		m_rightPrimary(RIGHT_FRONT_PORT),
+		m_leftSecondary(LEFT_BACK_PORT),
+		m_rightSecondary(RIGHT_BACK_PORT),
 		m_etherAValue("Ether A Value", .6),
         m_etherBValue("Ether B Value", .4),
 		m_etherQuickTurnValue("Ether Quick Turn Value", 1.0),
@@ -43,8 +43,8 @@ void DriveSubsystem::Teleop() {
 	setMotorSpeed(speeds.left, speeds.right);
 	SmartDashboard::PutNumber("Left side speed", speeds.left);
 	SmartDashboard::PutNumber("Right side speed", speeds.right);
-	SmartDashboard::PutNumber("Left side encoder", m_leftMaster.GetSelectedSensorPosition(0));
-	SmartDashboard::PutNumber("Right side encoder", m_rightMaster.GetSelectedSensorPosition(0));
+	SmartDashboard::PutNumber("Left side encoder", m_leftPrimary.GetSelectedSensorPosition(0));
+	SmartDashboard::PutNumber("Right side encoder", m_rightPrimary.GetSelectedSensorPosition(0));
 
 	SmartDashboard::PutNumber("Robot Heading", ahrs.GetFusedHeading());
 	
@@ -55,12 +55,12 @@ void DriveSubsystem::Teleop() {
 void DriveSubsystem::setMotorSpeed(double speedInFraction, DriveSide whichSide) {
 	// Sets motor speed based on drive side and desired speed
 	if (whichSide == DriveSide::BOTH || whichSide == DriveSide::RIGHT) {
-		m_rightMaster.Set(ControlMode::PercentOutput, speedInFraction);
-		m_rightSlave.Set(ControlMode::PercentOutput, speedInFraction);
+		m_rightPrimary.Set(ControlMode::PercentOutput, speedInFraction);
+		m_rightSecondary.Set(ControlMode::PercentOutput, speedInFraction);
 	}
 	if (whichSide == DriveSide::BOTH || whichSide == DriveSide::LEFT) {
-		m_leftMaster.Set(ControlMode::PercentOutput, speedInFraction);
-		m_leftSlave.Set(ControlMode::PercentOutput, speedInFraction);
+		m_leftPrimary.Set(ControlMode::PercentOutput, speedInFraction);
+		m_leftSecondary.Set(ControlMode::PercentOutput, speedInFraction);
 	}
 }
 
@@ -71,48 +71,48 @@ void DriveSubsystem::setMotorSpeed(double leftPercent, double rightPercent) {
 }
 
 double DriveSubsystem::getRobotPosition() {
-	return m_rightMaster.GetSelectedSensorPosition(0);
+	return m_rightPrimary.GetSelectedSensorPosition(0);
 }
 
 void DriveSubsystem::InitTalons() {
 	// Sets up talons
-	m_leftMaster.Set(ControlMode::PercentOutput, 0);
-	m_leftSlave.Set(ControlMode::PercentOutput, 0);
-	m_rightMaster.Set(ControlMode::PercentOutput, 0);
-	m_rightSlave.Set(ControlMode::PercentOutput, 0);
+	m_leftPrimary.Set(ControlMode::PercentOutput, 0);
+	m_leftSecondary.Set(ControlMode::PercentOutput, 0);
+	m_rightPrimary.Set(ControlMode::PercentOutput, 0);
+	m_rightSecondary.Set(ControlMode::PercentOutput, 0);
 
 	// Encoder Functions
-    m_leftMaster.SetStatusFramePeriod(StatusFrameEnhanced::Status_1_General, 10, 0);
-    m_rightMaster.SetStatusFramePeriod(StatusFrameEnhanced::Status_1_General, 10, 0);
+    m_leftPrimary.SetStatusFramePeriod(StatusFrameEnhanced::Status_1_General, 10, 0);
+    m_rightPrimary.SetStatusFramePeriod(StatusFrameEnhanced::Status_1_General, 10, 0);
 
-    m_leftMaster.ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::IntegratedSensor, 0, 0);
-    m_rightMaster.ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::IntegratedSensor, 0, 0);
+    m_leftPrimary.ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::IntegratedSensor, 0, 0);
+    m_rightPrimary.ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::IntegratedSensor, 0, 0);
 
-	// m_rightMaster.SetSelectedSensorPosition(0.0);
-	// m_leftMaster.SetSelectedSensorPosition(0.0);
+	m_leftPrimary.SetSelectedSensorPosition(0.0);
+	m_rightPrimary.SetSelectedSensorPosition(0.0);
 	
 	SetTalonMode(NeutralMode::Coast);
 
-	m_leftMaster.SetSensorPhase(false);
-    m_rightMaster.SetSensorPhase(false);
+	m_leftPrimary.SetSensorPhase(false);
+    m_rightPrimary.SetSensorPhase(false);
 
 	// Motor Inversion
-	m_leftMaster.SetInverted(false);
-	m_leftSlave.SetInverted(false);
-	m_rightMaster.SetInverted(true);
-	m_rightSlave.SetInverted(true);
+	m_leftPrimary.SetInverted(false);
+	m_leftSecondary.SetInverted(false);
+	m_rightPrimary.SetInverted(true);
+	m_rightSecondary.SetInverted(true);
  
 	SetTalonMode(NeutralMode::Coast);
 }
 
 
 void DriveSubsystem::resetEncoder(){
-	cout << "Reset encoder error value" <<  m_rightMaster.SetSelectedSensorPosition(0.0, 0, 25);
+	cout << "Reset encoder error value" <<  m_rightPrimary.SetSelectedSensorPosition(0.0, 0, 25);
 }
 
 void DriveSubsystem::SetTalonMode(NeutralMode mode){
-	m_rightMaster.SetNeutralMode(mode);
-	m_rightSlave.SetNeutralMode(mode);
-	m_leftMaster.SetNeutralMode(mode);
-	m_leftSlave.SetNeutralMode(mode);
+	m_rightPrimary.SetNeutralMode(mode);
+	m_rightSecondary.SetNeutralMode(mode);
+	m_leftPrimary.SetNeutralMode(mode);
+	m_rightSecondary.SetNeutralMode(mode);
 }
