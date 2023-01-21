@@ -12,9 +12,9 @@ using namespace frc;
 class IntakeSubsystem : public CORESubsystem {
 public:
 	IntakeSubsystem();
-    void RobotInit();
-    void TeleopInit();
-    void Teleop();
+    void RobotInit() override;
+    void TeleopInit() override;
+    void Teleop() override;
     void SetIntake(double intakeSpeed);
 
     COREConstant<double> intakeSpeed;

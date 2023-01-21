@@ -10,6 +10,8 @@ ElevatorSubsystem::ElevatorSubsystem() :
 
 
 void ElevatorSubsystem::RobotInit(){
+    operatorJoystick->RegisterAxis(CORE::COREJoystick::LEFT_STICK_Y);
+
     m_leftLiftMotor.Set(ControlMode::PercentOutput, 0);
     m_rightLiftMotor.Set(ControlMode::PercentOutput, 0);
 

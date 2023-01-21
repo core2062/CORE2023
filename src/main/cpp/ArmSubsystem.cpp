@@ -1,11 +1,12 @@
 #include "ArmSubsystem.h"
 
-ArmSubsystem::ArmSubsystem() :  m_armMotorSpeedModifier("Arm Speed Modifier", 0.5),
+ArmSubsystem::ArmSubsystem() : // m_armMotorSpeedModifier("Arm Speed Modifier", 0.5),
                                 m_armMotor(ARM_MOTOR_PORT)
 {}
 
 void ArmSubsystem::RobotInit()
 {
+    operatorJoystick->RegisterAxis(CORE::COREJoystick::RIGHT_STICK_Y);
     InitTalons();
 }
 
@@ -22,7 +23,7 @@ void ArmSubsystem::Teleop()
 
 void ArmSubsystem::SetArmMotorSpeed(double speed)
 {
-    m_armMotor.Set(ControlMode::PercentOutput,(speed*m_armMotorSpeedModifier.Get()));
+    // m_armMotor.Set(ControlMode::PercentOutput,(speed*m_armMotorSpeedModifier.Get()));
 }
 
 double ArmSubsystem::GetArmMotorPosition()
