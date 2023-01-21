@@ -21,9 +21,11 @@ public:
     double GetArmMotorPosition();
     void ResetEncoders();
     void InitTalons();
+    void ArmLift();
 
 private:
-    TalonSRX m_armMotor;
+    TalonSRX m_armMotor, m_armLift;
+    COREConstant<double> m_liftSpeed;
     
     // DigitalInput m_inLimitSwitch, m_outLimitSwitch;
 
