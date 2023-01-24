@@ -6,7 +6,7 @@ frc::DigitalInput bottomlimitSwitch {1};
 ArmSubsystem::ArmSubsystem() : // m_armMotorSpeedModifier("Arm Speed Modifier", 0.5),
                                 m_armMotor(ARM_MOTOR_PORT), 
                                 m_armLift(ARM_LIFT_MOTOR_PORT),
-                                m_liftSpeed("Arm Lift Speed", 0.5){
+                                m_liftSpeed("Arm Lift Speed", 0.3){
 }
 
 void ArmSubsystem::RobotInit(){
@@ -22,6 +22,13 @@ void ArmSubsystem::TeleopInit(){
 
 void ArmSubsystem::Teleop(){
     SmartDashboard::PutNumber("Arm motor encoder position",m_armMotor.GetSelectedSensorPosition(0));
+	if (operatorJoystick->GetButton(CORE::COREJoystick::LEFT_TRIGGER)) {
+		ArmSubsystem::ArmLift(m_liftSpeed.Get());
+	} else if(driverJoystick->GetButton(CORE::COREJoystick::LEFT_BUTTON)) {
+		ArmSubsystem::ArmLift(-m_liftSpeed.Get());
+	} else {
+		m_armLift.Set(ControlMode::PercentOutput, 0);
+	}
 }
 
 
@@ -51,14 +58,14 @@ void ArmSubsystem::InitTalons() {
     m_armMotor.SetSensorPhase(true);
 }
 
-void ArmSubsystem::ArmLift() {
-        if (m_liftSpeed.Get() > 0) {
+void ArmSubsystem::ArmLift(double lift) {
+    if (lift > 0) {
         if (toplimitSwitch.Get()) {
             // Arm's going up and top limit is tripped so stop
             m_armLift.Set(ControlMode::PercentOutput, 0);
         } else {
             // Arm's going up but top limit is not tripped so go at commanded speed
-            m_armLift.Set(ControlMode::PercentOutput, m_liftSpeed.Get());
+            m_armLift.Set(ControlMode::PercentOutput, lift);
         }
     } else {
         if (bottomlimitSwitch.Get()) {
@@ -66,7 +73,7 @@ void ArmSubsystem::ArmLift() {
             m_armLift.Set(ControlMode::PercentOutput, 0);
         } else {
             // Arm's going down but bottom limit is not tripped so go at commanded speed
-            m_armLift.Set(ControlMode::PercentOutput, -m_liftSpeed.Get());
+            m_armLift.Set(ControlMode::PercentOutput, lift);
         }
     }
 }

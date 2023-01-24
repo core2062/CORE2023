@@ -21,7 +21,7 @@ public:
     double GetArmMotorPosition();
     void ResetEncoders();
     void InitTalons();
-    void ArmLift();
+    void ArmLift(double lift);
 
 private:
     TalonSRX m_armMotor, m_armLift;
