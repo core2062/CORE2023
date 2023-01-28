@@ -1,3 +1,4 @@
+/*
 #include "IntakeSubsystem.h"
 
 using namespace CORE;
@@ -33,3 +34,4 @@ void IntakeSubsystem::SetIntake(double intakeSpeed) {
     m_leftIntakeMotor.Set(ControlMode::PercentOutput, -intakeSpeed);
     m_rightIntakeMotor.Set(ControlMode::PercentOutput, intakeSpeed);
 }
+*/

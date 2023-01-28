@@ -1,3 +1,4 @@
+/*
 #include "ElevatorSubsystem.h"
 
 using namespace CORE;
@@ -36,3 +37,4 @@ double ElevatorSubsystem::GetMotorPosition()
 {
     return m_rightLiftMotor.GetSelectedSensorPosition();
 }
+*/

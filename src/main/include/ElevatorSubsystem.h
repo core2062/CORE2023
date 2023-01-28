@@ -1,3 +1,4 @@
+/*
 #pragma once
 
 #include <ctre/Phoenix.h>
@@ -23,3 +24,4 @@ private:
 	TalonSRX m_leftLiftMotor, m_rightLiftMotor;
     COREConstant<double> m_liftSpeedModifier;
 };
+*/

@@ -1,3 +1,4 @@
+/*
 #include "ScoringAssembly.h"
 #include "Robot.h"
 
@@ -22,3 +23,4 @@ void ScoringAssembly::TeleopInitTask()
 void ScoringAssembly::PostLoopTask()
 {
 }
+*/

@@ -1,3 +1,4 @@
+/*
 #include "GrabberSubsystem.h"
 
 using namespace CORE;
@@ -23,3 +24,4 @@ void GrabberSubsystem::teleop(){
     }
 	SmartDashboard::PutBoolean("Claw Open", m_clawActive);
 }
+*/
