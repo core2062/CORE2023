@@ -1,13 +1,13 @@
 #include "ArmSubsystem.h"
-#include <frc/DigitalInput.h>
-frc::DigitalInput toplimitSwitch {0};
-frc::DigitalInput bottomlimitSwitch {1};
+// #include <frc/DigitalInput.h>
+// frc::DigitalInput toplimitSwitch {0};
+// frc::DigitalInput bottomlimitSwitch {1};
 
-ArmSubsystem::ArmSubsystem() : // m_armMotorSpeedModifier("Arm Speed Modifier", 0.5),
-                                m_armMotor(ARM_MOTOR_PORT), 
-                                m_armLift(ARM_LIFT_MOTOR_PORT),
-                                m_liftSpeed("Arm Lift Speed", 0.3){
-}
+// ArmSubsystem::ArmSubsystem() : // m_armMotorSpeedModifier("Arm Speed Modifier", 0.5),
+//                                 m_armMotor(ARM_MOTOR_PORT), 
+//                                 m_armLift(ARM_LIFT_MOTOR_PORT),
+//                                 m_liftSpeed("Arm Lift Speed", 0.3){
+// }
 
 // void ArmSubsystem::RobotInit()
 // {

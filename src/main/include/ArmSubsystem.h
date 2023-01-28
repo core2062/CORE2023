@@ -22,9 +22,9 @@
 //     void ResetEncoders();
 //     void InitTalons();
 
-private:
-    TalonSRX m_armMotor, m_armLift;
-    COREConstant<double> m_liftSpeed;
+// private:
+//     TalonSRX m_armMotor, m_armLift;
+//     COREConstant<double> m_liftSpeed;
     
 //     // DigitalInput m_inLimitSwitch, m_outLimitSwitch;
 
