@@ -18,6 +18,8 @@
 #define ARM_MOTOR_PORT 9
 #define ARM_LIFT_MOTOR_PORT 10
 
-/*solenoid Ports*/
+/* Solenoid Ports */
 #define ACTUATOR_IN_PORT 1
 #define ACTUATOR_OUT_PORT 2
+
+/* Roborio Ports */
