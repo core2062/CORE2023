@@ -30,17 +30,17 @@ void ElevatorSubsystem::robotInit(){
 
     m_leftLiftMotor.Follow(m_rightLiftMotor);
 
-    m_rightLiftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor,0,0);
+    m_rightLiftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative,0,0);
     m_rightLiftMotor.SetSelectedSensorPosition(0,0,0);
 
     m_rightLiftMotor.SetSensorPhase(true);
 
-    operatorJoystick->RegisterAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
+    operatorJoystick->RegisterAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_Y);
 
 }
 
 void ElevatorSubsystem::teleopInit(){
-    SetRequestedPosition(GetElevatorMeters());
+    SetRequestedPosition(GetElevatorInches());
     m_rightLiftMotor.ConfigMotionCruiseVelocity(m_cruiseVel.Get(),0);
     m_rightLiftMotor.ConfigMotionAcceleration(m_maxAcel.Get(),0);
 }
@@ -52,9 +52,9 @@ void ElevatorSubsystem::PostLoopTask(){
     SmartDashboard::PutNumber("Elevator Velocity",m_rightLiftMotor.GetSelectedSensorVelocity(0));
     SmartDashboard::PutNumber("Requested Elevator Position",m_requestedPosition);
 
-    double elevatorPosition = GetElevatorMeters();
+    double elevatorPosition = GetElevatorInches();
 
-    SetRequestedSpeed(-operatorJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y));
+    SetRequestedSpeed(-operatorJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_Y));
 
     SmartDashboard::PutNumber("Elevator Speed",m_requestedSpeed);
     if(m_requestedSpeed < -0.01 || m_requestedSpeed > 0.1)
@@ -95,8 +95,8 @@ void ElevatorSubsystem::PostLoopTask(){
 
 }
 
-void ElevatorSubsystem::SetRequestedPosition(double positionInMeters){
-    auto position = (int)(positionInMeters * m_ticksPerMeter.Get());
+void ElevatorSubsystem::SetRequestedPosition(double positionInInches){
+    auto position = (int)(positionInInches * m_ticksPerMeter.Get());
     position = max(position,0);
     position = min(position, (int)(m_topLimit.Get()*m_ticksPerMeter.Get()));
     m_requestedPosition = position;
@@ -122,7 +122,7 @@ int ElevatorSubsystem::GetElevatorPosition(){
     return m_rightLiftMotor.GetSelectedSensorPosition(0);
 }
 
-double ElevatorSubsystem::GetElevatorMeters(){
+double ElevatorSubsystem::GetElevatorInches(){
     return GetElevatorPosition() / m_ticksPerMeter.Get();
 }
 
@@ -135,15 +135,15 @@ bool ElevatorSubsystem::ElevatorUp(){
 }
 
 bool ElevatorSubsystem::IsHighHeight(){
-    return abs(GetElevatorMeters() - m_highHeight.Get()) < 2;
+    return abs(GetElevatorInches() - m_highHeight.Get()) < 2;
 }
 
 bool ElevatorSubsystem::IsMediumHeight(){
-    return abs(GetElevatorMeters() - m_mediumHeight.Get()) < 2;
+    return abs(GetElevatorInches() - m_mediumHeight.Get()) < 2;
 }
 
 bool ElevatorSubsystem::IsPickupHeight(){
-    return abs(GetElevatorMeters() - m_pickUpHeight.Get()) < 2;
+    return abs(GetElevatorInches() - m_pickUpHeight.Get()) < 2;
 }
 
 void ElevatorSubsystem::ResetEncoders(){
