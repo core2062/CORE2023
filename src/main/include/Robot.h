@@ -11,10 +11,12 @@
 #include <COREFramework/COREScheduler.h>
 #include <CORERobotLib.h>
 
+
 #include "DriveSubsystem.h"
 #include "IntakeSubsystem.h"
-#include "ArmSubsystem.h"
 #include "GrabberSubsystem.h"
+#include "ScoringAssembly.h"
+#include "ArmSubsystem.h"
 #include "ElevatorSubsystem.h"
 
 using namespace CORE;
@@ -27,17 +29,20 @@ class Robot : public CORERobot {
   void robotInit() override;
   void teleopInit() override;
   void teleop() override;
-  // void test() override;
-  // void TestInit() override;
+  void test() override;
+  void testInit() override;
   // void SimulationInit() override;
   // void SimulationPeriodic() override;
   static Robot * GetInstance();
+
   
   DriveSubsystem driveSubsystem;
-  // IntakeSubsystem intakeSubsystem;
-  // ArmSubsystem armSubsystem;
-  // GrabberSubsystem grabberSubsystem;
-  // ElevatorSubsystem elevatorSubsystem;
+  IntakeSubsystem intakeSubsystem;
+  GrabberSubsystem grabberSubsystem;
+  ScoringAssembly scoringAssembly;
+  ArmSubsystem armSubsystem;
+  ElevatorSubsystem elevatorSubsystem;
+  
  private:
  
   static Robot * m_instance;

@@ -17,9 +17,9 @@ void Robot::robotInit() {}
 
 void Robot::teleopInit() {}
 
-// void Robot::Test() {}
+void Robot::test() {}
 
-// void Robot::TestInit() {}
+void Robot::testInit() {}
 
 // void Robot::SimulationInit() {}
 

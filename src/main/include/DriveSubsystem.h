@@ -2,7 +2,6 @@
 
 #include <frc/Compressor.h>
 #include <frc/AnalogInput.h>
-#include <frc/GenericHID.h>
 #include <ctre/Phoenix.h>
 #include <AHRS.h>
 #include <CORERobotLib.h>
@@ -33,10 +32,11 @@ public:
 
 private:
 	//m_analogSupplyVoltage used in calculation to get current PSI
-	GenericHID m_driverJoystick,m_operatorJoystick;
-	AnalogInput m_analogPressureInput, m_analogSupplyVoltage;
+	// AnalogInput m_analogPressureInput, m_analogSupplyVoltage;
     TalonSRX m_leftPrimary, m_rightPrimary, m_leftSecondary, m_rightSecondary;
 
     COREConstant<double> m_etherAValue, m_etherBValue, m_etherQuickTurnValue, m_ticksPerInch, m_driveSpeedModifier;
+
+	// CORETimer m_timeoutTimer;
     // Compressor m_compressor;
 };

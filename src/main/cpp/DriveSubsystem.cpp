@@ -2,8 +2,6 @@
 
 DriveSubsystem::DriveSubsystem() :
 		ahrs(SPI::Port::kMXP),
-		m_analogPressureInput(0),
-		m_analogSupplyVoltage(1),
 		m_leftPrimary(LEFT_FRONT_PORT),
 		m_rightPrimary(RIGHT_FRONT_PORT),
 		m_leftSecondary(LEFT_BACK_PORT),
@@ -27,7 +25,7 @@ void DriveSubsystem::robotInit() {
 }
 
 void DriveSubsystem::teleopInit() {
-	std::cout << "TeleopInit " << endl;
+	std::cout << "teleopInit " << endl;
 	// Sets ether drive values, inits talons
 	COREEtherDrive::SetAB(m_etherAValue.Get(), m_etherBValue.Get());
 	COREEtherDrive::SetQuickturn(m_etherQuickTurnValue.Get());
@@ -40,7 +38,7 @@ void DriveSubsystem::teleop() {
 	// Code for teleop. Sets motor speed based on the values for the joystick, runs compressor,
 	// Toggles gears
     double rot = -driverJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
-	double mag = /driverJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_X);
+	double mag = driverJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_X);
 
 	
 	VelocityPair speeds = COREEtherDrive::Calculate(mag, rot, .1);
@@ -52,7 +50,7 @@ void DriveSubsystem::teleop() {
 
 	SmartDashboard::PutNumber("Robot Heading", ahrs.GetFusedHeading());
 	
-	SmartDashboard::PutNumber("Pressure", (250* (m_analogPressureInput.GetVoltage()/m_analogSupplyVoltage.GetVoltage())-25));
+	// SmartDashboard::PutNumber("Pressure", (250* (m_analogPressureInput.GetVoltage()/m_analogSupplyVoltage.GetVoltage())-25));
 
 }
 

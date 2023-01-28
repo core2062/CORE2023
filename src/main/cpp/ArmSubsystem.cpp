@@ -1,56 +1,56 @@
 #include "ArmSubsystem.h"
-// #include <frc/DigitalInput.h>
-// frc::DigitalInput toplimitSwitch {0};
-// frc::DigitalInput bottomlimitSwitch {1};
+#include <frc/DigitalInput.h>
 
-// ArmSubsystem::ArmSubsystem() : // m_armMotorSpeedModifier("Arm Speed Modifier", 0.5),
-//                                 m_armMotor(ARM_MOTOR_PORT), 
-//                                 m_armLift(ARM_LIFT_MOTOR_PORT),
-//                                 m_liftSpeed("Arm Lift Speed", 0.3){
-// }
+ArmSubsystem::ArmSubsystem() :  //m_armMotorSpeedModifier("Arm Speed Modifier", 0.5),
+                                m_armMotor(ARM_MOTOR_PORT), 
+                                m_armLift(ARM_LIFT_MOTOR_PORT),
+                                m_liftSpeed("Arm Lift Speed", 0.3),
+                                m_inLimitSwitch(0),
+                                m_outLimitSwitch(1) {
+}
 
-// void ArmSubsystem::RobotInit()
-// {
-//     // operatorJoystick->RegisterAxis(CORE::COREJoystick::RIGHT_STICK_Y);
-//     InitTalons();
-// }
+void ArmSubsystem::robotInit()
+{
+    operatorJoystick->RegisterAxis(CORE::COREJoystick::RIGHT_STICK_Y);
+    InitTalons();
+}
 
-// void ArmSubsystem::TeleopInit()
-// {
-// 	m_armMotor.Set(ControlMode::PercentOutput, 0);
-// }
+void ArmSubsystem::teleopInit()
+{
+	m_armMotor.Set(ControlMode::PercentOutput, 0);
+}
 
-// void ArmSubsystem::Teleop()
-// {
-//     SmartDashboard::PutNumber("Arm motor encoder position",m_armMotor.GetSelectedSensorPosition(0));
-// }
+void ArmSubsystem::teleop()
+{
+    SmartDashboard::PutNumber("Arm motor encoder position",m_armMotor.GetSelectedSensorPosition(0));
+}
 
 
-// void ArmSubsystem::SetArmMotorSpeed(double speed)
-// {
-//     // m_armMotor.Set(ControlMode::PercentOutput,(speed*m_armMotorSpeedModifier.Get()));
-// }
+void ArmSubsystem::SetArmMotorSpeed(double speed)
+{
+    //m_armMotor.Set(ControlMode::PercentOutput,(speed*m_armMotorSpeedModifier.Get()));
+}
 
-// double ArmSubsystem::GetArmMotorPosition()
-// {
-//     return m_armMotor.GetSelectedSensorPosition(0);
-// }
+double ArmSubsystem::GetArmMotorPosition()
+{
+    return m_armMotor.GetSelectedSensorPosition(0);
+}
 
-// void ArmSubsystem::ResetEncoders()
-// {
-//     m_armMotor.SetSelectedSensorPosition(0, 0, 10);
-// }
+void ArmSubsystem::ResetEncoders()
+{
+    m_armMotor.SetSelectedSensorPosition(0, 0, 10);
+}
 
-// void ArmSubsystem::InitTalons() {
+void ArmSubsystem::InitTalons() {
 
-//     m_armMotor.SetNeutralMode(NeutralMode::Brake);
-//    m_armLift.SetNeutralMode(NeutralMode::Brake);
+    m_armMotor.SetNeutralMode(NeutralMode::Brake);
+   m_armLift.SetNeutralMode(NeutralMode::Brake);
 
-// 	// Sets up talons
-// 	m_armMotor.Set(ControlMode::PercentOutput, 0);
+	// Sets up talons
+	m_armMotor.Set(ControlMode::PercentOutput, 0);
 
-//     // Zero the sensor
-//     m_armMotor.SetSelectedSensorPosition(0, 0, 10);
-//     // m_armMotor.SetInverted(true);
-//     m_armMotor.SetSensorPhase(true);
-// }
+    // Zero the sensor
+    m_armMotor.SetSelectedSensorPosition(0, 0, 10);
+    // m_armMotor.SetInverted(true);
+    m_armMotor.SetSensorPhase(true);
+}
