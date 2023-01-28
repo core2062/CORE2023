@@ -1,27 +1,27 @@
-#include "ScoringAssembly.h"
+// #include "ScoringAssembly.h"
 
-ScoringAssembly::ScoringAssembly() //: 
-{}
+// ScoringAssembly::ScoringAssembly() //: 
+// {}
 
-void ScoringAssembly::RobotInitTask()
-{
-}
-
-void ScoringAssembly::TeleopInitTask()
-{
-}
-
-// void ScoringAssembly::Teleop()
+// void ScoringAssembly::RobotInitTask()
 // {
-//     /* Testing Subsystems */
-
 // }
 
-// void ScoringAssembly::MoveToStart()
-// {}
+// void ScoringAssembly::TeleopInitTask()
+// {
+// }
 
-// void ScoringAssembly::MoveToLevel2()
-// {}
+// // void ScoringAssembly::Teleop()
+// // {
+// //     /* Testing Subsystems */
 
-// void ScoringAssembly::MoveToLevel3()
-// {}
+// // }
+
+// // void ScoringAssembly::MoveToStart()
+// // {}
+
+// // void ScoringAssembly::MoveToLevel2()
+// // {}
+
+// // void ScoringAssembly::MoveToLevel3()
+// // {}

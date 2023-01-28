@@ -12,11 +12,13 @@ DriveSubsystem::DriveSubsystem() :
         m_etherBValue("Ether B Value", .4),
 		m_etherQuickTurnValue("Ether Quick Turn Value", 1.0),
         m_ticksPerInch("Ticks Per Inch", (4 * 3.1415) / 1024),
-		m_driveSpeedModifier("Drive speed Modifier", 1),
-		m_compressor(frc::PneumaticsModuleType::REVPH) {
-}
+		m_driveSpeedModifier("Drive speed Modifier", 1)
+		// m_compressor(frc::PneumaticsModuleType::REVPH) {
+{}
 
-void DriveSubsystem::RobotInit() {
+void DriveSubsystem::robotInit() {
+	
+	std::cout << "RobotInit " << endl;
 	// Registers joystick axis and buttons, does inital setup for talons
 	driverJoystick->RegisterAxis(CORE::COREJoystick::LEFT_STICK_Y);
 	driverJoystick->RegisterAxis(CORE::COREJoystick::RIGHT_STICK_X);
@@ -24,21 +26,23 @@ void DriveSubsystem::RobotInit() {
     InitTalons();
 }
 
-void DriveSubsystem::TeleopInit() {
+void DriveSubsystem::teleopInit() {
+	std::cout << "TeleopInit " << endl;
 	// Sets ether drive values, inits talons
 	COREEtherDrive::SetAB(m_etherAValue.Get(), m_etherBValue.Get());
 	COREEtherDrive::SetQuickturn(m_etherQuickTurnValue.Get());
 	InitTalons();
-	m_compressor.EnableDigital();
+	// m_compressor.EnableDigital();
 	SmartDashboard::PutString("Drive Controls", " Forward/Back: Left Stick \n Right/Left: Right Stick \n Shift: Right Trigger");
 }
 
-void DriveSubsystem::Teleop() {
+void DriveSubsystem::teleop() {
 	// Code for teleop. Sets motor speed based on the values for the joystick, runs compressor,
 	// Toggles gears
-    double mag = -driverJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
-	double rot = driverJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_X);
+    double rot = -driverJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
+	double mag = /driverJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_X);
 
+	
 	VelocityPair speeds = COREEtherDrive::Calculate(mag, rot, .1);
 	setMotorSpeed(speeds.left, speeds.right);
 	SmartDashboard::PutNumber("Left side speed", speeds.left);
@@ -55,8 +59,8 @@ void DriveSubsystem::Teleop() {
 void DriveSubsystem::setMotorSpeed(double speedInFraction, DriveSide whichSide) {
 	// Sets motor speed based on drive side and desired speed
 	if (whichSide == DriveSide::BOTH || whichSide == DriveSide::RIGHT) {
-		m_rightPrimary.Set(ControlMode::PercentOutput, speedInFraction);
-		m_rightSecondary.Set(ControlMode::PercentOutput, speedInFraction);
+		m_rightPrimary.Set(ControlMode::PercentOutput, -speedInFraction);
+		m_rightSecondary.Set(ControlMode::PercentOutput, -speedInFraction);
 	}
 	if (whichSide == DriveSide::BOTH || whichSide == DriveSide::LEFT) {
 		m_leftPrimary.Set(ControlMode::PercentOutput, speedInFraction);
@@ -94,7 +98,7 @@ void DriveSubsystem::InitTalons() {
 	SetTalonMode(NeutralMode::Coast);
 
 	m_leftPrimary.SetSensorPhase(false);
-    m_rightPrimary.SetSensorPhase(false);
+    m_rightPrimary.SetSensorPhase(true);
 
 	// Motor Inversion
 	m_leftPrimary.SetInverted(false);

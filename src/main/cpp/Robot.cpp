@@ -11,19 +11,19 @@ Robot::Robot() {
     m_instance = this;
 }
 
-void Robot::Teleop() {}
+void Robot::teleop() {}
 
-void Robot::RobotInit() {}
+void Robot::robotInit() {}
 
-void Robot::TeleopInit() {}
+void Robot::teleopInit() {}
 
-void Robot::Test() {}
+// void Robot::Test() {}
 
-void Robot::TestInit() {}
+// void Robot::TestInit() {}
 
-void Robot::SimulationInit() {}
+// void Robot::SimulationInit() {}
 
-void Robot::SimulationPeriodic() {}
+// void Robot::SimulationPeriodic() {}
 
 Robot * Robot::GetInstance() {
     return m_instance;

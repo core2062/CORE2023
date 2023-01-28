@@ -24,20 +24,20 @@ using namespace std;
 class Robot : public CORERobot {
  public:
   Robot();
-  void RobotInit() override;
-  void TeleopInit() override;
-  void Teleop() override;
-  void Test() override;
-  void TestInit() override;
-  void SimulationInit() override;
-  void SimulationPeriodic() override;
+  void robotInit() override;
+  void teleopInit() override;
+  void teleop() override;
+  // void test() override;
+  // void TestInit() override;
+  // void SimulationInit() override;
+  // void SimulationPeriodic() override;
   static Robot * GetInstance();
   
   DriveSubsystem driveSubsystem;
-  IntakeSubsystem intakeSubsystem;
-  ArmSubsystem armSubsystem;
-  GrabberSubsystem grabberSubsystem;
-  ElevatorSubsystem elevatorSubsystem;
+  // IntakeSubsystem intakeSubsystem;
+  // ArmSubsystem armSubsystem;
+  // GrabberSubsystem grabberSubsystem;
+  // ElevatorSubsystem elevatorSubsystem;
  private:
  
   static Robot * m_instance;
