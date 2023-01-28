@@ -26,6 +26,7 @@ public:
     void TeleopInitTask() override;
     void PostLoopTask() override;
 
+    void SetWantedState(WantedState wantedState);
 
 private:
     ArmSubsystem* m_armSubsystem;
