@@ -2,6 +2,7 @@
 
 #include <ctre/Phoenix.h>
 #include <frc/DoubleSolenoid.h>
+#include <frc/DigitalInput.h>
 #include <CORERobotLib.h>
 #include "Config.h"
 
