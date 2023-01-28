@@ -21,5 +21,3 @@
 /* Solenoid Ports */
 #define ACTUATOR_IN_PORT 1
 #define ACTUATOR_OUT_PORT 2
-
-/* Roborio Ports */
