@@ -1,8 +1,13 @@
-// #include "ArmSubsystem.h"
+#include "ArmSubsystem.h"
+#include <frc/DigitalInput.h>
+frc::DigitalInput toplimitSwitch {0};
+frc::DigitalInput bottomlimitSwitch {1};
 
-// ArmSubsystem::ArmSubsystem() : // m_armMotorSpeedModifier("Arm Speed Modifier", 0.5),
-//                                 m_armMotor(ARM_MOTOR_PORT)
-// {}
+ArmSubsystem::ArmSubsystem() : // m_armMotorSpeedModifier("Arm Speed Modifier", 0.5),
+                                m_armMotor(ARM_MOTOR_PORT), 
+                                m_armLift(ARM_LIFT_MOTOR_PORT),
+                                m_liftSpeed("Arm Lift Speed", 0.3){
+}
 
 // void ArmSubsystem::RobotInit()
 // {
@@ -39,6 +44,7 @@
 // void ArmSubsystem::InitTalons() {
 
 //     m_armMotor.SetNeutralMode(NeutralMode::Brake);
+//    m_armLift.SetNeutralMode(NeutralMode::Brake);
 
 // 	// Sets up talons
 // 	m_armMotor.Set(ControlMode::PercentOutput, 0);
