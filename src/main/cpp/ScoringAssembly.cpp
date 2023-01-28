@@ -22,3 +22,7 @@ void ScoringAssembly::TeleopInitTask()
 void ScoringAssembly::PostLoopTask()
 {
 }
+
+void ScoringAssembly::SetWantedState(WantedState wantedState){
+    m_wantedState = wantedState;
+}

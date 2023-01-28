@@ -32,6 +32,7 @@ private:
     ArmSubsystem* m_armSubsystem;
     ElevatorSubsystem* m_elevatorSubsystem;
 
+    WantedState m_wantedState;
     // int m_currentLevel;
     // double m_currentElevPosition,m_currentArmPosition;
 };

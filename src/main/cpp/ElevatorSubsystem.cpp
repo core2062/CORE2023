@@ -1,4 +1,5 @@
 #include "ElevatorSubsystem.h"
+#include "Robot.h"
 
 using namespace CORE;
 
@@ -10,7 +11,9 @@ ElevatorSubsystem::ElevatorSubsystem() :
         m_pickUpHeight("Elevator Pick Up Height"),
         m_mediumHeight("Elevator Mid-Level Height"),
         m_highHeight("Elevator High-Level Height"),
-        m_ticksPerInch("Elevator Ticks Per Inch"),
+        m_ticksPerMeter("Elevator Ticks Per Meter"),
+        m_bottomLimit("Elevator Bottom Limit"),
+        m_topLimit("Elevator Top Limit"),
         m_cruiseVel("Elevator Cruise Velocity"),
         m_maxAcel("Elevator Max Acceleration")
 {}
@@ -32,42 +35,117 @@ void ElevatorSubsystem::robotInit(){
 
     m_rightLiftMotor.SetSensorPhase(true);
 
+    operatorJoystick->RegisterAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
+
 }
 
 void ElevatorSubsystem::teleopInit(){
-    SetRequestedPosition(GetElevatorInches());
+    SetRequestedPosition(GetElevatorMeters());
     m_rightLiftMotor.ConfigMotionCruiseVelocity(m_cruiseVel.Get(),0);
     m_rightLiftMotor.ConfigMotionAcceleration(m_maxAcel.Get(),0);
 }
 
 void ElevatorSubsystem::teleop(){}
 
-void ElevatorSubsystem::PostLoopTask(){}
+void ElevatorSubsystem::PostLoopTask(){
+    SmartDashboard::PutNumber("Elevator Position",m_rightLiftMotor.GetSelectedSensorPosition(0));
+    SmartDashboard::PutNumber("Elevator Velocity",m_rightLiftMotor.GetSelectedSensorVelocity(0));
+    SmartDashboard::PutNumber("Requested Elevator Position",m_requestedPosition);
 
-void ElevatorSubsystem::SetRequestedPosition(double positionInInches){}
+    double elevatorPosition = GetElevatorMeters();
 
-void ElevatorSubsystem::SetRequestedSpeed(double speed){}
+    SetRequestedSpeed(-operatorJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y));
 
-void ElevatorSubsystem::SetHighHeight(){}
+    SmartDashboard::PutNumber("Elevator Speed",m_requestedSpeed);
+    if(m_requestedSpeed < -0.01 || m_requestedSpeed > 0.1)
+    {
+        if(m_requestedSpeed < 0)
+            m_requestedSpeed *= 0.1;
+        else
+            m_requestedSpeed *= 0.5;
+        SetRequestedPosition(elevatorPosition);
+        Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
+    }
 
-void ElevatorSubsystem::SetMediumHeight(){}
+    double elevatorRequestedPosition = m_requestedPosition;
 
-void ElevatorSubsystem::SetPickupHeight(){}
+    if(m_requestedSpeed > 0 && ElevatorUp())
+    {
 
-int ElevatorSubsystem::GetElevatorPosition(){}
+    } else if(ElevatorDown())
+    {
+        if(m_requestedSpeed < 0)
+        {
+            m_requestedSpeed = 0;
+            SetRequestedPosition(0);
+        }
+        ResetEncoders();
+    }
 
-double ElevatorSubsystem::GetElevatorInches(){}
+    if (m_requestedSpeed < -0.01 || m_requestedSpeed > 0.1)
+    {
+        m_rightLiftMotor.Set(ControlMode::PercentOutput, m_requestedSpeed);
+    } else
+    {
+        m_rightLiftMotor.Set(ControlMode::MotionMagic,elevatorRequestedPosition);
+    }
+    
+    m_requestedSpeed = 0;
+    SmartDashboard::PutNumber("Elevator",elevatorPosition);
 
-bool ElevatorSubsystem::LiftDown(){}
+}
 
-bool ElevatorSubsystem::LiftTop(){}
+void ElevatorSubsystem::SetRequestedPosition(double positionInMeters){
+    auto position = (int)(positionInMeters * m_ticksPerMeter.Get());
+    position = max(position,0);
+    position = min(position, (int)(m_topLimit.Get()*m_ticksPerMeter.Get()));
+    m_requestedPosition = position;
+}
 
-bool ElevatorSubsystem::IsHighHeight(){}
+void ElevatorSubsystem::SetRequestedSpeed(double speed){
+    m_requestedSpeed = speed;
+}
 
-bool ElevatorSubsystem::IsMediumHeight(){}
+void ElevatorSubsystem::SetHighHeight(){
+    SetRequestedPosition(m_highHeight.Get());
+}
 
-bool ElevatorSubsystem::IsPickupHeight(){}
+void ElevatorSubsystem::SetMediumHeight(){
+    SetRequestedPosition(m_mediumHeight.Get());
+}
 
-void ElevatorSubsystem::ResetEncoder(){
+void ElevatorSubsystem::SetPickupHeight(){
+    SetRequestedPosition(m_pickUpHeight.Get());
+}
+
+int ElevatorSubsystem::GetElevatorPosition(){
+    return m_rightLiftMotor.GetSelectedSensorPosition(0);
+}
+
+double ElevatorSubsystem::GetElevatorMeters(){
+    return GetElevatorPosition() / m_ticksPerMeter.Get();
+}
+
+bool ElevatorSubsystem::ElevatorDown(){
+    return m_bottomLimitSwitch.Get();
+}
+
+bool ElevatorSubsystem::ElevatorUp(){
+    return m_topLimitSwitch.Get();
+}
+
+bool ElevatorSubsystem::IsHighHeight(){
+    return abs(GetElevatorMeters() - m_highHeight.Get()) < 2;
+}
+
+bool ElevatorSubsystem::IsMediumHeight(){
+    return abs(GetElevatorMeters() - m_mediumHeight.Get()) < 2;
+}
+
+bool ElevatorSubsystem::IsPickupHeight(){
+    return abs(GetElevatorMeters() - m_pickUpHeight.Get()) < 2;
+}
+
+void ElevatorSubsystem::ResetEncoders(){
     m_rightLiftMotor.SetSelectedSensorPosition(0,0,0);
 }
