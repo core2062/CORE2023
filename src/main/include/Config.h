@@ -15,8 +15,8 @@
 #define RIGHT_LIFT_PORT 8
 
 /* Arm Ports */
-#define ARM_MOTOR_PORT 9
-#define ARM_LIFT_MOTOR_PORT 10
+#define TELESCOPING_ARM_MOTOR 9
+#define ARM_ROTATION_MOTOR 10
 
 /* Solenoid Ports */
 #define ACTUATOR_IN_PORT 1

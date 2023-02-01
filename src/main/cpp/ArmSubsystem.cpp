@@ -2,8 +2,8 @@
 #include "Robot.h"
 
 ArmSubsystem::ArmSubsystem() : 
-        m_armMotor(ARM_MOTOR_PORT),
-        m_armLift(ARM_LIFT_MOTOR_PORT),
+        m_telescopeMotor(TELESCOPING_ARM_MOTOR),
+        m_rotateMotor(ARM_ROTATION_MOTOR),
         m_inLimitSwitch(ARM_IN_LIMIT_SWITCH_PORT),
         m_downLimitSwitch(ARM_DOWN_LIMIT_SWITCH_PORT),
         m_rotationDist("Arm Rotation Dist"), // Arm rot out degrees
@@ -11,7 +11,6 @@ ArmSubsystem::ArmSubsystem() :
         m_highDist("Arm High-Level Distance"),
         m_ticksPerMeter("Arm Ticks Per Meter"),
         m_ticksPerDegree("Arm Ticks Per Degree"),
-        m_innerLimit("Arm Inner Limit"),
         m_outerLimit("Arm Outer Limit"),
         m_rotationLimit("Arm Rotation Limit"),
         m_cruiseTelescopeVel("Telescope Arm Cruise Velocity"),
@@ -23,21 +22,21 @@ ArmSubsystem::ArmSubsystem() :
 void ArmSubsystem::robotInit()
 {
     // Lines 20-33 config the talons
-    m_armMotor.Set(ControlMode::PercentOutput, 0);
-    m_armLift.Set(ControlMode::PercentOutput, 0);
+    m_telescopeMotor.Set(ControlMode::PercentOutput, 0);
+    m_rotateMotor.Set(ControlMode::PercentOutput, 0);
 
-    m_armMotor.SetNeutralMode(NeutralMode::Brake);
-    m_armLift.SetNeutralMode(NeutralMode::Brake);
+    m_telescopeMotor.SetNeutralMode(NeutralMode::Brake);
+    m_rotateMotor.SetNeutralMode(NeutralMode::Brake);
 
     // m_armMotor.SetInverted(true);
 
-    m_armMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative,0,0);
-    m_armMotor.SetSelectedSensorPosition(0,0,0);
+    m_telescopeMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative,0,0);
+    m_telescopeMotor.SetSelectedSensorPosition(0,0,0);
 
-    m_armLift.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative,0,0);
-    m_armLift.SetSelectedSensorPosition(0,0,0);
+    m_rotateMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative,0,0);
+    m_rotateMotor.SetSelectedSensorPosition(0,0,0);
 
-    operatorJoystick->RegisterAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_X);
+    operatorJoystick->RegisterAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
 
 }
 
@@ -49,37 +48,123 @@ void ArmSubsystem::teleop()
 
 void ArmSubsystem::PostLoopTask()
 {
-    SmartDashboard::PutNumber("Arm Telescope Position", m_armMotor.GetSelectedSensorPosition(0));
-    SmartDashboard::PutNumber("Arm Telescope Velocity", m_armMotor.GetSelectedSensorVelocity(0));
+    SmartDashboard::PutNumber("Arm Telescope Position", m_telescopeMotor.GetSelectedSensorPosition(0));
+    SmartDashboard::PutNumber("Arm Telescope Velocity", m_telescopeMotor.GetSelectedSensorVelocity(0));
     SmartDashboard::PutNumber("Arm Telescope Requested Position", m_requestedDist);
 
-    SmartDashboard::PutNumber("Arm Rotation Position", m_armLift.GetSelectedSensorPosition(0));
-    SmartDashboard::PutNumber("Arm Rotation Velocity", m_armLift.GetSelectedSensorVelocity(0));
+    SmartDashboard::PutNumber("Arm Rotation Position", m_rotateMotor.GetSelectedSensorPosition(0));
+    SmartDashboard::PutNumber("Arm Rotation Velocity", m_rotateMotor.GetSelectedSensorVelocity(0));
     SmartDashboard::PutNumber("Arm Rotation Requested Position", m_requestedRot);
 
     double telescopePosition = GetTelescopeArmInches();
+    double armRotation = GetRotationArmDegrees();
 
+    double joystickValue = -operatorJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
+
+    SetDistRequestedSpeed(joystickValue);
+    SetRotRequestedSpeed(joystickValue);
+
+    SmartDashboard::PutNumber("Requested Telescope Speed",m_requestedTelescopeSpeed);
+    if(m_requestedTelescopeSpeed < -0.01 || m_requestedTelescopeSpeed > 0.1)
+    {
+        if(m_requestedTelescopeSpeed < 0)
+        {
+            m_requestedTelescopeSpeed *= 0.1;
+            m_requestedRotSpeed *= 0.1;
+        }
+        else
+        {
+            m_requestedTelescopeSpeed *= 0.5;
+            m_requestedRotSpeed *= 0.5;
+        }
+        SetRequestedPosition(telescopePosition);
+        SetRequestedRotation(armRotation);
+        Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
+    }
+
+    if(m_requestedTelescopeSpeed > 0 && GetTelescopeArmInches() - m_outerLimit.Get() > 2)
+    {
+            m_requestedTelescopeSpeed = 0;
+            SetRequestedPosition(m_outerLimit.Get());
+    } else if(ArmIn())
+    {
+        if (m_requestedTelescopeSpeed < 0)
+        {
+            m_requestedTelescopeSpeed = 0;
+            SetRequestedPosition(0);
+        }
+        ResetDistanceEncoder();
+    }
+
+    if(m_requestedRotSpeed > 0 && GetRotationArmDegrees() - m_rotationDist.Get() > 2)
+    {
+        m_requestedRotSpeed = 0;
+        SetRequestedRotation(m_rotationDist.Get());
+    } else if(ArmDown())
+    {
+        if (m_requestedRotSpeed < 0)
+        {
+            m_requestedRotSpeed = 0;
+            SetRequestedRotation(0);
+        }
+        ResetRotationEncoder();
+    }
+    
     switch (m_wantedState)
     {
         case MANUAL:
-
-            break;
-        case WANT_TO_SCORE:
-            if (GetRotationArmDegrees() - m_rotationDist.Get() < 1)
+            if(joystickValue < 0) // Rotates before moving
             {
-                /* code */
-            } else
+                if (abs(armRotation - m_rotationDist.Get()) < 1) // If arm rotated, then arm can exted
+                {
+                    double telescopeRequestedPosition = m_requestedDist;
+                    m_telescopeMotor.Set(ControlMode::MotionProfile,telescopeRequestedPosition);
+                    m_rotateMotor.Set(ControlMode::PercentOutput,0);
+                } else
+                {
+                    double armRequestedRotation = m_requestedRot;
+                    m_rotateMotor.Set(ControlMode::MotionProfile,armRequestedRotation);
+                    m_telescopeMotor.Set(ControlMode::PercentOutput,0);
+                }
+            } else // Moves before rotating
             {
-                /* code */
+                if (telescopePosition < 2)  // If telescoping arm is in, then arm can rotate
+                {
+                    double armRequestedRotation = m_requestedRot;
+                    m_rotateMotor.Set(ControlMode::MotionProfile,armRequestedRotation);
+                    m_telescopeMotor.Set(ControlMode::PercentOutput,0);
+                } else
+                {
+                    double telescopeRequestedPosition = m_requestedDist;
+                    m_telescopeMotor.Set(ControlMode::MotionProfile,telescopeRequestedPosition);
+                    m_rotateMotor.Set(ControlMode::PercentOutput,0);
+                }
             }
             break;
-        case WANT_TO_PICKUP:
-            if (GetTelescopeArmInches() - m_rotationDist.Get() < 1)
+        case WANT_TO_SCORE: // Rotates before moving
+            if (abs(armRotation - m_rotationDist.Get()) < 1) // If arm rotated, then arm can exted
             {
-                /* code */
+                double telescopeRequestedPosition = m_requestedDist;
+                m_telescopeMotor.Set(ControlMode::MotionProfile,telescopeRequestedPosition);
+                m_rotateMotor.Set(ControlMode::PercentOutput,0);
             } else
             {
-                /* code */
+                double armRequestedRotation = m_requestedRot;
+                m_rotateMotor.Set(ControlMode::MotionProfile,armRequestedRotation);
+                m_telescopeMotor.Set(ControlMode::PercentOutput,0);
+            }
+            break;
+        case WANT_TO_PICKUP: // Moves before rotating
+            if (telescopePosition < 2)  // If telescoping arm is in, then arm can rotate
+            {
+                double armRequestedRotation = m_requestedRot;
+                m_rotateMotor.Set(ControlMode::MotionProfile,armRequestedRotation);
+                m_telescopeMotor.Set(ControlMode::PercentOutput,0);
+            } else
+            {
+                double telescopeRequestedPosition = m_requestedDist;
+                m_telescopeMotor.Set(ControlMode::MotionProfile,telescopeRequestedPosition);
+                m_rotateMotor.Set(ControlMode::PercentOutput,0);
             }
             break;
     }
@@ -134,12 +219,12 @@ void ArmSubsystem::SetRotDown()
 
 int ArmSubsystem::GetArmDist()
 {
-    return m_armMotor.GetSelectedSensorPosition(0);
+    return m_telescopeMotor.GetSelectedSensorPosition(0);
 }
 
 int ArmSubsystem::GetArmRotation()
 {
-    return m_armLift.GetSelectedSensorPosition(0);
+    return m_rotateMotor.GetSelectedSensorPosition(0);
 }
 
 double ArmSubsystem::GetTelescopeArmInches()
@@ -179,12 +264,12 @@ bool ArmSubsystem::IsArmUp()
 
 void ArmSubsystem::ResetRotationEncoder()
 {
-    m_armLift.SetSelectedSensorPosition(0,0,0);
+    m_rotateMotor.SetSelectedSensorPosition(0,0,0);
 }
 
 void ArmSubsystem::ResetDistanceEncoder()
 {
-    m_armMotor.SetSelectedSensorPosition(0,0,0);
+    m_telescopeMotor.SetSelectedSensorPosition(0,0,0);
 }
 
 void ArmSubsystem::ResetEncoders()

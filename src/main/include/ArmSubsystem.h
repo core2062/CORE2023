@@ -51,13 +51,12 @@ private:
     };
 
 
-    TalonSRX m_armMotor, m_armLift;
+    TalonSRX m_telescopeMotor, m_rotateMotor;
     DigitalInput m_inLimitSwitch, m_downLimitSwitch;
     
     COREConstant<double> m_rotationDist, m_mediumDist, m_highDist;
     COREConstant<double> m_ticksPerMeter, m_ticksPerDegree;
-    // When Telescope @ m_innerLimit & rotation @ m_rotationLimit, it can either extend or rotate
-    COREConstant<int> m_innerLimit, m_outerLimit, m_rotationLimit;
+    COREConstant<int> m_outerLimit, m_rotationLimit;
     COREConstant<int> m_cruiseTelescopeVel, m_maxTelescopeAcel;
     COREConstant<int> m_cruiseRotationVel, m_maxRotationAcel;
 
