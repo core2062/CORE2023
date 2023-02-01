@@ -1,24 +1,24 @@
-#pragma once
+// #pragma once
 
-#include <ctre/Phoenix.h>
-#include <frc/DoubleSolenoid.h>
-#include <CORERobotLib.h>
-#include "Config.h"
-
-
-using namespace CORE;
-using namespace frc;
+// #include <ctre/Phoenix.h>
+// #include <frc/DoubleSolenoid.h>
+// #include <CORERobotLib.h>
+// #include "Config.h"
 
 
-class ElevatorSubsystem : public CORESubsystem {
-public:
-	ElevatorSubsystem();
-    void RobotInit() override;
-    void TeleopInit() override;
-    void Teleop() override;
-    void ElevatorSpeed(double);
-private:
-	TalonSRX m_leftMotor, m_rightMotor;
-    double m_liftStart;
-    COREConstant<double> m_liftSpeedModifier;
-};
+// using namespace CORE;
+// using namespace frc;
+
+
+// class ElevatorSubsystem : public CORESubsystem {
+// public:
+// 	ElevatorSubsystem();
+//     void RobotInit() override;
+//     void TeleopInit() override;
+//     void Teleop() override;
+//     void ElevatorSpeed(double);
+// private:
+// 	TalonSRX m_leftMotor, m_rightMotor;
+//     double m_liftStart;
+//     COREConstant<double> m_liftSpeedModifier;
+// };

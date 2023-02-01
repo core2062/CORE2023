@@ -12,9 +12,9 @@
 #include <CORERobotLib.h>
 
 #include "DriveSubsystem.h"
-#include "ArmSubsystem.h"
-#include "GrabberSubsystem.h"
-#include "ElevatorSubsystem.h"
+// #include "ArmSubsystem.h"
+// #include "GrabberSubsystem.h"
+// #include "ElevatorSubsystem.h"
 
 using namespace CORE;
 using namespace std;
@@ -23,19 +23,19 @@ using namespace std;
 class Robot : public CORERobot {
  public:
   Robot();
-  void RobotInit() override;
-  void TeleopInit() override;
-  void Teleop() override;
-  void Test() override;
-  void TestInit() override;
+  void robotInit() override;
+  void teleopInit() override;
+  void teleop() override;
+  void test() override;
+  void testInit() override;
   void SimulationInit() override;
   void SimulationPeriodic() override;
   static Robot * GetInstance();
   
   DriveSubsystem driveSubsystem;
-  ArmSubsystem armSubsystem;
-  GrabberSubsystem grabberSubsystem;
-  ElevatorSubsystem elevatorSubsystem;
+  // ArmSubsystem armSubsystem;
+  // GrabberSubsystem grabberSubsystem;
+  // ElevatorSubsystem elevatorSubsystem;
  private:
  
   static Robot * m_instance;

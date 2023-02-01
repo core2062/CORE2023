@@ -11,15 +11,15 @@ Robot::Robot() {
     m_instance = this;
 }
 
-void Robot::Teleop() {}
+void Robot::teleop() {}
 
-void Robot::RobotInit() {}
+void Robot::robotInit() {}
 
-void Robot::TeleopInit() {}
+void Robot::teleopInit() {}
 
-void Robot::Test() {}
+void Robot::test() {}
 
-void Robot::TestInit() {}
+void Robot::testInit() {}
 
 void Robot::SimulationInit() {}
 

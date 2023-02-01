@@ -18,9 +18,9 @@ enum class DriveSide{LEFT = 1, RIGHT = 2, BOTH = 3};
 class DriveSubsystem : public CORESubsystem {
 public:
 	DriveSubsystem();
-	void RobotInit() override;
-	void TeleopInit() override;
-	void Teleop() override;
+	void robotInit() override;
+	void teleopInit() override;
+	void teleop() override;
 	
 	double getRobotPosition();
 	void InitTalons();
@@ -28,13 +28,14 @@ public:
 	void setMotorSpeed(double leftPercent, double rightPercent);
 	void resetEncoder();
 	void SetTalonMode(NeutralMode mode);
+	void Balance();
 	AHRS ahrs;
 
 private:
 	//m_analogSupplyVoltage used in calculation to get current PSI
 	AnalogInput m_analogPressureInput, m_analogSupplyVoltage;
     TalonSRX m_leftMaster, m_rightMaster, m_leftSlave, m_rightSlave;
-
-    COREConstant<double> m_etherAValue, m_etherBValue, m_etherQuickTurnValue, m_ticksPerInch, m_driveSpeedModifier;
+	double m_currentPitch;
+    COREConstant<double> m_etherAValue, m_etherBValue, m_etherQuickTurnValue, m_ticksPerInch, m_driveSpeedModifier, m_balanceMaxSpeed, m_balanceCalibration;
     Compressor m_compressor;
 };
