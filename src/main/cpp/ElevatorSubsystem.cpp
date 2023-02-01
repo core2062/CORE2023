@@ -71,7 +71,8 @@ void ElevatorSubsystem::PostLoopTask(){
 
     if(m_requestedSpeed > 0 && ElevatorUp())
     {
-
+        m_requestedSpeed = 0;
+        SetRequestedPosition(m_topLimit.Get());
     } else if(ElevatorDown())
     {
         if(m_requestedSpeed < 0)
@@ -92,7 +93,6 @@ void ElevatorSubsystem::PostLoopTask(){
     
     m_requestedSpeed = 0;
     SmartDashboard::PutNumber("Elevator",elevatorPosition);
-
 }
 
 void ElevatorSubsystem::SetRequestedPosition(double positionInInches){
