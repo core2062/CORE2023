@@ -14,7 +14,7 @@ public:
 	IntakeSubsystem();
     void robotInit() override;
     void teleopInit() override;
-    void teleop() override;
+    void teleop() override; 
     void SetIntake(double intakeSpeed);
 
     COREConstant<double> intakeSpeed;
