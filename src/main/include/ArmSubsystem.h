@@ -1,6 +1,7 @@
 #pragma once
 
 #include <frc/DigitalInput.h>
+#include <frc/DoubleSolenoid.h>
 #include <ctre/Phoenix.h>
 #include <CORERobotLib.h>
 #include "Config.h"
@@ -17,29 +18,24 @@ public:
     void PostLoopTask() override;
 
     void SetRequestedPosition(double positionInInches);
-    void SetRequestedRotation(double rotationInDegrees);
+    void SetRequestedRotation(bool rot);
     void SetDistRequestedSpeed(double speed);
-    void SetRotRequestedSpeed(double speed);
 
     void SetHighDist();
     void SetMediumDist();
     void SetRotDown();
 
     int GetArmDist();
-    int GetArmRotation();
     double GetTelescopeArmInches();
-    double GetRotationArmDegrees();
     
     bool ArmIn();
     bool ArmDown();
 
     bool IsHighDist();
     bool IsMediumDist();
-    bool IsArmOut();
+    // bool IsArmOut();
     bool IsArmUp();
 
-    void ResetRotationEncoder();
-    void ResetDistanceEncoder();
     void ResetEncoders();
 
 private:
@@ -51,20 +47,19 @@ private:
     };
 
 
-    TalonSRX m_telescopeMotor, m_rotateMotor;
+    TalonSRX m_telescopeMotor;
+    DoubleSolenoid m_armPiston;
     DigitalInput m_inLimitSwitch, m_downLimitSwitch;
     
-    COREConstant<double> m_rotationDist, m_mediumDist, m_highDist;
-    COREConstant<double> m_ticksPerMeter, m_ticksPerDegree;
+    COREConstant<double> m_mediumDist, m_highDist;
+    COREConstant<double> m_ticksPerMeter;
     COREConstant<int> m_outerLimit, m_rotationLimit;
     COREConstant<int> m_cruiseTelescopeVel, m_maxTelescopeAcel;
-    COREConstant<int> m_cruiseRotationVel, m_maxRotationAcel;
 
     int m_requestedDist;
     double m_requestedTelescopeSpeed;
 
-    int m_requestedRot;
-    double m_requestedRotSpeed;
+    bool m_requestedRotOut;
 
     WantedArmState m_wantedState;
 };
