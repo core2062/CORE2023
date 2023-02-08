@@ -15,11 +15,21 @@ void GrabberSubsystem::teleopInit() {
 
 void GrabberSubsystem::teleop(){   
     if (operatorJoystick->GetRisingEdge(CORE::COREJoystick::JoystickButton::LEFT_BUTTON) && m_clawActive == false){
-		m_clawActuator.Set(DoubleSolenoid::kForward);
-		m_clawActive = true;
+		setGrabber(true);
 	} else if (operatorJoystick->GetRisingEdge(CORE::COREJoystick::JoystickButton::LEFT_BUTTON) && m_clawActive == true){
-		m_clawActuator.Set(DoubleSolenoid::kReverse);
-		m_clawActive = false;
+		setGrabber(false);
     }
 	SmartDashboard::PutBoolean("Claw Open", m_clawActive);
+}
+
+void GrabberSubsystem::setGrabber(bool set) {
+	if (set)
+	{
+		m_clawActuator.Set(DoubleSolenoid::kForward);
+		m_clawActive = true;
+	} else {
+		m_clawActuator.Set(DoubleSolenoid::kReverse);
+		m_clawActive = false;
+	}
+	
 }

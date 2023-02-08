@@ -16,6 +16,7 @@ public:
     void robotInit() override;
     void teleopInit() override;
     void teleop() override;
+    void setGrabber(bool set);
 private:
     DoubleSolenoid m_clawActuator;
     bool m_clawActive;

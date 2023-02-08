@@ -21,9 +21,9 @@ void IntakeSubsystem::teleopInit() {
 void IntakeSubsystem::teleop(){
     if(operatorJoystick->GetButton(CORE::COREJoystick::JoystickButton::RIGHT_TRIGGER)) {
        SetIntake(-intakeSpeed.Get());
-     } else if (operatorJoystick->GetButton(CORE::COREJoystick::JoystickButton::RIGHT_BUTTON)) {
+    } else if (operatorJoystick->GetButton(CORE::COREJoystick::JoystickButton::RIGHT_BUTTON)) {
         SetIntake(intakeSpeed.Get());
-        } else{
+    } else{
         SetIntake(0.0);
     }
     
