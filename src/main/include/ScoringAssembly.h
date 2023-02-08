@@ -29,10 +29,25 @@ public:
     void SetWantedState(WantedState wantedState);
 
 private:
+    enum SystemState {
+        TRANSIT,
+        GRABBING,
+        SCORING_HIGH,
+        SCORING_MID
+    };
+
+    SystemState HandleTransit();
+    SystemState HandleGrabbing();
+    SystemState HandleScoringHigh();
+    SystemState HandleScoringMid();
+
     ArmSubsystem* m_armSubsystem;
     ElevatorSubsystem* m_elevatorSubsystem;
 
     WantedState m_wantedState;
-    // int m_currentLevel;
-    // double m_currentElevPosition,m_currentArmPosition;
+    SystemState m_systemState;
+
+    COREConstant<double> m_transitTransitionTimeout;
+
+    CORETimer m_timeoutTimer;
 };

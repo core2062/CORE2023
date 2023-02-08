@@ -11,11 +11,29 @@ Robot::Robot() {
     m_instance = this;
 }
 
-void Robot::teleop() {}
-
-void Robot::robotInit() {}
+void Robot::robotInit() {
+    operatorJoystick->RegisterButton(COREJoystick::JoystickButton::A_BUTTON);
+    operatorJoystick->RegisterButton(COREJoystick::JoystickButton::B_BUTTON);
+    operatorJoystick->RegisterButton(COREJoystick::JoystickButton::Y_BUTTON);
+}
 
 void Robot::teleopInit() {}
+
+void Robot::teleop() {
+    if (operatorJoystick->GetRisingEdge(COREJoystick::JoystickButton::A_BUTTON))
+    {
+        scoringAssembly.SetWantedState(WantedState::WANT_TO_PICKUP);
+    }
+    else if (operatorJoystick->GetRisingEdge(COREJoystick::JoystickButton::B_BUTTON))
+    {
+        scoringAssembly.SetWantedState(WantedState::WANT_TO_SCORE_MID);
+    }
+    else if (operatorJoystick->GetRisingEdge(COREJoystick::JoystickButton::Y_BUTTON))
+    {
+        scoringAssembly.SetWantedState(WantedState::WANT_TO_SCORE_HIGH);
+    }
+    
+}
 
 void Robot::test() {}
 
