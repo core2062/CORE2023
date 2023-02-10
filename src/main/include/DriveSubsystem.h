@@ -36,6 +36,6 @@ private:
 	AnalogInput m_analogPressureInput, m_analogSupplyVoltage;
     TalonSRX m_leftMaster, m_rightMaster, m_leftSlave, m_rightSlave;
 	double m_currentPitch;
-    COREConstant<double> m_etherAValue, m_etherBValue, m_etherQuickTurnValue, m_ticksPerInch, m_driveSpeedModifier, m_balanceMaxSpeed, m_balanceCalibration;
+    COREConstant<double> m_etherAValue, m_etherBValue, m_etherQuickTurnValue, m_ticksPerInch, m_driveSpeedModifier, m_balanceMaxSpeed, m_balanceCalibration, m_balanceMaxCalibration;
     Compressor m_compressor;
 };
