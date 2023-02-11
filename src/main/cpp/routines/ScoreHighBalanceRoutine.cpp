@@ -9,6 +9,12 @@ void ScoreHighBalanceRoutine::AddNodes() {
     delayNode2 = new Node(10, new DelayAction());
     driveNode = new Node(10, new DriveAction(BACKWARD, 24));
     delayNode3 = new Node(10, new DelayAction());
-    autoBalancerNode = new Node(10, new AutoBalanceAction(AUTO_BALANCE));
+    balanceNode = new Node(10, new AutoBalanceAction(AUTO_BALANCE));
     AddFirstNode(grabNode);
+    grabNode -> AddNext(delayNode);
+    delayNode -> AddNext(scoreHighNode);
+    scoreHighNode -> AddNext(delayNode2);
+    delayNode2 -> AddNext(driveNode);
+    driveNode -> AddNext(delayNode3);
+    delayNode3 -> AddNext(balanceNode);
 }

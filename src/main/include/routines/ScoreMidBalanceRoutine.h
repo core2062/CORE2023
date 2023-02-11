@@ -6,6 +6,7 @@
 #include "auton/DelayAction.h"
 #include "auton/ScoreMidAction.h"
 #include "auton/GrabberAction.h"
+#include "auton/AutoBalanceAction.h"
 
 using namespace CORE;
 using namespace std;
@@ -21,5 +22,5 @@ private:
     Node * delayNode2;
     Node * driveNode;
     Node * delayNode3;
-    Node * autoBalanceNode;
+    Node * balanceNode;
 };
