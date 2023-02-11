@@ -67,7 +67,7 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
         case WantedState::WANT_TO_PICKUP:
             m_armSubsystem->SetRotDown();
             m_elevatorSubsystem->SetPickupHeight();
-            reachedTarget = (m_armSubsystem->ArmDown() && m_elevatorSubsystem->IsPickupHeight());
+            reachedTarget = (!m_armSubsystem->IsArmUp() && m_elevatorSubsystem->IsPickupHeight());
             break;
         case WantedState::WANT_TO_SCORE_MID:
             m_armSubsystem->SetMediumDist();
