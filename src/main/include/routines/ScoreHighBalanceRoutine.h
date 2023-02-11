@@ -22,7 +22,5 @@ private:
     Node * delayNode2;
     Node * driveNode;
     Node * delayNode3;
-    Node * autoBalancerNode;
-
-
+    Node * balanceNode;
 };
