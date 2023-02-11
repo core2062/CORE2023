@@ -6,6 +6,7 @@
 #include "auton/DelayAction.h"
 #include "auton/ScoreHighAction.h"
 #include "auton/GrabberAction.h"
+#include "auton/AutoBalanceAction.h"
 
 using namespace CORE;
 using namespace std;
