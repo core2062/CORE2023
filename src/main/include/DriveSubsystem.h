@@ -33,7 +33,7 @@ public:
 private:
 	//m_analogSupplyVoltage used in calculation to get current PSI
 	// AnalogInput m_analogPressureInput, m_analogSupplyVoltage;
-    TalonFX m_leftPrimary, m_rightPrimary, m_leftSecondary, m_rightSecondary;
+    WPI_TalonFX m_leftPrimary, m_rightPrimary, m_leftSecondary, m_rightSecondary;
 
     COREConstant<double> m_etherAValue, m_etherBValue, m_etherQuickTurnValue, m_ticksPerInch, m_driveSpeedModifier;
 
