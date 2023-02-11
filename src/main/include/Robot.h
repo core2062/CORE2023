@@ -61,7 +61,7 @@ class Robot : public CORERobot {
   ScoreHighRoutine scoreHighRoutine;
   ScoreMidRoutine scoreMidRoutine;
   ScoreHighBalanceRoutine scoreHighBalanceRoutine;
-  // ScoreMidBalanceRoutine scoreMidBalanceRoutine;
+  ScoreMidBalanceRoutine scoreMidBalanceRoutine;
   ScoreHighFieldBalanceRoutine scoreHighFieldBalanceRoutine;
   ScoreMidFieldBalanceRoutine scoreMidFieldBalanceRoutine;
 
