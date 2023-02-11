@@ -2,19 +2,19 @@
 
 #include <string>
 #include <CORERobotLib.h>
-#include "auton/ScoreHighAction.h"
+#include "auton/ScoreMidAction.h"
 #include "auton/GrabberAction.h"
 #include "auton/DelayAction.h"
 
 using namespace CORE;
 using namespace std;
 
-class HighScoreRoutine: public COREAuton {
+class ScoreMidRoutine: public COREAuton {
 public:
-    HighScoreRoutine();
+    ScoreMidRoutine();
     void AddNodes() override;
 private:
-    Node * grab;
-    Node * delay;
-    Node * scorehigh;
+    Node * grabNode;
+    Node * delayNode;
+    Node * scoremidNode;
 };

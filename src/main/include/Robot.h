@@ -12,13 +12,24 @@
 #include <CORERobotLib.h>
 
 
+//Subsystems
 #include "DriveSubsystem.h"
 #include "IntakeSubsystem.h"
 #include "GrabberSubsystem.h"
 #include "ScoringAssembly.h"
 #include "ArmSubsystem.h"
 #include "ElevatorSubsystem.h"
+
+
+//Routines
 #include "routines/DriveRoutine.h"
+#include "routines/ScoreHighBalanceRoutine.h"
+#include "routines/ScoreMidBalanceRoutine.h"
+#include "routines/ScoreHighfieldBalanceRoutine.h"
+#include "routines/ScoreMidFieldBalanceRoutine.h"
+#include "routines/ScoreHighRoutine.h"
+#include "routines/ScoreMidRoutine.h"
+
 
 using namespace CORE;
 using namespace std;
@@ -36,14 +47,24 @@ class Robot : public CORERobot {
   void SimulationPeriodic() override;
   static Robot * GetInstance();
 
-  
+  //Subsystems
   DriveSubsystem driveSubsystem;
   IntakeSubsystem intakeSubsystem;
   GrabberSubsystem grabberSubsystem;
   ScoringAssembly scoringAssembly;
   ArmSubsystem armSubsystem;
   ElevatorSubsystem elevatorSubsystem;
+
+
+  //Routines
   DriveRoutine driveRoutine;
+  ScoreHighRoutine scoreHighRoutine;
+  ScoreMidRoutine scoreMidRoutine;
+  ScoreHighBalanceRoutine scoreHighBalanceRoutine;
+  // ScoreMidBalanceRoutine scoreMidBalanceRoutine;
+  ScoreHighFieldBalanceRoutine scoreHighFieldBalanceRoutine;
+  ScoreMidFieldBalanceRoutine scoreMidFieldBalanceRoutine;
+
   
  private:
  
