@@ -26,11 +26,28 @@ public:
     void TeleopInitTask() override;
     void PostLoopTask() override;
 
+    void SetWantedState(WantedState wantedState);
 
 private:
+    enum SystemState {
+        TRANSIT,
+        GRABBING,
+        SCORING_HIGH,
+        SCORING_MID
+    };
+
+    SystemState HandleTransit();
+    SystemState HandleGrabbing();
+    SystemState HandleScoringHigh();
+    SystemState HandleScoringMid();
+
     ArmSubsystem* m_armSubsystem;
     ElevatorSubsystem* m_elevatorSubsystem;
 
-    // int m_currentLevel;
-    // double m_currentElevPosition,m_currentArmPosition;
+    WantedState m_wantedState;
+    SystemState m_systemState;
+
+    COREConstant<double> m_transitTransitionTimeout;
+
+    CORETimer m_timeoutTimer;
 };
