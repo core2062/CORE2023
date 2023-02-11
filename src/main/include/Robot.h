@@ -32,8 +32,8 @@ class Robot : public CORERobot {
   void teleop() override;
   void test() override;
   void testInit() override;
-  // void SimulationInit() override;
-  // void SimulationPeriodic() override;
+  void SimulationInit() override;
+  void SimulationPeriodic() override;
   static Robot * GetInstance();
 
   

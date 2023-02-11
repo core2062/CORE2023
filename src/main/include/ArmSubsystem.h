@@ -33,7 +33,7 @@ public:
 
     bool IsHighDist();
     bool IsMediumDist();
-    // bool IsArmOut();
+    bool IsArmOut();
     bool IsArmUp();
 
     void ResetEncoders();
