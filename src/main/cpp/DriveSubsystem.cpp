@@ -37,8 +37,8 @@ void DriveSubsystem::teleopInit() {
 void DriveSubsystem::teleop() {
 	// Code for teleop. Sets motor speed based on the values for the joystick, runs compressor,
 	// Toggles gears
-    double rot = -driverJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
-	double mag = driverJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_X);
+    double rot = -driverJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_X);
+	double mag = driverJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
 
 	
 	VelocityPair speeds = COREEtherDrive::Calculate(mag, rot, .1);
@@ -57,8 +57,8 @@ void DriveSubsystem::teleop() {
 void DriveSubsystem::setMotorSpeed(double speedInFraction, DriveSide whichSide) {
 	// Sets motor speed based on drive side and desired speed
 	if (whichSide == DriveSide::BOTH || whichSide == DriveSide::RIGHT) {
-		m_rightPrimary.Set(ControlMode::PercentOutput, -speedInFraction);
-		m_rightSecondary.Set(ControlMode::PercentOutput, -speedInFraction);
+		m_rightPrimary.Set(ControlMode::PercentOutput, speedInFraction);
+		m_rightSecondary.Set(ControlMode::PercentOutput, speedInFraction);
 	}
 	if (whichSide == DriveSide::BOTH || whichSide == DriveSide::LEFT) {
 		m_leftPrimary.Set(ControlMode::PercentOutput, speedInFraction);
