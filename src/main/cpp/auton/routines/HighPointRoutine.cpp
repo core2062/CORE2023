@@ -1,8 +1,8 @@
-#include "routines/ScoreHighFieldBalanceRoutine.h"
+#include "auton/routines/HighPointRoutine.h"
 
-ScoreHighFieldBalanceRoutine::ScoreHighFieldBalanceRoutine() : COREAuton("Score High Routine") {}
+HighScoreRoutine::HighScoreRoutine() : COREAuton("Score High Routine") {}
 
-void ScoreHighFieldBalanceRoutine::AddNodes() {
+void HighScoreRoutine::AddNodes() {
     grabNode = new Node(10, new GrabberAction(GRABBER_GRAB));
     delayNode = new Node(10, new DelayAction());
     scoreHighNode = new Node(10, new ScoreHighAction(SCORE_HIGH));
@@ -15,7 +15,7 @@ void ScoreHighFieldBalanceRoutine::AddNodes() {
     delayNode5 = new Node(10, new DelayAction());
     driveNode = new Node(10, new DriveAction(FORWARD, 24));
     delayNode6 = new Node(10, new DelayAction());
-    BalanceNode = new Node(10, new AutoBalanceAction(AUTO_BALANCE));
+    balanceNode = new Node(10, new AutoBalanceAction(AUTO_BALANCE, 10));
     AddFirstNode(grabNode);
     grabNode -> AddNext(delayNode);
     delayNode -> AddNext(scoreHighNode);
@@ -28,5 +28,5 @@ void ScoreHighFieldBalanceRoutine::AddNodes() {
     driveNode -> AddNext(delayNode5);
     delayNode5 -> AddNext(driveNode2);
     driveNode2 -> AddNext(delayNode6);
-    delayNode6 -> AddNext(BalanceNode);
+    delayNode6 -> AddNext(balanceNode);
 }

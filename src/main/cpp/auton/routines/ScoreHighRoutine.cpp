@@ -1,4 +1,4 @@
-#include "routines/ScoreHighRoutine.h"
+#include "auton/routines/ScoreHighRoutine.h"
 
 ScoreHighRoutine::ScoreHighRoutine() : COREAuton("High Score Routine") {}
 

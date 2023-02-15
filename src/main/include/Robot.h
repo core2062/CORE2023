@@ -22,13 +22,13 @@
 
 
 //Routines
-#include "routines/DriveRoutine.h"
-#include "routines/ScoreHighBalanceRoutine.h"
-#include "routines/ScoreMidBalanceRoutine.h"
-#include "routines/ScoreHighfieldBalanceRoutine.h"
-#include "routines/ScoreMidFieldBalanceRoutine.h"
-#include "routines/ScoreHighRoutine.h"
-#include "routines/ScoreMidRoutine.h"
+#include "auton/routines/DriveRoutine.h"
+#include "auton/routines/ScoreHighBalanceRoutine.h"
+#include "auton/routines/ScoreMidBalanceRoutine.h"
+#include "auton/routines/ScoreHighfieldBalanceRoutine.h"
+#include "auton/routines/ScoreMidFieldBalanceRoutine.h"
+#include "auton/routines/ScoreHighRoutine.h"
+#include "auton/routines/ScoreMidRoutine.h"
 
 
 using namespace CORE;
@@ -56,7 +56,7 @@ class Robot : public CORERobot {
   ElevatorSubsystem elevatorSubsystem;
 
 
-  //Routines
+  //auton/routines
   DriveRoutine driveRoutine;
   ScoreHighRoutine scoreHighRoutine;
   ScoreMidRoutine scoreMidRoutine;

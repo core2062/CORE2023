@@ -11,10 +11,11 @@ enum autoBalanceAction{
 
 class AutoBalanceAction : public COREAutonAction {
     public:
-        AutoBalanceAction(autoBalanceAction requestedBalanceAction);
+        AutoBalanceAction(autoBalanceAction requestedBalanceAction, int requestedTime);
         void ActionInit() override;
         CORE::COREAutonAction::actionStatus Action() override;
         void ActionEnd() override;
     private:
         autoBalanceAction m_autoBalanceAction;
+        int m_timer;
 };

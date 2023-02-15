@@ -1,4 +1,4 @@
-#include "routines/ScoreMidBalanceRoutine.h"
+#include "auton/routines/ScoreMidBalanceRoutine.h"
 
 ScoreMidBalanceRoutine::ScoreMidBalanceRoutine() : COREAuton("Score Mid Routine") {}
 
@@ -9,7 +9,7 @@ void ScoreMidBalanceRoutine::AddNodes() {
     delayNode2 = new Node(10, new DelayAction());
     driveNode = new Node(10, new DriveAction(BACKWARD, 24));
     delayNode3 = new Node(10, new DelayAction());
-    balanceNode = new Node(10, new AutoBalanceAction(AUTO_BALANCE));
+    balanceNode = new Node(10, new AutoBalanceAction(AUTO_BALANCE, 10));
     AddFirstNode(grabNode);
     grabNode -> AddNext(delayNode);
     delayNode -> AddNext(scoreMidNode);

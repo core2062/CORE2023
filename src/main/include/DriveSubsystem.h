@@ -30,12 +30,13 @@ public:
 	void SetTalonMode(NeutralMode mode);
 	void Balance();
 	AHRS ahrs;
+	COREConstant<double> m_balanceMaxSpeed, m_balanceCalibration, m_balanceMaxCalibration;
 
 private:
 	//m_analogSupplyVoltage used in calculation to get current PSI
 	AnalogInput m_analogPressureInput, m_analogSupplyVoltage;
     TalonSRX m_leftPrimary, m_rightPrimary, m_leftSecondary, m_rightSecondary;
 	double m_currentPitch;
-    COREConstant<double> m_etherAValue, m_etherBValue, m_etherQuickTurnValue, m_ticksPerInch, m_driveSpeedModifier, m_balanceMaxSpeed, m_balanceCalibration, m_balanceMaxCalibration;
+    COREConstant<double> m_etherAValue, m_etherBValue, m_etherQuickTurnValue, m_ticksPerInch, m_driveSpeedModifier;
     Compressor m_compressor;
 };

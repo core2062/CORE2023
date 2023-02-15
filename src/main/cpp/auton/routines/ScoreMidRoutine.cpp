@@ -1,4 +1,4 @@
-#include "routines/ScoreMidRoutine.h"
+#include "auton/routines/ScoreMidRoutine.h"
 
 ScoreMidRoutine::ScoreMidRoutine() : COREAuton("Middle Score Routine") {}
 
