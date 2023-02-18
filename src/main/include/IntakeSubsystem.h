@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ctre/Phoenix.h>
+#include <frc/DoubleSolenoid.h>
 #include <CORERobotLib.h>
 #include "Config.h"
 
@@ -20,4 +21,6 @@ public:
     COREConstant<double> intakeSpeed;
 private:
     TalonSRX m_leftIntakeMotor, m_rightIntakeMotor;
+    DoubleSolenoid m_intake;
+    bool m_intakeActive;
 };

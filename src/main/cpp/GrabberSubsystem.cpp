@@ -2,7 +2,7 @@
 
 using namespace CORE;
 
-GrabberSubsystem::GrabberSubsystem(): m_clawActuator(frc::PneumaticsModuleType::REVPH, ACTUATOR_IN_PORT, ACTUATOR_OUT_PORT){}
+GrabberSubsystem::GrabberSubsystem(): m_clawActuator(frc::PneumaticsModuleType::REVPH, CLAW_IN_PORT, CLAW_OUT_PORT){}
 
 
 void GrabberSubsystem::robotInit(){
