@@ -17,7 +17,7 @@ public:
     void teleop() override;
     void PostLoopTask() override;
 
-    void SetRequestedPosition(double positionInInches);
+    void SetRequestedPosition(double positionInMeters);
     void SetRequestedRotation(bool rot);
     void SetDistRequestedSpeed(double speed);
 
@@ -26,7 +26,7 @@ public:
     void SetRotDown();
 
     int GetArmDist();
-    double GetTelescopeArmInches();
+    double GetTelescopeArmMeters();
     
     bool ArmIn();
     bool ArmDown();
@@ -39,7 +39,7 @@ public:
     void ResetEncoders();
 
 private:
-    enum WantedArmState
+    enum WantedArmState // This is used to determine which order the arm assembly will move in; (Rot before extend vise versa)
     {
         WANT_TO_SCORE,
         WANT_TO_PICKUP,

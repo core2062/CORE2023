@@ -19,7 +19,7 @@ public:
     void teleop() override;
     void PostLoopTask() override;
 
-    void SetRequestedPosition(double positionInInches);
+    void SetRequestedPosition(double positionInMeters);
     void SetRequestedSpeed(double speed);
 
     void SetHighHeight();
@@ -27,7 +27,7 @@ public:
     void SetPickupHeight();
 
     int GetElevatorPosition();
-    double GetElevatorInches();
+    double GetElevatorMeters();
     bool ElevatorDown();
     bool ElevatorUp();
 

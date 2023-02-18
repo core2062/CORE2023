@@ -40,23 +40,26 @@ void ElevatorSubsystem::robotInit(){
 }
 
 void ElevatorSubsystem::teleopInit(){
-    SetRequestedPosition(GetElevatorInches());
+    SetRequestedPosition(GetElevatorMeters()); // Sets requested position to current position
     m_rightLiftMotor.ConfigMotionCruiseVelocity(m_cruiseVel.Get(),0);
     m_rightLiftMotor.ConfigMotionAcceleration(m_maxAcel.Get(),0);
 }
 
 void ElevatorSubsystem::teleop(){}
 
+// Will probably run after PostLoopTask() in scoring assembly
 void ElevatorSubsystem::PostLoopTask(){
-    SmartDashboard::PutNumber("Elevator Position",m_rightLiftMotor.GetSelectedSensorPosition(0));
-    SmartDashboard::PutNumber("Elevator Velocity",m_rightLiftMotor.GetSelectedSensorVelocity(0));
-    SmartDashboard::PutNumber("Requested Elevator Position",m_requestedPosition);
+    SmartDashboard::PutNumber("Elevator Position", m_rightLiftMotor.GetSelectedSensorPosition(0));
+    SmartDashboard::PutNumber("Elevator Velocity", m_rightLiftMotor.GetSelectedSensorVelocity(0));
+    SmartDashboard::PutNumber("Requested Elevator Position", m_requestedPosition);
 
-    double elevatorPosition = GetElevatorInches();
+    double elevatorPosition = GetElevatorMeters();
 
     SetRequestedSpeed(-operatorJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_Y));
 
-    SmartDashboard::PutNumber("Elevator Speed",m_requestedSpeed);
+    SmartDashboard::PutNumber("Elevator Speed", m_requestedSpeed);
+
+    // Deadbands joystick input
     if(m_requestedSpeed < -0.01 || m_requestedSpeed > 0.1)
     {
         if(m_requestedSpeed < 0)
@@ -69,6 +72,7 @@ void ElevatorSubsystem::PostLoopTask(){
 
     double elevatorRequestedPosition = m_requestedPosition;
 
+    // Softstops the elevator
     if(m_requestedSpeed > 0 && ElevatorUp())
     {
         m_requestedSpeed = 0;
@@ -83,20 +87,23 @@ void ElevatorSubsystem::PostLoopTask(){
         ResetEncoders();
     }
 
+    // Sets the motors, if requested speed is within deadbands will move manually else motionmagic will move it to the requested position
     if (m_requestedSpeed < -0.01 || m_requestedSpeed > 0.1)
     {
         m_rightLiftMotor.Set(ControlMode::PercentOutput, m_requestedSpeed);
     } else
     {
-        m_rightLiftMotor.Set(ControlMode::MotionMagic,elevatorRequestedPosition);
+        m_rightLiftMotor.Set(ControlMode::MotionMagic, elevatorRequestedPosition);
     }
     
     m_requestedSpeed = 0;
-    SmartDashboard::PutNumber("Elevator",elevatorPosition);
+    SmartDashboard::PutNumber("Elevator", elevatorPosition);
 }
 
-void ElevatorSubsystem::SetRequestedPosition(double positionInInches){
-    auto position = (int)(positionInInches * m_ticksPerMeter.Get());
+void ElevatorSubsystem::SetRequestedPosition(double positionInMeters)
+{
+    // Sets the requested position after converting to ticks; Used for moving manually
+    auto position = (int)(positionInMeters * m_ticksPerMeter.Get());
     position = max(position,0);
     position = min(position, (int)(m_topLimit.Get()*m_ticksPerMeter.Get()));
     m_requestedPosition = position;
@@ -122,7 +129,7 @@ int ElevatorSubsystem::GetElevatorPosition(){
     return m_rightLiftMotor.GetSelectedSensorPosition(0);
 }
 
-double ElevatorSubsystem::GetElevatorInches(){
+double ElevatorSubsystem::GetElevatorMeters(){
     return GetElevatorPosition() / m_ticksPerMeter.Get();
 }
 
@@ -135,15 +142,15 @@ bool ElevatorSubsystem::ElevatorUp(){
 }
 
 bool ElevatorSubsystem::IsHighHeight(){
-    return abs(GetElevatorInches() - m_highHeight.Get()) < 2;
+    return abs(GetElevatorMeters() - m_highHeight.Get()) < 2;
 }
 
 bool ElevatorSubsystem::IsMediumHeight(){
-    return abs(GetElevatorInches() - m_mediumHeight.Get()) < 2;
+    return abs(GetElevatorMeters() - m_mediumHeight.Get()) < 2;
 }
 
 bool ElevatorSubsystem::IsPickupHeight(){
-    return abs(GetElevatorInches() - m_pickUpHeight.Get()) < 2;
+    return abs(GetElevatorMeters() - m_pickUpHeight.Get()) < 2;
 }
 
 void ElevatorSubsystem::ResetEncoders(){
