@@ -15,9 +15,19 @@
 #define RIGHT_LIFT_PORT 8
 
 /* Arm Ports */
-#define ARM_MOTOR_PORT 9
-#define ARM_LIFT_MOTOR_PORT 10
+#define RIGHT_ARM_MOTOR 9
+#define LEFT_ARM_MOTOR 10
 
-/*solenoid Ports*/
-#define ACTUATOR_IN_PORT 1
-#define ACTUATOR_OUT_PORT 2
+/* Solenoid Ports */
+#define ARM_IN_PORT 10
+#define ARM_OUT_PORT 11
+#define CLAW_IN_PORT 12
+#define CLAW_OUT_PORT 13
+#define INTAKE_IN_PORT 0
+#define INTAKE_OUT_PORT 1
+
+/* Roborio Ports */
+#define ELEVATOR_BOTTOM_LIMIT_SWITCH_PORT 1
+#define ELEVATOR_TOP_LIMIT_SWITCH_PORT 2
+#define ARM_IN_LIMIT_SWITCH_PORT 3
+#define ARM_DOWN_LIMIT_SWITCH_PORT 4
