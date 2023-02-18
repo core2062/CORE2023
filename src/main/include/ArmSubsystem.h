@@ -49,7 +49,7 @@ private:
     };
 
 
-    TalonSRX m_telescopeMotor;
+    TalonSRX m_telescopeMotorL, m_telescopeMotorR;
     DoubleSolenoid m_armPiston;
     DigitalInput m_inLimitSwitch, m_downLimitSwitch;
     
