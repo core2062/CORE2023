@@ -5,6 +5,7 @@
 #include <ctre/Phoenix.h>
 #include <CORERobotLib.h>
 #include "Config.h"
+#include "ElevatorSubsystem.h"
 
 using namespace CORE;
 using namespace frc;
@@ -35,6 +36,7 @@ public:
     bool IsMediumDist();
     // bool IsArmOut();
     bool IsArmUp();
+    bool IsArmFullyIn();
 
     void ResetEncoders();
 
@@ -62,4 +64,7 @@ private:
     bool m_requestedRotOut;
 
     WantedArmState m_wantedState;
+
+    // ElevatorSubsystem* m_elevatorSubsystem;
+
 };

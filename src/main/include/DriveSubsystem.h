@@ -38,5 +38,5 @@ private:
     COREConstant<double> m_etherAValue, m_etherBValue, m_etherQuickTurnValue, m_ticksPerInch, m_driveSpeedModifier;
 
 	// CORETimer m_timeoutTimer;
-    // Compressor m_compressor;
+    Compressor m_compressor;
 };

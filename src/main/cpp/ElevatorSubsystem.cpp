@@ -11,6 +11,7 @@ ElevatorSubsystem::ElevatorSubsystem() :
         m_pickUpHeight("Elevator Pick Up Height"),
         m_mediumHeight("Elevator Mid-Level Height"),
         m_highHeight("Elevator High-Level Height"),
+        m_safeRotateHeight("Safe rotation height"),
         m_ticksPerMeter("Elevator Ticks Per Meter"),
         m_bottomLimit("Elevator Bottom Limit"),
         m_topLimit("Elevator Top Limit"),
@@ -26,23 +27,25 @@ void ElevatorSubsystem::robotInit(){
     m_leftLiftMotor.SetNeutralMode(NeutralMode::Brake);
     m_rightLiftMotor.SetNeutralMode(NeutralMode::Brake);
 
-    m_rightLiftMotor.SetInverted(true);
-
     m_leftLiftMotor.Follow(m_rightLiftMotor);
 
-    m_rightLiftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative,0,0);
-    m_rightLiftMotor.SetSelectedSensorPosition(0,0,0);
+    m_rightLiftMotor.SetInverted(true);
+
+    m_rightLiftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, 0, 0);
+    m_rightLiftMotor.SetSelectedSensorPosition(0, 0, 0);
 
     m_rightLiftMotor.SetSensorPhase(true);
 
     operatorJoystick->RegisterAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_Y);
+    
+    // m_armSubsystem = &Robot::GetInstance()->armSubsystem;
 
 }
 
 void ElevatorSubsystem::teleopInit(){
     SetRequestedPosition(GetElevatorMeters()); // Sets requested position to current position
-    m_rightLiftMotor.ConfigMotionCruiseVelocity(m_cruiseVel.Get(),0);
-    m_rightLiftMotor.ConfigMotionAcceleration(m_maxAcel.Get(),0);
+    m_rightLiftMotor.ConfigMotionCruiseVelocity(m_cruiseVel.Get(), 0);
+    m_rightLiftMotor.ConfigMotionAcceleration(m_maxAcel.Get(), 0);
 }
 
 void ElevatorSubsystem::teleop(){}
@@ -70,8 +73,6 @@ void ElevatorSubsystem::PostLoopTask(){
         Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
     }
 
-    double elevatorRequestedPosition = m_requestedPosition;
-
     // Softstops the elevator
     if(m_requestedSpeed > 0 && ElevatorUp())
     {
@@ -87,13 +88,26 @@ void ElevatorSubsystem::PostLoopTask(){
         ResetEncoders();
     }
 
+    // Checks if the arm is in before allowing it to go too low to manipulate arm
+    if(!Robot::GetInstance()->armSubsystem.IsArmFullyIn())
+    {
+        if((double)m_requestedPosition <= m_safeRotateHeight.Get()+0.5){
+            SetRequestedPosition(GetElevatorMeters());
+            SetRequestedSpeed(0);
+        } else if(m_requestedSpeed < 0 && GetElevatorMeters() <= m_safeRotateHeight.Get()+0.5)
+        {
+            SetRequestedPosition(GetElevatorMeters());
+            SetRequestedSpeed(0);
+        }
+    }
+
     // Sets the motors, if requested speed is within deadbands will move manually else motionmagic will move it to the requested position
     if (m_requestedSpeed < -0.01 || m_requestedSpeed > 0.1)
     {
         m_rightLiftMotor.Set(ControlMode::PercentOutput, m_requestedSpeed);
     } else
     {
-        m_rightLiftMotor.Set(ControlMode::MotionMagic, elevatorRequestedPosition);
+        m_rightLiftMotor.Set(ControlMode::MotionMagic, m_requestedPosition);
     }
     
     m_requestedSpeed = 0;
@@ -151,6 +165,10 @@ bool ElevatorSubsystem::IsMediumHeight(){
 
 bool ElevatorSubsystem::IsPickupHeight(){
     return abs(GetElevatorMeters() - m_pickUpHeight.Get()) < 2;
+}
+
+bool ElevatorSubsystem::IsSafeRotateHeight(){
+    return GetElevatorMeters() >= m_safeRotateHeight.Get();
 }
 
 void ElevatorSubsystem::ResetEncoders(){

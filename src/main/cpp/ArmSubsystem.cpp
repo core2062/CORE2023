@@ -17,6 +17,8 @@ ArmSubsystem::ArmSubsystem() :
 
 void ArmSubsystem::robotInit()
 {
+    // m_elevatorSubsystem = &Robot::GetInstance()->elevatorSubsystem;
+
     // Lines 20-33 config the talons
     m_telescopeMotor.Set(ControlMode::PercentOutput, 0);
 
@@ -89,7 +91,36 @@ void ArmSubsystem::PostLoopTask()
     switch (m_wantedState)
     {
         case MANUAL:
-            if(joystickValue < 0) // Rotates before moving
+            if(Robot::GetInstance()->elevatorSubsystem.IsSafeRotateHeight())
+            {
+                if(m_requestedTelescopeSpeed < 0) // Rotates before moving
+                {
+                    if (armRotation) // If arm rotated, then arm can extend
+                    {
+                        m_telescopeMotor.Set(ControlMode::PercentOutput,m_requestedTelescopeSpeed);
+                    } else
+                    {
+                        m_armPiston.Set(DoubleSolenoid::kForward);
+                        m_telescopeMotor.Set(ControlMode::PercentOutput,0);
+                    }
+                } else // Moves before rotating
+                {
+                    if (telescopePosition < 2)  // If telescoping arm is in, then arm can rotate
+                    {
+                        m_armPiston.Set(DoubleSolenoid::kReverse);
+                        m_telescopeMotor.Set(ControlMode::PercentOutput,0);
+                    } else
+                    {
+                        double telescopeRequestedPosition = m_requestedDist;
+                        m_telescopeMotor.Set(ControlMode::PercentOutput,m_requestedTelescopeSpeed);
+                    }
+                }
+            } else {
+                m_telescopeMotor.Set(ControlMode::PercentOutput,0);
+            }
+            break;
+        case WANT_TO_SCORE: // Rotates before moving
+            if(Robot::GetInstance()->elevatorSubsystem.IsSafeRotateHeight())
             {
                 if (armRotation) // If arm rotated, then arm can extend
                 {
@@ -100,7 +131,10 @@ void ArmSubsystem::PostLoopTask()
                     m_armPiston.Set(DoubleSolenoid::kForward);
                     m_telescopeMotor.Set(ControlMode::PercentOutput,0);
                 }
-            } else // Moves before rotating
+            }
+            break;
+        case WANT_TO_PICKUP: // Moves before rotating
+            if(Robot::GetInstance()->elevatorSubsystem.IsSafeRotateHeight())
             {
                 if (telescopePosition < 2)  // If telescoping arm is in, then arm can rotate
                 {
@@ -111,28 +145,6 @@ void ArmSubsystem::PostLoopTask()
                     double telescopeRequestedPosition = m_requestedDist;
                     m_telescopeMotor.Set(ControlMode::MotionProfile,telescopeRequestedPosition);
                 }
-            }
-            break;
-        case WANT_TO_SCORE: // Rotates before moving
-            if (armRotation) // If arm rotated, then arm can extend
-            {
-                double telescopeRequestedPosition = m_requestedDist;
-                m_telescopeMotor.Set(ControlMode::MotionProfile,telescopeRequestedPosition);
-            } else
-            {
-                m_armPiston.Set(DoubleSolenoid::kForward);
-                m_telescopeMotor.Set(ControlMode::PercentOutput,0);
-            }
-            break;
-        case WANT_TO_PICKUP: // Moves before rotating
-            if (telescopePosition < 2)  // If telescoping arm is in, then arm can rotate
-            {
-                m_armPiston.Set(DoubleSolenoid::kReverse);
-                m_telescopeMotor.Set(ControlMode::PercentOutput,0);
-            } else
-            {
-                double telescopeRequestedPosition = m_requestedDist;
-                m_telescopeMotor.Set(ControlMode::MotionProfile,telescopeRequestedPosition);
             }
             break;
     }
@@ -212,4 +224,9 @@ bool ArmSubsystem::IsArmUp()
 void ArmSubsystem::ResetEncoders()
 {
     m_telescopeMotor.SetSelectedSensorPosition(0,0,0);
+}
+
+bool ArmSubsystem::IsArmFullyIn()
+{
+    return ArmIn() && !IsArmUp();
 }
