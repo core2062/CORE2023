@@ -13,7 +13,7 @@ DriveSubsystem::DriveSubsystem() :
 		m_etherQuickTurnValue("Ether Quick Turn Value", 1.0),
         m_ticksPerInch("Ticks Per Inch", (4 * 3.1415) / 1024),
 		m_driveSpeedModifier("Drive speed Modifier", 1),
-		m_balanceMaxSpeed("Max speed of Balance", 0.5),
+		m_balanceMaxSpeed("Max speed of Balance", 0.4),
 		m_balanceCalibration("Robot Pitch", 2.5),
 		m_balanceMaxCalibration("max proportion of robot", 0.30),
 		m_compressor(frc::PneumaticsModuleType::REVPH) {

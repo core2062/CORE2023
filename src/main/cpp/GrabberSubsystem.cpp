@@ -31,5 +31,4 @@ void GrabberSubsystem::setGrabber(bool set) {
 		m_clawActuator.Set(DoubleSolenoid::kReverse);
 		m_clawActive = false;
 	}
-	
 }

@@ -11,7 +11,6 @@ IntakeSubsystem::IntakeSubsystem() :
  void IntakeSubsystem::robotInit(){
      m_rightIntakeMotor.Set(ControlMode::PercentOutput, 0);
      m_leftIntakeMotor.Set(ControlMode::PercentOutput, 0);
-
  }
 
 
@@ -26,7 +25,6 @@ void IntakeSubsystem::teleop(){
     } else{
         SetIntake(0.0);
     }
-    
  }
 
  void IntakeSubsystem::SetIntake(double intakeSpeed) {

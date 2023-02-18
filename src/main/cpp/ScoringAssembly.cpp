@@ -52,7 +52,6 @@ void ScoringAssembly::PostLoopTask()
         m_timeoutTimer.Reset();
         m_timeoutTimer.Start();
     }
-    
 }
 
 void ScoringAssembly::SetWantedState(WantedState wantedState){

@@ -48,5 +48,4 @@ private:
 
     int m_requestedPosition;
     double m_requestedSpeed;
-
 };

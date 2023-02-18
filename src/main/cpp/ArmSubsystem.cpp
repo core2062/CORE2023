@@ -28,7 +28,6 @@ void ArmSubsystem::robotInit()
     m_telescopeMotor.SetSelectedSensorPosition(0,0,0);
 
     operatorJoystick->RegisterAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
-
 }
 
 void ArmSubsystem::teleopInit()
@@ -81,20 +80,6 @@ void ArmSubsystem::PostLoopTask()
         }
         ResetEncoders();
     }
-
-    // if(m_requestedRotSpeed > 0 && GetRotationArmDegrees() - m_rotationDist.Get() > 2)
-    // {
-    //     m_requestedRotSpeed = 0;
-    //     SetRequestedRotation(m_rotationDist.Get());
-    // } else if(ArmDown())
-    // {
-    //     if (m_requestedRotSpeed < 0)
-    //     {
-    //         m_requestedRotSpeed = 0;
-    //         SetRequestedRotation(0);
-    //     }
-    //     ResetRotationEncoder();
-    // }
     
     switch (m_wantedState)
     {

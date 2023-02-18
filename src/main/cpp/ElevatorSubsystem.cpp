@@ -36,7 +36,6 @@ void ElevatorSubsystem::robotInit(){
     m_rightLiftMotor.SetSensorPhase(true);
 
     operatorJoystick->RegisterAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_Y);
-
 }
 
 void ElevatorSubsystem::teleopInit(){
