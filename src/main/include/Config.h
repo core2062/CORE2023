@@ -21,8 +21,8 @@
 /* Solenoid Ports */
 #define ACTUATOR_IN_PORT 10
 #define ACTUATOR_OUT_PORT 11
-#define ARM_IN_PORT 13
-#define ARM_OUT_PORT 12
+#define ARM_IN_PORT 12
+#define ARM_OUT_PORT 13
 
 /* Roborio Ports */
 #define ELEVATOR_BOTTOM_LIMIT_SWITCH_PORT 1

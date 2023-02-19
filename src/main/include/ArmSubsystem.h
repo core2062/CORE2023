@@ -64,6 +64,8 @@ private:
     bool m_requestedRotOut;
 
     WantedArmState m_wantedState;
+    
+    bool m_wristUp;
 
     // ElevatorSubsystem* m_elevatorSubsystem;
 
