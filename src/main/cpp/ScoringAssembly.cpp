@@ -1,14 +1,14 @@
-#include "ScoringAssembly.h"
-#include "Robot.h"
+// #include "ScoringAssembly.h"
+// #include "Robot.h"
 
 ScoringAssembly::ScoringAssembly() : m_transitTransitionTimeout("Transit Transition Timeout")
 {}
 
-void ScoringAssembly::RobotInitTask()
-{
-    m_armSubsystem = &Robot::GetInstance()->armSubsystem;
-    m_elevatorSubsystem = &Robot::GetInstance()->elevatorSubsystem;
-}
+// void ScoringAssembly::RobotInitTask()
+// {
+//     m_armSubsystem = &Robot::GetInstance()->armSubsystem;
+//     m_elevatorSubsystem = &Robot::GetInstance()->elevatorSubsystem;
+// }
 
 void ScoringAssembly::AutonInitTask()
 {
