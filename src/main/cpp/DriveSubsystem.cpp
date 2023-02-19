@@ -8,9 +8,9 @@ DriveSubsystem::DriveSubsystem() :
 		m_rightSecondary(RIGHT_BACK_PORT),
 		m_etherAValue("Ether A Value", .6),
         m_etherBValue("Ether B Value", .4),
-		m_etherQuickTurnValue("Ether Quick Turn Value", 1.0),
+		m_etherQuickTurnValue("Ether Quick Turn Value", .2),
         m_ticksPerInch("Ticks Per Inch", (4 * 3.1415) / 1024),
-		m_driveSpeedModifier("Drive speed Modifier", 1)
+		m_driveSpeedModifier("Drive speed Modifier", .2)
 		// m_compressor(frc::PneumaticsModuleType::REVPH) {
 {}
 
@@ -31,7 +31,8 @@ void DriveSubsystem::teleopInit() {
 	COREEtherDrive::SetQuickturn(m_etherQuickTurnValue.Get());
 	InitTalons();
 	// m_compressor.EnableDigital();
-	SmartDashboard::PutString("Drive Controls", " Forward/Back: Left Stick \n Right/Left: Right Stick \n Shift: Right Trigger");
+	SmartDashboard::PutString("Driver Controls", " Left Stick: Forward/Backward \n Right Stick: Left/Right \n Start: Coast Mode \n B Button: Brake Mode");
+	SmartDashboard::PutString("Operator Controls", "Left Stick: Telescope Arm In/Out \n Right Stick: Elevator Up/Down \n Left Bumper: Claw Open/Close \n Right Trigger: Intake In \n Right Bumper: Intake Out \n A Button: Pickup Assembly \n B Button: Score Mid Assembly \n Y Button: Score High Assembly \n X Button: Intake In/Out");
 }
 
 void DriveSubsystem::teleop() {

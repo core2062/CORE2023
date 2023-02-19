@@ -3,7 +3,7 @@
 using namespace CORE;
 
 IntakeSubsystem::IntakeSubsystem() :
-                                    intakeSpeed("Intake Speed", 0.70),
+                                    intakeSpeed("Intake Speed", 0.25),
                                     m_leftIntakeMotor(LEFT_INTAKE),
                                     m_rightIntakeMotor(RIGHT_INTAKE),
                                     m_intake(frc::PneumaticsModuleType::REVPH, INTAKE_IN_PORT, INTAKE_OUT_PORT){

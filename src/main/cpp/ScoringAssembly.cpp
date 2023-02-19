@@ -1,24 +1,24 @@
-#include "ScoringAssembly.h"
-#include "Robot.h"
+// #include "ScoringAssembly.h"
+// #include "Robot.h"
 
-ScoringAssembly::ScoringAssembly() //: 
-{
-}
+// ScoringAssembly::ScoringAssembly() //: 
+// {
+// }
 
-void ScoringAssembly::RobotInitTask()
-{
-    m_armSubsystem = &Robot::GetInstance()->armSubsystem;
-    m_elevatorSubsystem = &Robot::GetInstance()->elevatorSubsystem;
-}
+// void ScoringAssembly::RobotInitTask()
+// {
+//     m_armSubsystem = &Robot::GetInstance()->armSubsystem;
+//     m_elevatorSubsystem = &Robot::GetInstance()->elevatorSubsystem;
+// }
 
-void ScoringAssembly::AutonInitTask()
-{
-}
+// void ScoringAssembly::AutonInitTask()
+// {
+// }
 
-void ScoringAssembly::TeleopInitTask()
-{
-}
+// void ScoringAssembly::TeleopInitTask()
+// {
+// }
 
-void ScoringAssembly::PostLoopTask()
-{
-}
+// void ScoringAssembly::PostLoopTask()
+// {
+// }

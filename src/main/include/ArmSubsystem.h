@@ -1,3 +1,4 @@
+/*
 #pragma once
 
 #include <frc/DigitalInput.h>
@@ -8,7 +9,7 @@
 using namespace CORE;
 using namespace frc;
 
-class ArmSubsystem : public CORESubsystem/*, public CORETask*/ {
+class ArmSubsystem : public CORESubsystem/*, public CORETask* {
 public:
     ArmSubsystem();
     void robotInit() override;
@@ -16,7 +17,7 @@ public:
     void teleop() override;
     // void PostLoopTask() override;
 
-    /* Will be used for testing only */
+    /* Will be used for testing only *
     void SetArmMotorSpeed(double percent);
     double GetArmMotorPosition();
     void ResetEncoders();
@@ -33,3 +34,4 @@ private:
     int m_requestedPosition;
     double m_requestedSpeed;
 };
+*/

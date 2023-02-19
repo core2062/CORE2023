@@ -19,10 +19,12 @@
 #define LEFT_ARM_MOTOR 10
 
 /* Solenoid Ports */
-#define ARM_IN_PORT 10
-#define ARM_OUT_PORT 11
-#define CLAW_IN_PORT 12
-#define CLAW_OUT_PORT 13
+#define PIN_IN_PORT 15
+#define PIN_OUT_PORT 14
+#define ARM_IN_PORT 13
+#define ARM_OUT_PORT 12
+#define CLAW_IN_PORT 10
+#define CLAW_OUT_PORT 11
 #define INTAKE_IN_PORT 0
 #define INTAKE_OUT_PORT 1
 
