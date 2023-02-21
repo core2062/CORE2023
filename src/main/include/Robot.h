@@ -15,8 +15,8 @@
 #include "DriveSubsystem.h"
 #include "IntakeSubsystem.h"
 #include "GrabberSubsystem.h"
-// #include "ScoringAssembly.h"
-// #include "ArmSubsystem.h"
+#include "ScoringAssembly.h"
+#include "ArmSubsystem.h"
 #include "ElevatorSubsystem.h"
 
 using namespace CORE;
@@ -39,8 +39,8 @@ class Robot : public CORERobot {
   DriveSubsystem driveSubsystem;
   IntakeSubsystem intakeSubsystem;
   GrabberSubsystem grabberSubsystem;
-  // ScoringAssembly scoringAssembly;
-  // ArmSubsystem armSubsystem;
+  ScoringAssembly scoringAssembly;
+  ArmSubsystem armSubsystem;
   ElevatorSubsystem elevatorSubsystem;
   
  private:

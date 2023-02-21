@@ -31,15 +31,12 @@ void DriveSubsystem::teleopInit() {
 	COREEtherDrive::SetQuickturn(m_etherQuickTurnValue.Get());
 	InitTalons();
 	m_compressor.EnableDigital();
-	// SmartDashboard::PutString("Drive Controls", " Forward/Back: Left Stick \n Right/Left: Right Stick \n Shift: Right Trigger");
-	// m_compressor.EnableDigital();
 	SmartDashboard::PutString("Driver Controls", " Left Stick: Forward/Backward \n Right Stick: Left/Right \n Start: Coast Mode \n B Button: Brake Mode");
 	SmartDashboard::PutString("Operator Controls", "Left Stick: Telescope Arm In/Out \n Right Stick: Elevator Up/Down \n Left Bumper: Claw Open/Close \n Right Trigger: Intake In \n Right Bumper: Intake Out \n A Button: Pickup Assembly \n B Button: Score Mid Assembly \n Y Button: Score High Assembly \n X Button: Intake In/Out");
 }
 
 void DriveSubsystem::teleop() {
 	// Code for teleop. Sets motor speed based on the values for the joystick, runs compressor,
-	// Toggles gears
     double rot = -driverJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
 	double mag = driverJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_X);
 

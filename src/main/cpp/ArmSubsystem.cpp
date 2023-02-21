@@ -2,8 +2,8 @@
 #include "Robot.h"
 
 ArmSubsystem::ArmSubsystem() : 
-        m_telescopeMotorL(TELESCOPING_ARM_LEFT_MOTOR),
-        m_telescopeMotorR(TELESCOPING_ARM_RIGHT_MOTOR),
+        m_telescopeMotorL(LEFT_ARM_MOTOR),
+        m_telescopeMotorR(RIGHT_ARM_MOTOR),
         m_armPiston(frc::PneumaticsModuleType::REVPH, ARM_IN_PORT, ARM_OUT_PORT),
         m_inLimitSwitch(ARM_IN_LIMIT_SWITCH_PORT),
         m_downLimitSwitch(ARM_DOWN_LIMIT_SWITCH_PORT),
@@ -32,9 +32,6 @@ void ArmSubsystem::robotInit()
     m_telescopeMotorL.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, 0, 0);
     m_telescopeMotorL.SetSelectedSensorPosition(0, 0, 0);
 
-    // m_telescopeMotorL.SetSensorPhase(true);
-
-
     operatorJoystick->RegisterAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_Y);
     operatorJoystick->RegisterButton(CORE::COREJoystick::JoystickButton::BACK_BUTTON);
 
@@ -59,7 +56,6 @@ void ArmSubsystem::teleop()
         }
         m_wristUp = !m_wristUp;
     }
-
 }
 
 // Will probably run after PostLoopTask() in scoring assembly
@@ -85,8 +81,6 @@ void ArmSubsystem::PostLoopTask()
     // Deadbands joystick input
     if(m_requestedTelescopeSpeed < -0.1 || m_requestedTelescopeSpeed > 0.1)
     {
-        
-	    std::cout << "requesting speed " << endl;
         m_requestedTelescopeSpeed *= 0.5;
         // SetRequestedPosition(telescopePosition);
         Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
@@ -111,7 +105,6 @@ void ArmSubsystem::PostLoopTask()
     switch (m_wantedState)
     {
         case MANUAL:
-    	    std::cout << "manual arm telescope " << endl;
             if(Robot::GetInstance()->elevatorSubsystem.IsSafeRotateHeight())
             {
                 if(m_requestedTelescopeSpeed < 0) // Rotates before moving

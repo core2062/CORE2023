@@ -1,4 +1,3 @@
-/*
 #pragma once
 
 #include <ctre/Phoenix.h>
@@ -52,4 +51,3 @@ private:
 
     CORETimer m_timeoutTimer;
 };
-*/
