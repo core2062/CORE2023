@@ -8,9 +8,9 @@ DriveSubsystem::DriveSubsystem() :
 		m_rightSecondary(RIGHT_BACK_PORT),
 		m_etherAValue("Ether A Value", .6),
         m_etherBValue("Ether B Value", .4),
-		m_etherQuickTurnValue("Ether Quick Turn Value", .2),
+		m_etherQuickTurnValue("Ether Quick Turn Value", .5),
         m_ticksPerInch("Ticks Per Inch", (4 * 3.1415) / 1024),
-		m_driveSpeedModifier("Drive speed Modifier", 0.25),
+		m_driveSpeedModifier("Drive speed Modifier", 0.5),
 		m_compressor(frc::PneumaticsModuleType::REVPH) {
 }
 
@@ -37,8 +37,8 @@ void DriveSubsystem::teleopInit() {
 
 void DriveSubsystem::teleop() {
 	// Code for teleop. Sets motor speed based on the values for the joystick, runs compressor,
-    double rot = -driverJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
-	double mag = driverJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_X);
+    double mag = -driverJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
+	double rot = driverJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_X);
 
 	
 	VelocityPair speeds = COREEtherDrive::Calculate(mag, rot, .1);
@@ -56,9 +56,10 @@ void DriveSubsystem::teleop() {
 
 void DriveSubsystem::setMotorSpeed(double speedInFraction, DriveSide whichSide) {
 	// Sets motor speed based on drive side and desired speed
+	speedInFraction *= m_driveSpeedModifier.Get();
 	if (whichSide == DriveSide::BOTH || whichSide == DriveSide::RIGHT) {
-		m_rightPrimary.Set(ControlMode::PercentOutput, -speedInFraction);
-		m_rightSecondary.Set(ControlMode::PercentOutput, -speedInFraction);
+		m_rightPrimary.Set(ControlMode::PercentOutput, speedInFraction);
+		m_rightSecondary.Set(ControlMode::PercentOutput, speedInFraction);
 	}
 	if (whichSide == DriveSide::BOTH || whichSide == DriveSide::LEFT) {
 		m_leftPrimary.Set(ControlMode::PercentOutput, speedInFraction);
