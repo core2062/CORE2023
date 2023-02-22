@@ -1,4 +1,4 @@
-#pragma once
+// #pragma once
 
 #include <ctre/Phoenix.h>
 #include <frc/DoubleSolenoid.h>
@@ -6,8 +6,8 @@
 #include "Config.h"
 
 
-using namespace CORE;
-using namespace frc;
+// using namespace CORE;
+// using namespace frc;
 
 
 class IntakeSubsystem : public CORESubsystem {

@@ -1,13 +1,13 @@
-#pragma once
+// #pragma once
 
-#include <ctre/Phoenix.h>
-#include <frc/DoubleSolenoid.h>
-#include <CORERobotLib.h>
-#include "Config.h"
+// #include <ctre/Phoenix.h>
+// #include <frc/DoubleSolenoid.h>
+// #include <CORERobotLib.h>
+// #include "Config.h"
 
 
-using namespace CORE;
-using namespace frc;
+// using namespace CORE;
+// using namespace frc;
 
 
 class GrabberSubsystem : public CORESubsystem {

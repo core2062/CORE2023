@@ -1,6 +1,6 @@
-#include "IntakeSubsystem.h"
+// #include "IntakeSubsystem.h"
 
-using namespace CORE;
+// using namespace CORE;
 
 IntakeSubsystem::IntakeSubsystem() :
                                     intakeSpeed("Intake Speed", 0.25),
@@ -16,8 +16,8 @@ void IntakeSubsystem::robotInit(){
 }
 
 
-void IntakeSubsystem::teleopInit() {
-}
+// void IntakeSubsystem::teleopInit() {
+// }
 
 void IntakeSubsystem::teleop(){
     if(operatorJoystick->GetButton(CORE::COREJoystick::JoystickButton::RIGHT_TRIGGER)) {
@@ -37,7 +37,7 @@ void IntakeSubsystem::teleop(){
     }
 }
 
-void IntakeSubsystem::SetIntake(double intakeSpeed) {
-    m_leftIntakeMotor.Set(ControlMode::PercentOutput, -intakeSpeed);
-    m_rightIntakeMotor.Set(ControlMode::PercentOutput, intakeSpeed);
-}
+// void IntakeSubsystem::SetIntake(double intakeSpeed) {
+//     m_leftIntakeMotor.Set(ControlMode::PercentOutput, -intakeSpeed);
+//     m_rightIntakeMotor.Set(ControlMode::PercentOutput, intakeSpeed);
+// }

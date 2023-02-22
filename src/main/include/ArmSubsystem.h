@@ -1,4 +1,4 @@
-#pragma once
+// #pragma once
 
 #include <frc/DigitalInput.h>
 #include <frc/DoubleSolenoid.h>
@@ -7,8 +7,8 @@
 #include "Config.h"
 #include "ElevatorSubsystem.h"
 
-using namespace CORE;
-using namespace frc;
+// using namespace CORE;
+// using namespace frc;
 
 class ArmSubsystem : public CORESubsystem, public CORETask {
 public:

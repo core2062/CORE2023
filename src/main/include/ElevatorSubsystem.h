@@ -1,4 +1,4 @@
-#pragma once
+// #pragma once
 
 #include <ctre/Phoenix.h>
 #include <frc/DoubleSolenoid.h>
@@ -8,8 +8,8 @@
 #include "ArmSubsystem.h"
 
 
-using namespace CORE;
-using namespace frc;
+// using namespace CORE;
+// using namespace frc;
 
 
 class ElevatorSubsystem : public CORESubsystem, public CORETask {
