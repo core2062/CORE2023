@@ -1,7 +1,6 @@
 #include "ElevatorSubsystem.h"
 #include "Robot.h"
 
-// using namespace CORE;
 
 ElevatorSubsystem::ElevatorSubsystem() : 
         m_leftLiftMotor(LEFT_LIFT_PORT),

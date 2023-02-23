@@ -21,9 +21,6 @@ public:
 	void robotInit() override;
 	void teleopInit() override;
 	void teleop() override;
-	void robotInit() override;
-	void teleopInit() override;
-	void teleop() override;
 	
 	double getRobotPosition();
 	void InitTalons();

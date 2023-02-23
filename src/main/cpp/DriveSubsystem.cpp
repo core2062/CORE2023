@@ -1,7 +1,7 @@
 #include "DriveSubsystem.h"
 
 DriveSubsystem::DriveSubsystem() :
-		ahrs(SPI::Port::kMXP),
+		ahrs(SerialPort::kUSB),
 		m_leftPrimary(LEFT_FRONT_PORT),
 		m_rightPrimary(RIGHT_FRONT_PORT),
 		m_leftSecondary(LEFT_BACK_PORT),
@@ -10,7 +10,6 @@ DriveSubsystem::DriveSubsystem() :
         m_etherBValue("Ether B Value", .4),
 		m_etherQuickTurnValue("Ether Quick Turn Value", .5),
         m_ticksPerInch("Ticks Per Inch", (4 * 3.1415) / 1024),
-		m_driveSpeedModifier("Drive speed Modifier", 1),
 		m_balanceMaxSpeed("Max speed of Balance", 0.5),
 		m_balanceCalibration("Robot Pitch", 2.5),
 		m_balanceMaxCalibration("max proportion of robot", 0.30),
@@ -42,7 +41,6 @@ void DriveSubsystem::teleopInit() {
 }
 
 void DriveSubsystem::teleop() {
-void DriveSubsystem::teleop() {
 	// Code for teleop. Sets motor speed based on the values for the joystick, runs compressor,
     double mag = -driverJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
 	double rot = driverJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_X);
@@ -57,7 +55,7 @@ void DriveSubsystem::teleop() {
 
 	SmartDashboard::PutNumber("Robot Heading", ahrs.GetFusedHeading());
 	
-	SmartDashboard::PutNumber("Pressure", (250* (m_analogPressureInput.GetVoltage()/m_analogSupplyVoltage.GetVoltage())-25));
+	// SmartDashboard::PutNumber("Pressure", (250* (m_analogPressureInput.GetdriverVoltage()/m_analogSupplyVoltage.GetVoltage())-25));
 	// SetTalonMode(NeutralMode::Coast);
 	if (driverJoystick->GetRisingEdge(CORE::COREJoystick::START_BUTTON)){
 		SetTalonMode(NeutralMode::Coast);
@@ -107,8 +105,6 @@ void DriveSubsystem::InitTalons() {
 
 	m_leftPrimary.SetSelectedSensorPosition(0.0);
 	m_rightPrimary.SetSelectedSensorPosition(0.0);
-	
-	SetTalonMode(NeutralMode::Coast);
 
 	m_leftPrimary.SetSensorPhase(false);
     m_rightPrimary.SetSensorPhase(true);

@@ -37,9 +37,7 @@ void Robot::teleop() {
 }
 
 void Robot::test() {}
-void Robot::test() {}
 
-void Robot::testInit() {}
 void Robot::testInit() {}
 
 // void Robot::SimulationInit() {}
