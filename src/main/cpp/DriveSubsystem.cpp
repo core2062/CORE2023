@@ -12,8 +12,9 @@ DriveSubsystem::DriveSubsystem() :
         m_ticksPerInch("Ticks Per Inch", (4 * 3.1415) / 1024),
 		m_balanceMaxSpeed("Max speed of Balance", 0.5),
 		m_balanceCalibration("Robot Pitch", 2.5),
-		m_balanceMaxCalibration("max proportion of robot", 0.30),
+		m_balanceMaxCalibration("max proportion of robot", 0.50),
 		m_driveSpeedModifier("Drive speed Modifier", 0.5),
+		m_driveSpeedModifierSlow("Drive speed Modifier slowed", 0.25),
 		m_compressor(frc::PneumaticsModuleType::REVPH) {
 }
 
@@ -36,7 +37,7 @@ void DriveSubsystem::teleopInit() {
 	COREEtherDrive::SetQuickturn(m_etherQuickTurnValue.Get());
 	InitTalons();
 	m_compressor.EnableDigital();
-	SmartDashboard::PutString("Driver Controls", " Left Stick: Forward/Backward \n Right Stick: Left/Right \n Start: Coast Mode \n B Button: Brake Mode");
+	SmartDashboard::PutString("Driver Controls", " Left Stick: Forward/Backward \n Right Stick: Left/Right \n Start: Coast Mode \n B Button: Brake Mode \n Right Bumber: Slow Drive Modify");
 	SmartDashboard::PutString("Operator Controls", "Left Stick: Telescope Arm In/Out \n Right Stick: Elevator Up/Down \n Left Bumper: Claw Open/Close \n Right Trigger: Intake In \n Right Bumper: Intake Out \n A Button: Pickup Assembly \n B Button: Score Mid Assembly \n Y Button: Score High Assembly \n X Button: Intake In/Out");
 }
 
@@ -47,7 +48,9 @@ void DriveSubsystem::teleop() {
 
 	
 	VelocityPair speeds = COREEtherDrive::Calculate(mag, rot, .1);
+
 	setMotorSpeed(speeds.left, speeds.right);
+
 	SmartDashboard::PutNumber("Left side speed", speeds.left);
 	SmartDashboard::PutNumber("Right side speed", speeds.right);
 	SmartDashboard::PutNumber("Left side encoder", m_leftPrimary.GetSelectedSensorPosition(0));
@@ -68,7 +71,11 @@ void DriveSubsystem::teleop() {
 
 void DriveSubsystem::setMotorSpeed(double speedInFraction, DriveSide whichSide) {
 	// Sets motor speed based on drive side and desired speed
-	speedInFraction *= m_driveSpeedModifier.Get();
+	if (driverJoystick->GetButton(CORE::COREJoystick::RIGHT_BUTTON)){
+		speedInFraction *= m_driveSpeedModifierSlow.Get();
+	} else {
+		speedInFraction *= m_driveSpeedModifier.Get();
+	}
 	if (whichSide == DriveSide::BOTH || whichSide == DriveSide::RIGHT) {
 		m_rightPrimary.Set(ControlMode::PercentOutput, speedInFraction);
 		m_rightSecondary.Set(ControlMode::PercentOutput, speedInFraction);

@@ -5,6 +5,7 @@ IntakeSubsystem::IntakeSubsystem() :
                                     intakeSpeed("Intake Speed", 0.25),
                                     m_leftIntakeMotor(LEFT_INTAKE),
                                     m_rightIntakeMotor(RIGHT_INTAKE),
+                                    m_intakeTimeSet("Intake timer set time", 5),
                                     m_intake(frc::PneumaticsModuleType::REVPH, INTAKE_IN_PORT, INTAKE_OUT_PORT){
 }
 
@@ -28,11 +29,18 @@ void IntakeSubsystem::teleop(){
     }
 
     if (operatorJoystick->GetRisingEdge(CORE::COREJoystick::JoystickButton::X_BUTTON) && m_intakeActive == false){
-		m_intake.Set(DoubleSolenoid::kForward);
-		m_intakeActive = true;
-	} else if (operatorJoystick->GetRisingEdge(CORE::COREJoystick::JoystickButton::X_BUTTON) && m_intakeActive == true){
 		m_intake.Set(DoubleSolenoid::kReverse);
+		m_intakeActive = true;
+        m_intakeTimer.Reset();
+        m_intakeTimer.Start();
+	} else if (operatorJoystick->GetRisingEdge(CORE::COREJoystick::JoystickButton::X_BUTTON) && m_intakeActive == true){
+		m_intake.Set(DoubleSolenoid::kForward);
 		m_intakeActive = false;
+    }
+    if (m_intakeTimer.GetTime() > m_intakeTimeSet.Get() && m_intakeActive) {
+        m_intake.Set(DoubleSolenoid::kOff);
+        m_intakeTimer.Reset();
+        m_intakeTimer.Stop();
     }
 }
 

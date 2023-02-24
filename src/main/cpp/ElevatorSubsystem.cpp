@@ -19,7 +19,7 @@ ElevatorSubsystem::ElevatorSubsystem() :
 {
     m_rightLiftMotor.SetInverted(true);
 }
-
+frc::DigitalInput limitSwitch {0};
 void ElevatorSubsystem::robotInit()
 {
     m_leftLiftMotor.Set(ControlMode::PercentOutput, 0);
@@ -53,6 +53,7 @@ void ElevatorSubsystem::PostLoopTask(){
     SmartDashboard::PutNumber("Elevator Velocity", m_rightLiftMotor.GetSelectedSensorVelocity(0));
     SmartDashboard::PutNumber("Requested Elevator Position", m_requestedPosition);
     SmartDashboard::PutBoolean("Elevator safe rotation height", IsSafeRotateHeight());
+    SmartDashboard::PutBoolean("limit Switch", limitSwitch.Get());
 
     double elevatorPosition = GetElevatorMeters();
 
