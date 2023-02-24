@@ -7,6 +7,7 @@ void GrabberSubsystem::robotInit(){
 }
 
 void GrabberSubsystem::teleopInit() {
+	m_clawActuator.Set(DoubleSolenoid::kForward);
 }
 
 void GrabberSubsystem::teleop(){   

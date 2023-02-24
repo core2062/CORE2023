@@ -109,14 +109,14 @@ void ArmSubsystem::PostLoopTask()
             {
                 if(m_requestedTelescopeSpeed < 0) // Rotates before moving
                 {
-                    if (armRotation) // If arm rotated, then arm can extend
-                    {
+                    // if (armRotation) // If arm rotated, then arm can extend
+                    // {
                         m_telescopeMotorL.Set(ControlMode::PercentOutput,m_requestedTelescopeSpeed);
-                    } else
-                    {
+                    // } else
+                    // {
                         // m_armPiston.Set(DoubleSolenoid::kForward);
-                        m_telescopeMotorL.Set(ControlMode::PercentOutput,0);
-                    }
+                        // m_telescopeMotorL.Set(ControlMode::PercentOutput,0);
+                    // }
                 } else // Moves before rotating
                 {
                     // if (telescopePosition > 2)  // If telescoping arm is in, then arm can rotate
