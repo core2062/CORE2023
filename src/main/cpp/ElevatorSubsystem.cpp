@@ -28,12 +28,12 @@ void ElevatorSubsystem::robotInit()
     m_leftLiftMotor.SetNeutralMode(NeutralMode::Brake);
     m_rightLiftMotor.SetNeutralMode(NeutralMode::Brake);
 
-    m_leftLiftMotor.Follow(m_rightLiftMotor);
+    m_rightLiftMotor.Follow(m_leftLiftMotor);
 
-    m_rightLiftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, 0, 0);
-    m_rightLiftMotor.SetSelectedSensorPosition(0, 0, 0);
+    m_leftLiftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, 0, 0);
+    m_leftLiftMotor.SetSelectedSensorPosition(0, 0, 0);
 
-    m_rightLiftMotor.SetSensorPhase(true);
+    // m_leftLiftMotor.SetSensorPhase(true);
     
     operatorJoystick->RegisterAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
 
@@ -41,16 +41,16 @@ void ElevatorSubsystem::robotInit()
 
 void ElevatorSubsystem::teleopInit(){
     SetRequestedPosition(GetElevatorMeters()); // Sets requested position to current position
-    m_rightLiftMotor.ConfigMotionCruiseVelocity(m_cruiseVel.Get(), 0);
-    m_rightLiftMotor.ConfigMotionAcceleration(m_maxAcel.Get(), 0);
+    m_leftLiftMotor.ConfigMotionCruiseVelocity(m_cruiseVel.Get(), 0);
+    m_leftLiftMotor.ConfigMotionAcceleration(m_maxAcel.Get(), 0);
 }
 
 void ElevatorSubsystem::teleop(){}
 
 // Will probably run after PostLoopTask() in scoring assembly
 void ElevatorSubsystem::PostLoopTask(){
-    SmartDashboard::PutNumber("Elevator Position", m_rightLiftMotor.GetSelectedSensorPosition(0));
-    SmartDashboard::PutNumber("Elevator Velocity", m_rightLiftMotor.GetSelectedSensorVelocity(0));
+    SmartDashboard::PutNumber("Elevator Position Meters", GetElevatorMeters());
+    SmartDashboard::PutNumber("Elevator Velocity", m_leftLiftMotor.GetSelectedSensorVelocity(0));
     SmartDashboard::PutNumber("Requested Elevator Position", m_requestedPosition);
     SmartDashboard::PutBoolean("Elevator safe rotation height", IsSafeRotateHeight());
     SmartDashboard::PutBoolean("limit Switch", limitSwitch.Get());
@@ -73,13 +73,14 @@ void ElevatorSubsystem::PostLoopTask(){
     }
 
     // Softstops the elevator
-    if(m_requestedSpeed > 0 && ElevatorUp())
+    if(m_requestedSpeed > 0 && !ElevatorUp())
     {
 	    std::cout << "Softstopped" << endl;
         m_requestedSpeed = 0;
         SetRequestedPosition(m_topLimit.Get());
-    } else if(ElevatorDown())
+    } else if(!ElevatorDown())
     {
+        
         if(m_requestedSpeed < 0)
         {
             m_requestedSpeed = 0;
@@ -105,10 +106,10 @@ void ElevatorSubsystem::PostLoopTask(){
     if (m_requestedSpeed < -0.01 || m_requestedSpeed > 0.1)
     {
 	    std::cout << "Manual " << endl;
-        m_rightLiftMotor.Set(ControlMode::PercentOutput, m_requestedSpeed);
+        m_leftLiftMotor.Set(ControlMode::PercentOutput, m_requestedSpeed);
     } else
     {
-        m_rightLiftMotor.Set(ControlMode::MotionMagic, m_requestedPosition);
+        m_leftLiftMotor.Set(ControlMode::MotionMagic, m_requestedPosition);
     }
     
     m_requestedSpeed = 0;
@@ -141,7 +142,7 @@ void ElevatorSubsystem::SetPickupHeight(){
 }
 
 int ElevatorSubsystem::GetElevatorPosition(){
-    return m_rightLiftMotor.GetSelectedSensorPosition();
+    return m_leftLiftMotor.GetSelectedSensorPosition();
 }
 
 double ElevatorSubsystem::GetElevatorMeters(){
@@ -174,5 +175,5 @@ bool ElevatorSubsystem::IsSafeRotateHeight(){
 }
 
 void ElevatorSubsystem::ResetEncoders(){
-    m_rightLiftMotor.SetSelectedSensorPosition(0,0,0);
+    m_leftLiftMotor.SetSelectedSensorPosition(0,0,0);
 }
