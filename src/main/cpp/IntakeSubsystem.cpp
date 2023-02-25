@@ -13,6 +13,9 @@ void IntakeSubsystem::robotInit(){
     m_rightIntakeMotor.Set(ControlMode::PercentOutput, 0);
     m_leftIntakeMotor.Set(ControlMode::PercentOutput, 0);
     operatorJoystick->RegisterButton(CORE::COREJoystick::X_BUTTON);
+    operatorJoystick->RegisterButton(CORE::COREJoystick::DPAD_N);
+    operatorJoystick->RegisterButton(CORE::COREJoystick::DPAD_E);
+    operatorJoystick->RegisterButton(CORE::COREJoystick::DPAD_S);
 }
 
 
@@ -27,21 +30,30 @@ void IntakeSubsystem::teleop(){
         } else{
         SetIntake(0.0);
     }
-
-    if (operatorJoystick->GetRisingEdge(CORE::COREJoystick::JoystickButton::X_BUTTON) && m_intakeActive == false){
-		m_intake.Set(DoubleSolenoid::kReverse);
-		m_intakeActive = true;
-        m_intakeTimer.Reset();
-        m_intakeTimer.Start();
-	} else if (operatorJoystick->GetRisingEdge(CORE::COREJoystick::JoystickButton::X_BUTTON) && m_intakeActive == true){
-		m_intake.Set(DoubleSolenoid::kForward);
-		m_intakeActive = false;
+    if(operatorJoystick->GetRisingEdge(CORE::COREJoystick::JoystickButton::DPAD_N)) {
+        m_intake.Set(DoubleSolenoid::kForward);
     }
-    if (m_intakeTimer.GetTime() > m_intakeTimeSet.Get() && m_intakeActive) {
+    if(operatorJoystick->GetRisingEdge(CORE::COREJoystick::JoystickButton::DPAD_E)) {
         m_intake.Set(DoubleSolenoid::kOff);
-        m_intakeTimer.Reset();
-        m_intakeTimer.Stop();
     }
+    if(operatorJoystick->GetRisingEdge(CORE::COREJoystick::JoystickButton::DPAD_S)) {
+        m_intake.Set(DoubleSolenoid::kReverse);
+    }
+
+    // if (operatorJoystick->GetRisingEdge(CORE::COREJoystick::JoystickButton::X_BUTTON) && m_intakeActive == false){
+	// 	m_intake.Set(DoubleSolenoid::kReverse);
+	// 	m_intakeActive = true;
+    //     m_intakeTimer.Reset();
+    //     m_intakeTimer.Start();
+	// } else if (operatorJoystick->GetRisingEdge(CORE::COREJoystick::JoystickButton::X_BUTTON) && m_intakeActive == true){
+	// 	m_intake.Set(DoubleSolenoid::kForward);
+	// 	m_intakeActive = false;
+    // }
+    // if (m_intakeTimer.GetTime() > m_intakeTimeSet.Get() && m_intakeActive) {
+    //     m_intake.Set(DoubleSolenoid::kOff);
+    //     m_intakeTimer.Reset();
+    //     m_intakeTimer.Stop();
+    // }
 }
 
 void IntakeSubsystem::SetIntake(double intakeSpeed) {

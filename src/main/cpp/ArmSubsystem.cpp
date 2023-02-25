@@ -5,8 +5,6 @@ ArmSubsystem::ArmSubsystem() :
         m_telescopeMotorL(LEFT_ARM_MOTOR),
         m_telescopeMotorR(RIGHT_ARM_MOTOR),
         m_armPiston(frc::PneumaticsModuleType::REVPH, ARM_IN_PORT, ARM_OUT_PORT),
-        m_inLimitSwitch(ARM_IN_LIMIT_SWITCH_PORT),
-        m_downLimitSwitch(ARM_DOWN_LIMIT_SWITCH_PORT),
         m_mediumDist("Arm Mid-Level Distance"),
         m_highDist("Arm High-Level Distance"),
         m_ticksPerMeter("Arm Ticks Per Meter"),
@@ -212,12 +210,6 @@ int ArmSubsystem::GetArmDist()
 double ArmSubsystem::GetTelescopeArmMeters()
 {
     return GetArmDist() / m_ticksPerMeter.Get();
-}
-
-// Returns whether or not the arm is retracted to the inner limit
-bool ArmSubsystem::ArmIn()
-{
-    return m_inLimitSwitch.Get();
 }
 
 bool ArmSubsystem::IsHighDist()

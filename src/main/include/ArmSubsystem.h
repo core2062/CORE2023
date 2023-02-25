@@ -51,7 +51,6 @@ private:
 
     TalonSRX m_telescopeMotorL, m_telescopeMotorR;
     DoubleSolenoid m_armPiston;
-    DigitalInput m_inLimitSwitch, m_downLimitSwitch;
     
     COREConstant<double> m_mediumDist, m_highDist;
     COREConstant<double> m_ticksPerMeter;

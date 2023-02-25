@@ -1,6 +1,7 @@
 #include "ElevatorSubsystem.h"
 #include "Robot.h"
 
+frc::DigitalInput limitSwitch {0};
 
 ElevatorSubsystem::ElevatorSubsystem() : 
         m_leftLiftMotor(LEFT_LIFT_PORT),
@@ -19,7 +20,6 @@ ElevatorSubsystem::ElevatorSubsystem() :
 {
     m_rightLiftMotor.SetInverted(true);
 }
-frc::DigitalInput limitSwitch {0};
 void ElevatorSubsystem::robotInit()
 {
     m_leftLiftMotor.Set(ControlMode::PercentOutput, 0);
@@ -73,12 +73,12 @@ void ElevatorSubsystem::PostLoopTask(){
     }
 
     // Softstops the elevator
-    if(m_requestedSpeed > 0 && !ElevatorUp())
+    if(m_requestedSpeed > 0 && ElevatorUp())
     {
 	    std::cout << "Softstopped" << endl;
         m_requestedSpeed = 0;
         SetRequestedPosition(m_topLimit.Get());
-    } else if(!ElevatorDown())
+    } else if(ElevatorDown())
     {
         if(m_requestedSpeed < 0)
         {
