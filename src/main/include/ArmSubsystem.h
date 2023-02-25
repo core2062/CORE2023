@@ -18,12 +18,13 @@ public:
     void teleop() override;
     void PostLoopTask() override;
 
-    void SetRequestedPosition(double positionInMeters);
+    void SetRequestedPosition(int position);
     void SetRequestedRotation(bool rot);
     void SetDistRequestedSpeed(double speed);
 
     void SetHighDist();
     void SetMediumDist();
+    void SetArmIn();
     void SetRotDown();
 
     int GetArmDist();
@@ -34,37 +35,26 @@ public:
 
     bool IsHighDist();
     bool IsMediumDist();
-    // bool IsArmOut();
     bool IsArmUp();
-    bool IsArmFullyIn();
+    bool IsArmIn();
 
     void ResetEncoders();
 
-    DoubleSolenoid m_armPiston;
 private:
-    enum WantedArmState // This is used to determine which order the arm assembly will move in; (Rot before extend vise versa)
-    {
-        WANT_TO_SCORE,
-        WANT_TO_PICKUP,
-        MANUAL
-    };
-
-
     TalonSRX m_telescopeMotorL, m_telescopeMotorR;
+    DoubleSolenoid m_armPiston;
+
+    Joystick m_operatorJoystick;
     
     COREConstant<double> m_mediumDist, m_highDist;
-    COREConstant<double> m_ticksPerMeter;
-    COREConstant<int> m_outerLimit, m_rotationLimit;
+    COREConstant<int> m_outerLimit;
     COREConstant<int> m_cruiseTelescopeVel, m_maxTelescopeAcel;
 
     int m_requestedDist;
     double m_requestedTelescopeSpeed;
 
-    bool m_requestedRotOut;
-    bool m_wristUp;
-
-    WantedArmState m_wantedState;
-    
+    bool m_requestedRotUp;
+    bool m_wristUp;    
 
     // ElevatorSubsystem* m_elevatorSubsystem;
 

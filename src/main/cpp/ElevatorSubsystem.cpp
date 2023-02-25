@@ -6,15 +6,18 @@ ElevatorSubsystem::ElevatorSubsystem() :
         m_rightLiftMotor(RIGHT_LIFT_PORT),
         m_bottomLimitSwitch(ELEVATOR_BOTTOM_LIMIT_SWITCH_PORT),
         m_topLimitSwitch(ELEVATOR_TOP_LIMIT_SWITCH_PORT),
+        m_operatorJoystick(OPERATOR_JOYSTICK),
         m_pickUpHeight("Elevator Pick Up Height"),
         m_mediumHeight("Elevator Mid-Level Height"),
         m_highHeight("Elevator High-Level Height"),
         m_safeRotateHeight("Safe rotation height",0.49541015982),
         m_ticksPerMeter("Elevator Ticks Per Meter",27343), 
-        m_bottomLimit("Elevator Bottom Limit"),
-        m_topLimit("Elevator Top Limit",4),
+        m_bottomLimit("Elevator Bottom Limit",0),
+        m_topLimit("Elevator Top Limit",0.586757),
         m_cruiseVel("Elevator Cruise Velocity"),
-        m_maxAcel("Elevator Max Acceleration")
+        m_maxAcel("Elevator Max Acceleration"),
+        m_liftUpSpeedMod("Elevator Up Speed ", 0.5),
+        m_liftDownSpeedMod("Elevator Down Speed ", 0.3)
 {
     m_rightLiftMotor.SetInverted(true);
 }
@@ -31,9 +34,9 @@ void ElevatorSubsystem::robotInit()
     m_leftLiftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, 0, 0);
     m_leftLiftMotor.SetSelectedSensorPosition(0, 0, 0);
 
-    // m_leftLiftMotor.SetSensorPhase(true);
+    m_leftLiftMotor.SetSensorPhase(true);
     
-    operatorJoystick->RegisterAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
+    // operatorJoystick->RegisterAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
 
 }
 
@@ -54,7 +57,7 @@ void ElevatorSubsystem::PostLoopTask(){
 
     double elevatorPosition = GetElevatorMeters();
 
-    SetRequestedSpeed(-operatorJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y));
+    SetRequestedSpeed(-m_operatorJoystick.GetRawAxis(1));
 
     SmartDashboard::PutNumber("Elevator Speed", m_requestedSpeed);
 
@@ -62,18 +65,18 @@ void ElevatorSubsystem::PostLoopTask(){
     if(m_requestedSpeed < -0.01 || m_requestedSpeed > 0.1)
     {
         if(m_requestedSpeed < 0)
-            m_requestedSpeed *= 0.1;
+            m_requestedSpeed *= m_liftDownSpeedMod.Get();
         else
-            m_requestedSpeed *= 0.5;
+            m_requestedSpeed *= m_liftUpSpeedMod.Get();
         SetRequestedPosition(elevatorPosition);
         Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
     }
 
     // Softstops the elevator
-    if(m_requestedSpeed > 0 && ElevatorUp())
+    if(m_requestedSpeed > 0.0 && (/*ElevatorUp() || */GetElevatorMeters() > m_topLimit.Get()))
     {
-	    std::cout << "Softstopped" << endl;
-        m_requestedSpeed = 0.18;
+	    // std::cout << "Softstopped" << endl;
+        m_requestedSpeed = 0;
         SetRequestedPosition(m_topLimit.Get());
     } 
     else if(!ElevatorDown())
@@ -86,24 +89,16 @@ void ElevatorSubsystem::PostLoopTask(){
         }
         ResetEncoders();
     }
-
-    // Checks if the arm is in before allowing it to go too low to manipulate arm
-    // if(Robot::GetInstance()->armSubsystem.IsArmFullyIn())
-    // {
-    //     if((double)m_requestedPosition <= m_safeRotateHeight.Get()+0.1){
-    //         SetRequestedPosition(GetElevatorMeters());
-    //         SetRequestedSpeed(0);
-    //     } else if(m_requestedSpeed < 0 && GetElevatorMeters() <= m_safeRotateHeight.Get()+0.1)
-    //     {
-    //         SetRequestedPosition(GetElevatorMeters());
-    //         SetRequestedSpeed(0);
-    //     }
-    // }
+    // std::cout << "Button 2: " << m_operatorJoystick.GetRawButton(2) << endl;
+    if (m_operatorJoystick.GetRawButton(2))
+    {
+        m_requestedSpeed = 0.2;
+    }
 
     // Sets the motors, if requested speed is within deadbands will move manually else motionmagic will move it to the requested position
     if (m_requestedSpeed < -0.01 || m_requestedSpeed > 0.1)
     {
-	    std::cout << "Manual " << endl;
+        
         m_leftLiftMotor.Set(ControlMode::PercentOutput, m_requestedSpeed);
     } else
     {
@@ -125,6 +120,10 @@ void ElevatorSubsystem::SetRequestedPosition(double positionInMeters)
 
 void ElevatorSubsystem::SetRequestedSpeed(double speed){
     m_requestedSpeed = speed;
+}
+
+void ElevatorSubsystem::SetMaxHeight(){
+    SetRequestedPosition(m_topLimit.Get());
 }
 
 void ElevatorSubsystem::SetHighHeight(){

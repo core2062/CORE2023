@@ -18,5 +18,8 @@ public:
     void teleop() override;
 private:
     DoubleSolenoid m_clawActuator;
+
+    Joystick m_operatorJoystick;
+    
     bool m_clawActive;
 };

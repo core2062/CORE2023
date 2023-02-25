@@ -1,13 +1,16 @@
 #include "ScoringAssembly.h"
 #include "Robot.h"
 
-ScoringAssembly::ScoringAssembly() : m_transitTransitionTimeout("Transit Transition Timeout")
+ScoringAssembly::ScoringAssembly() : m_transitTransitionTimeout("Transit Transition Timeout"),
+                                    m_armThreshold("Arm Threshold")
 {}
 
 void ScoringAssembly::RobotInitTask()
 {
     m_armSubsystem = &Robot::GetInstance()->armSubsystem;
     m_elevatorSubsystem = &Robot::GetInstance()->elevatorSubsystem;
+
+    m_armInElevatorUp = false;
 }
 
 void ScoringAssembly::AutonInitTask()
@@ -73,17 +76,48 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
     {
         case WantedState::WANT_TO_PICKUP:
             m_armSubsystem->SetRotDown(); // To pickup gamepieces, the arm had to be fully retracted and rotated down
-            m_elevatorSubsystem->SetPickupHeight(); // Sets the requested height of the elevator to the lowest level
-            reachedTarget = (!m_armSubsystem->IsArmUp() && m_elevatorSubsystem->IsPickupHeight()); // Checks if the individual subsystems have reached their destination.
+            if ((m_armSubsystem->IsArmIn() && m_elevatorSubsystem->ElevatorUp()) || m_armInElevatorUp)
+            {
+                m_armInElevatorUp = true;
+                m_elevatorSubsystem->SetPickupHeight(); // Sets the requested height of the elevator to the lowest level
+            } else {
+                m_elevatorSubsystem->SetMaxHeight();
+                m_armSubsystem->SetArmIn();
+            }
+            reachedTarget = (!m_armSubsystem->IsArmUp() && m_elevatorSubsystem->IsPickupHeight() && m_armSubsystem->IsArmIn()); // Checks if the individual subsystems have reached their destination.
             break;
         case WantedState::WANT_TO_SCORE_MID:
-            m_armSubsystem->SetMediumDist(); // To score at the mid level, the arm had to rotate up and extend partially
-            m_elevatorSubsystem->SetMediumHeight(); // Set the requested
+            if (m_armSubsystem->GetArmDist() < m_armThreshold.Get())
+            {
+                if ((m_armSubsystem->IsArmIn() && m_elevatorSubsystem->ElevatorUp()) || m_armInElevatorUp)
+                {
+                    m_armInElevatorUp = true;
+                    m_elevatorSubsystem->SetMediumHeight(); // Sets the requested height of the elevator to the lowest level
+                    m_armSubsystem->SetMediumDist();
+                } else {
+                    m_elevatorSubsystem->SetMaxHeight();
+                } 
+            } else {
+                m_armSubsystem->SetMediumDist(); // To score at the mid level, the arm had to rotate up and extend partially
+                m_elevatorSubsystem->SetMediumHeight(); // Set the requested
+            }
             reachedTarget = (m_armSubsystem->IsMediumDist() && m_elevatorSubsystem->IsMediumHeight());
             break;
         case WantedState::WANT_TO_SCORE_HIGH:
-            m_armSubsystem->SetHighDist();
-            m_elevatorSubsystem->SetHighHeight();
+            if (m_armSubsystem->GetArmDist() < m_armThreshold.Get())
+            {
+                if ((m_armSubsystem->IsArmIn() && m_elevatorSubsystem->ElevatorUp()) || m_armInElevatorUp)
+                {
+                    m_armInElevatorUp = true;
+                    m_elevatorSubsystem->SetHighHeight(); // Sets the requested height of the elevator to the lowest level
+                    m_armSubsystem->SetHighDist();
+                } else {
+                    m_elevatorSubsystem->SetMaxHeight();
+                } 
+            } else {
+                m_armSubsystem->SetHighDist(); // To score at the mid level, the arm had to rotate up and extend partially
+                m_elevatorSubsystem->SetHighHeight(); // Set the requested
+            }
             reachedTarget = (m_armSubsystem->IsHighDist() && m_elevatorSubsystem->IsHighHeight());
             break;
         case WantedState::MANUAL: // In case you wanted to manually move the scoring assembly
@@ -91,6 +125,12 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
     }
 
     reachedTarget = reachedTarget || m_timeoutTimer.Get() > m_transitTransitionTimeout.Get(); // Checks timeout
+
+    if (reachedTarget)
+    {
+        m_armInElevatorUp = false;
+    }
+    
 
     // State Transition
     switch (m_wantedState)
@@ -117,7 +157,7 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
     }
 }
 
-//Im ngl Im not entirely sure why the code below exists, but it does
+// The functions below handle keeping the scoring assembly in wanted state 
 
 ScoringAssembly::SystemState ScoringAssembly::HandleGrabbing()
 {
