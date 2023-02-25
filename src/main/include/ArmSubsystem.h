@@ -40,6 +40,7 @@ public:
 
     void ResetEncoders();
 
+    DoubleSolenoid m_armPiston;
 private:
     enum WantedArmState // This is used to determine which order the arm assembly will move in; (Rot before extend vise versa)
     {
@@ -50,7 +51,6 @@ private:
 
 
     TalonSRX m_telescopeMotorL, m_telescopeMotorR;
-    DoubleSolenoid m_armPiston;
     
     COREConstant<double> m_mediumDist, m_highDist;
     COREConstant<double> m_ticksPerMeter;
@@ -61,10 +61,10 @@ private:
     double m_requestedTelescopeSpeed;
 
     bool m_requestedRotOut;
+    bool m_wristUp;
 
     WantedArmState m_wantedState;
     
-    bool m_wristUp;
 
     // ElevatorSubsystem* m_elevatorSubsystem;
 

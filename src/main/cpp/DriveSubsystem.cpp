@@ -24,7 +24,7 @@ void DriveSubsystem::robotInit() {
 	// Registers joystick axis and buttons, does inital setup for talons
 	driverJoystick->RegisterAxis(CORE::COREJoystick::LEFT_STICK_Y);
 	driverJoystick->RegisterAxis(CORE::COREJoystick::RIGHT_STICK_X);
-	driverJoystick->RegisterButton(CORE::COREJoystick::RIGHT_TRIGGER);
+	driverJoystick->RegisterButton(CORE::COREJoystick::LEFT_BUTTON);
 	driverJoystick->RegisterButton(CORE::COREJoystick::B_BUTTON);
 	driverJoystick->RegisterButton(CORE::COREJoystick::START_BUTTON);
     InitTalons();
@@ -38,7 +38,7 @@ void DriveSubsystem::teleopInit() {
 	InitTalons();
 	m_compressor.EnableDigital();
 	SmartDashboard::PutString("Driver Controls", " Left Stick: Forward/Backward \n Right Stick: Left/Right \n Start: Coast Mode \n B Button: Brake Mode \n Right Bumber: Slow Drive Modify");
-	SmartDashboard::PutString("Operator Controls", "Left Stick: Telescope Arm In/Out \n Right Stick: Elevator Up/Down \n Left Bumper: Claw Open/Close \n Right Trigger: Intake In \n Right Bumper: Intake Out \n A Button: Pickup Assembly \n B Button: Score Mid Assembly \n Y Button: Score High Assembly \n X Button: Intake In/Out");
+	SmartDashboard::PutString("Operator Controls", "Left Stick: Telescope Arm In/Out \n Right Stick: Elevator Up/Down \n Left Bumper: Claw Open/Close \n Left Trigger: Intake In/Out \n Right Trigger: Intake In \n Right Bumper: Intake Out \n A Button: Pickup Assembly \n B Button: Score Mid Assembly \n Y Button: Score High Assembly \n X Button: Wrist Up/Down");
 }
 
 void DriveSubsystem::teleop() {
@@ -71,7 +71,7 @@ void DriveSubsystem::teleop() {
 
 void DriveSubsystem::setMotorSpeed(double speedInFraction, DriveSide whichSide) {
 	// Sets motor speed based on drive side and desired speed
-	if (driverJoystick->GetButton(CORE::COREJoystick::RIGHT_BUTTON)){
+	if (driverJoystick->GetButton(CORE::COREJoystick::LEFT_BUTTON)){
 		speedInFraction *= m_driveSpeedModifierSlow.Get();
 	} else {
 		speedInFraction *= m_driveSpeedModifier.Get();

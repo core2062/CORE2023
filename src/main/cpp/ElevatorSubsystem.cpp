@@ -1,8 +1,6 @@
 #include "ElevatorSubsystem.h"
 #include "Robot.h"
 
-frc::DigitalInput limitSwitch {0};
-
 ElevatorSubsystem::ElevatorSubsystem() : 
         m_leftLiftMotor(LEFT_LIFT_PORT),
         m_rightLiftMotor(RIGHT_LIFT_PORT),
@@ -53,7 +51,6 @@ void ElevatorSubsystem::PostLoopTask(){
     SmartDashboard::PutNumber("Elevator Velocity", m_leftLiftMotor.GetSelectedSensorVelocity(0));
     SmartDashboard::PutNumber("Requested Elevator Position", m_requestedPosition);
     SmartDashboard::PutBoolean("Elevator safe rotation height", IsSafeRotateHeight());
-    SmartDashboard::PutBoolean("limit Switch", limitSwitch.Get());
 
     double elevatorPosition = GetElevatorMeters();
 
@@ -73,12 +70,13 @@ void ElevatorSubsystem::PostLoopTask(){
     }
 
     // Softstops the elevator
-    if(m_requestedSpeed > 0 && !ElevatorUp())
+    if(m_requestedSpeed > 0 && ElevatorUp())
     {
 	    std::cout << "Softstopped" << endl;
-        m_requestedSpeed = 0;
+        m_requestedSpeed = 0.18;
         SetRequestedPosition(m_topLimit.Get());
-    } else if(!ElevatorDown())
+    } 
+    else if(!ElevatorDown())
     {
         
         if(m_requestedSpeed < 0)

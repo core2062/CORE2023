@@ -31,7 +31,7 @@ void ArmSubsystem::robotInit()
     m_telescopeMotorL.SetSelectedSensorPosition(0, 0, 0);
 
     operatorJoystick->RegisterAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_Y);
-    operatorJoystick->RegisterButton(CORE::COREJoystick::JoystickButton::BACK_BUTTON);
+    operatorJoystick->RegisterButton(CORE::COREJoystick::JoystickButton::X_BUTTON);
 
 }
 
@@ -44,7 +44,7 @@ void ArmSubsystem::teleopInit()
 
 void ArmSubsystem::teleop()
 {
-    if(operatorJoystick->GetRisingEdge(CORE::COREJoystick::JoystickButton::BACK_BUTTON))
+    if(operatorJoystick->GetRisingEdge(CORE::COREJoystick::JoystickButton::X_BUTTON))
     {
         if(m_wristUp)
         {
@@ -70,7 +70,7 @@ void ArmSubsystem::PostLoopTask()
     double telescopePosition = GetTelescopeArmMeters();
     bool armRotation = IsArmUp();
 
-    double joystickValue = -operatorJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_Y);
+    double joystickValue = operatorJoystick->GetAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_Y);
 
     SetDistRequestedSpeed(joystickValue);
 
