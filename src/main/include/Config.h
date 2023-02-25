@@ -1,5 +1,8 @@
 #pragma once
 
+/* Controller Ports */
+#define OPERATOR_JOYSTICK 1
+
 /* Drive ports */
 #define RIGHT_FRONT_PORT 1
 #define RIGHT_BACK_PORT 2
