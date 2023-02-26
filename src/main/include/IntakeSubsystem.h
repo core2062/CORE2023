@@ -18,7 +18,7 @@ public:
     void teleop() override; 
     void SetIntake(double intakeSpeed);
 
-    COREConstant<double> m_intakeSpeed, m_intakeTimeSet;
+    COREConstant<double> m_intakeConeSpeed, m_intakeCubeSpeed, m_intakeTimeSet;
 private:
     TalonSRX m_leftIntakeMotor, m_rightIntakeMotor;
     DoubleSolenoid m_intake;

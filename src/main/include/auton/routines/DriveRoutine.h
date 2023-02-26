@@ -16,5 +16,7 @@ public:
 private:
     Node * driveNode;
     Node * delayNode;
+    Node * driveNode2;
+    Node * delayNode2;
     Node * balanceNode;
 };

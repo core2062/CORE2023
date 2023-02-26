@@ -20,6 +20,9 @@
 #include "ArmSubsystem.h"
 #include "ElevatorSubsystem.h"
 
+//Routines
+#include "auton/routines/DriveRoutine.h"
+
 using namespace CORE;
 using namespace std;
 
@@ -43,6 +46,8 @@ class Robot : public CORERobot {
   ScoringAssembly scoringAssembly;
   ArmSubsystem armSubsystem;
   ElevatorSubsystem elevatorSubsystem;
+
+  DriveRoutine driveRoutine;
   
  private:
  
