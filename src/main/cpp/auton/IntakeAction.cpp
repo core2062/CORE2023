@@ -6,7 +6,7 @@ IntakeAction::IntakeAction(intakeAction requestedIntakeAction) {
 }
 
 void IntakeAction::ActionInit() {
-    m_intakeSpeed = Robot::GetInstance()->intakeSubsystem.intakeSpeed.Get();
+    m_intakeSpeed = Robot::GetInstance()->intakeSubsystem.m_intakeSpeed.Get();
 }
 
 CORE::COREAutonAction::actionStatus IntakeAction::Action() {

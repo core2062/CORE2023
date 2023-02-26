@@ -24,3 +24,14 @@ CORE::COREAutonAction::actionStatus GrabberAction::Action() {
 void GrabberAction::ActionEnd() {
     
 }
+
+void GrabberSubsystem::setGrabber(bool set) {
+	if (set)
+	{
+		m_clawActuator.Set(DoubleSolenoid::kForward);
+		m_clawActive = true;
+	} else {
+		m_clawActuator.Set(DoubleSolenoid::kReverse);
+		m_clawActive = false;
+	}
+}

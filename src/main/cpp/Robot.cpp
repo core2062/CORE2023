@@ -40,10 +40,6 @@ void Robot::test() {}
 
 void Robot::testInit() {}
 
-void Robot::SimulationInit() {}
-
-void Robot::SimulationPeriodic() {}
-
 Robot * Robot::GetInstance() {
     return m_instance;
 }

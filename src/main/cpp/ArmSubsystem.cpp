@@ -47,7 +47,7 @@ void ArmSubsystem::teleopInit()
     m_telescopeMotorL.ConfigMotionAcceleration(m_maxTelescopeAcel.Get(), 0);
 }
 
-void ArmSubsystem::teleop()
+void ArmSubsystem::teleop() {
     if(m_operatorJoystick.GetRawButtonReleased(3))
     {
         if(m_wristUp)

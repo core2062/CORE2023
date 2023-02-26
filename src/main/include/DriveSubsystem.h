@@ -30,7 +30,6 @@ public:
 	void SetTalonMode(NeutralMode mode);
 	void Balance();
 	AHRS ahrs;
-	COREConstant<double> m_balanceMaxSpeed, m_balanceCalibration, m_balanceMaxCalibration;
 
 private:
 	//m_analogSupplyVoltage used in calculation to get current PSI
