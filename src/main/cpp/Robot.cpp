@@ -19,6 +19,7 @@ void Robot::robotInit() {
 
 void Robot::teleopInit() {}
 
+/* This is where the current state of the scoring assembly is set */
 void Robot::teleop() {
     if (operatorJoystick->GetRisingEdge(COREJoystick::JoystickButton::A_BUTTON))
     {

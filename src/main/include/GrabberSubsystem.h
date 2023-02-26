@@ -19,5 +19,8 @@ public:
     void setGrabber(bool set);
 private:
     DoubleSolenoid m_clawActuator;
+
+    Joystick m_operatorJoystick;
+    
     bool m_clawActive;
 };

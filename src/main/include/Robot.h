@@ -20,17 +20,6 @@
 #include "ArmSubsystem.h"
 #include "ElevatorSubsystem.h"
 
-
-//Routines
-#include "auton/routines/DriveRoutine.h"
-#include "auton/routines/ScoreHighBalanceRoutine.h"
-#include "auton/routines/ScoreMidBalanceRoutine.h"
-#include "auton/routines/ScoreHighfieldBalanceRoutine.h"
-#include "auton/routines/ScoreMidFieldBalanceRoutine.h"
-#include "auton/routines/ScoreHighRoutine.h"
-#include "auton/routines/ScoreMidRoutine.h"
-
-
 using namespace CORE;
 using namespace std;
 
@@ -43,8 +32,8 @@ class Robot : public CORERobot {
   void teleop() override;
   void test() override;
   void testInit() override;
-  void SimulationInit() override;
-  void SimulationPeriodic() override;
+  // void SimulationInit() override;
+  // void SimulationPeriodic() override;
   static Robot * GetInstance();
 
   //Subsystems
@@ -54,17 +43,6 @@ class Robot : public CORERobot {
   ScoringAssembly scoringAssembly;
   ArmSubsystem armSubsystem;
   ElevatorSubsystem elevatorSubsystem;
-
-
-  //auton/routines
-  DriveRoutine driveRoutine;
-  ScoreHighRoutine scoreHighRoutine;
-  ScoreMidRoutine scoreMidRoutine;
-  ScoreHighBalanceRoutine scoreHighBalanceRoutine;
-  ScoreMidBalanceRoutine scoreMidBalanceRoutine;
-  ScoreHighFieldBalanceRoutine scoreHighFieldBalanceRoutine;
-  ScoreMidFieldBalanceRoutine scoreMidFieldBalanceRoutine;
-
   
  private:
  

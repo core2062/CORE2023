@@ -47,7 +47,9 @@ private:
     WantedState m_wantedState;
     SystemState m_systemState;
 
-    COREConstant<double> m_transitTransitionTimeout;
+    bool m_armInElevatorUp;
 
+    COREConstant<double> m_transitTransitionTimeout;
+    COREConstant<double> m_armThreshold;
     CORETimer m_timeoutTimer;
 };

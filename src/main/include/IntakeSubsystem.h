@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ctre/Phoenix.h>
+#include <frc/DoubleSolenoid.h>
 #include <CORERobotLib.h>
 #include "Config.h"
 
@@ -17,7 +18,13 @@ public:
     void teleop() override; 
     void SetIntake(double intakeSpeed);
 
-    COREConstant<double> intakeSpeed;
 private:
     TalonSRX m_leftIntakeMotor, m_rightIntakeMotor;
+    DoubleSolenoid m_intake;
+
+    Joystick m_operatorJoystick;
+    
+    COREConstant<double> m_intakeSpeed, m_intakeTimeSet;
+    bool m_intakeActive;
+    CORETimer m_intakeTimer;
 };

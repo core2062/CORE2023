@@ -5,6 +5,7 @@
 #include <ctre/Phoenix.h>
 #include <CORERobotLib.h>
 #include "Config.h"
+#include "ElevatorSubsystem.h"
 
 using namespace CORE;
 using namespace frc;
@@ -17,49 +18,44 @@ public:
     void teleop() override;
     void PostLoopTask() override;
 
-    void SetRequestedPosition(double positionInInches);
+    void SetRequestedPosition(int position);
     void SetRequestedRotation(bool rot);
     void SetDistRequestedSpeed(double speed);
 
     void SetHighDist();
     void SetMediumDist();
+    void SetArmIn();
     void SetRotDown();
 
     int GetArmDist();
-    double GetTelescopeArmInches();
+    double GetTelescopeArmMeters();
     
     bool ArmIn();
     bool ArmDown();
 
     bool IsHighDist();
     bool IsMediumDist();
-    bool IsArmOut();
     bool IsArmUp();
+    bool IsArmIn();
 
     void ResetEncoders();
 
 private:
-    enum WantedArmState
-    {
-        WANT_TO_SCORE,
-        WANT_TO_PICKUP,
-        MANUAL
-    };
-
-
-    TalonSRX m_telescopeMotor;
+    TalonSRX m_telescopeMotorL, m_telescopeMotorR;
     DoubleSolenoid m_armPiston;
-    DigitalInput m_inLimitSwitch, m_downLimitSwitch;
+
+    Joystick m_operatorJoystick;
     
     COREConstant<double> m_mediumDist, m_highDist;
-    COREConstant<double> m_ticksPerMeter;
-    COREConstant<int> m_outerLimit, m_rotationLimit;
+    COREConstant<int> m_outerLimit;
     COREConstant<int> m_cruiseTelescopeVel, m_maxTelescopeAcel;
 
     int m_requestedDist;
     double m_requestedTelescopeSpeed;
 
-    bool m_requestedRotOut;
+    bool m_requestedRotUp;
+    bool m_wristUp;    
 
-    WantedArmState m_wantedState;
+    // ElevatorSubsystem* m_elevatorSubsystem;
+
 };
