@@ -31,10 +31,12 @@ void ArmSubsystem::robotInit()
     m_telescopeMotorR.SetNeutralMode(NeutralMode::Brake);
     m_telescopeMotorL.SetNeutralMode(NeutralMode::Brake);
 
-    m_telescopeMotorR.Follow(m_telescopeMotorL);
+    // m_telescopeMotorR.Follow(m_telescopeMotorL);
 
     m_telescopeMotorL.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, 0, 0);
     m_telescopeMotorL.SetSelectedSensorPosition(0, 0, 0);
+    m_telescopeMotorR.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, 0, 0);
+    m_telescopeMotorR.SetSelectedSensorPosition(0, 0, 0);
 
     // operatorJoystick->RegisterAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_Y);
     // operatorJoystick->RegisterButton(CORE::COREJoystick::JoystickButton::BACK_BUTTON);
@@ -46,6 +48,8 @@ void ArmSubsystem::teleopInit()
     SetRequestedPosition(GetArmDist()); // Sets requested position to current position
     m_telescopeMotorL.ConfigMotionCruiseVelocity(m_cruiseTelescopeVel.Get(), 0);
     m_telescopeMotorL.ConfigMotionAcceleration(m_maxTelescopeAcel.Get(), 0);
+    m_telescopeMotorR.ConfigMotionCruiseVelocity(m_cruiseTelescopeVel.Get(), 0);
+    m_telescopeMotorR.ConfigMotionAcceleration(m_maxTelescopeAcel.Get(), 0);
 }
 
 void ArmSubsystem::teleop()
@@ -112,6 +116,7 @@ void ArmSubsystem::PostLoopTask()
 
     if(m_requestedTelescopeSpeed < -0.1 || m_requestedTelescopeSpeed > 0.1)
     {
+        m_telescopeMotorL.Set(ControlMode::PercentOutput,m_requestedTelescopeSpeed);
         m_telescopeMotorR.Set(ControlMode::PercentOutput,m_requestedTelescopeSpeed);
     } else {
 
@@ -160,6 +165,7 @@ void ArmSubsystem::SetRotDown()
 int ArmSubsystem::GetArmDist()
 {
     return m_telescopeMotorL.GetSelectedSensorPosition(0);
+    return m_telescopeMotorR.GetSelectedSensorPosition(0);
 }
 
 
@@ -186,4 +192,5 @@ bool ArmSubsystem::IsArmIn()
 void ArmSubsystem::ResetEncoders()
 {
     m_telescopeMotorL.SetSelectedSensorPosition(0,0,0);
+    m_telescopeMotorR.SetSelectedSensorPosition(0,0,0);
 }
