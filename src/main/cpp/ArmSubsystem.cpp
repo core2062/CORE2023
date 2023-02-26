@@ -16,7 +16,8 @@ ArmSubsystem::ArmSubsystem() :
         m_highDist("Arm High-Level Distance In Ticks"),
         m_outerLimit("Arm Outer Limit In Ticks"),
         m_cruiseTelescopeVel("Telescope Arm Cruise Velocity"),
-        m_maxTelescopeAcel("Telescope Arm Max Acceleration")
+        m_maxTelescopeAcel("Telescope Arm Max Acceleration"),
+        m_armSpeed("Arm Speed", 0.4)
 {}
 
 void ArmSubsystem::robotInit()
@@ -68,6 +69,7 @@ void ArmSubsystem::PostLoopTask()
     SmartDashboard::PutNumber("Arm Telescope LEFT Velocity", m_telescopeMotorL.GetSelectedSensorVelocity(0));
     SmartDashboard::PutNumber("Arm Telescope RIGHT Velocity", m_telescopeMotorR.GetSelectedSensorVelocity(0));
     SmartDashboard::PutNumber("Arm Telescope Requested Position", m_requestedDist);
+
 
     SmartDashboard::PutBoolean("Arm Rotation Out", IsArmUp());
     SmartDashboard::PutBoolean("Arm Rotation Requested Position", m_requestedRotUp);
@@ -131,7 +133,7 @@ void ArmSubsystem::SetRequestedRotation(bool rot)
 
 void ArmSubsystem::SetDistRequestedSpeed(double speed)
 {
-    m_requestedTelescopeSpeed = speed;
+    m_requestedTelescopeSpeed = speed * m_armSpeed.Get();
 }
 
 void ArmSubsystem::SetHighDist()

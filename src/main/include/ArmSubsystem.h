@@ -46,6 +46,7 @@ private:
 
     Joystick m_operatorJoystick;
     
+    COREConstant<double> m_armSpeed;
     COREConstant<double> m_mediumDist, m_highDist;
     COREConstant<int> m_outerLimit;
     COREConstant<int> m_cruiseTelescopeVel, m_maxTelescopeAcel;

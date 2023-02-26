@@ -24,7 +24,7 @@ private:
 
     Joystick m_operatorJoystick;
     
-    COREConstant<double> m_intakeSpeed, m_intakeTimeSet;
+    COREConstant<double> m_intakeConeSpeed, m_intakeCubeSpeed, m_intakeTimeSet;
     bool m_intakeActive;
     CORETimer m_intakeTimer;
 };
