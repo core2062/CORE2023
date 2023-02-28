@@ -18,5 +18,11 @@ private:
     Node * delayNode;
     Node * driveNode2;
     Node * delayNode2;
+    Node * driveNode3;
+    Node * delayNode3;
+    Node * driveNode4;
+    Node * delayNode4;
+    Node * driveNode5;
+    Node * delayNode5;
     Node * balanceNode;
 };

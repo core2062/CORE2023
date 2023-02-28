@@ -17,23 +17,31 @@ public:
     HighScoreRoutine();
     void AddNodes() override;
 private:
-    //place piece on score
-    Node * grabNode;
+    //Pickup prep
+    Node * wristNode;
     Node * delayNode;
-    Node * scoreHighNode;
+    Node * intakeNode;
+    Node * delayNode;
+    Node * autonPickupNode;
     Node * delayNode2;
-    Node * pickupNode;
+    //pickup and score
+    Node * grabNode;
     Node * delayNode3;
-    Node * grabNode2;
+    Node * scoreHighNode;
     Node * delayNode4;
+    Node * dropNode;
+    Node * delayNode5;
+    //prepeare to grab new piece
+    Node * pickupNode;
+    Node * delayNode6;
     //move and grab new piece
     Node * turnNode;
     Node * delayNode5;
+    Node * intakeNode;
+    Node * delayNode7;
     Node * driveNode;
     Node * delayNode6;
     //grab piece
-    Node * intakeNode;
-    Node * delayNode7;
     Node * grabberNode3;
     Node * delayNode8;
     Node * intakeNode2;
@@ -45,10 +53,16 @@ private:
     Node * delayNode11;
     Node * scoreMidNode;
     Node * delayNode12;
+    Node * dropNode;
+    Node * delayNode;
     Node * pickupNode2;
     Node * delayNode13;
-    Node * grabberNode4;
+    Node * wristNode;
     Node * delayNode14;
+    Node * intakeNode;
+    Node * delayNode;
+    Node * wristNode;
+    Node * delayNode;
     //go to balance
     Node * turnNode3;
     Node * delayNode15;

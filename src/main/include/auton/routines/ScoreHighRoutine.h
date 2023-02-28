@@ -14,7 +14,18 @@ public:
     ScoreHighRoutine();
     void AddNodes() override;
 private:
-    Node * grabNode;
+    //Pickup prep
+    Node * wristNode;
     Node * delayNode;
-    Node * scorehighNode;
+    Node * intakeNode;
+    Node * delayNode;
+    Node * autonPickupNode;
+    Node * delayNode2;
+    //pickup and score
+    Node * grabNode;
+    Node * delayNode3;
+    Node * scoreHighNode;
+    Node * delayNode4;
+    Node * dropNode;
+    Node * delayNode5;
 };
