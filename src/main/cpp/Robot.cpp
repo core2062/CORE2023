@@ -6,13 +6,13 @@
 
 Robot* Robot::m_instance;
 
-Robot::Robot() {
+Robot::Robot() : m_operatorJoystick(OPERATOR_JOYSTICK)
+{
     CORELog::LogInfo("Starting up Robot!");
     m_instance = this;
 }
 
 void Robot::robotInit() {
-    operatorJoystick->RegisterButton(COREJoystick::JoystickButton::A_BUTTON);
     operatorJoystick->RegisterButton(COREJoystick::JoystickButton::B_BUTTON);
     operatorJoystick->RegisterButton(COREJoystick::JoystickButton::Y_BUTTON);
 }
@@ -21,15 +21,15 @@ void Robot::teleopInit() {}
 
 /* This is where the current state of the scoring assembly is set */
 void Robot::teleop() {
-    if (operatorJoystick->GetRisingEdge(COREJoystick::JoystickButton::A_BUTTON))
+    if (m_operatorJoystick.GetRawButtonReleased(5))
     {
         scoringAssembly.SetWantedState(WantedState::WANT_TO_PICKUP);
     }
-    else if (operatorJoystick->GetRisingEdge(COREJoystick::JoystickButton::B_BUTTON))
+    else if (m_operatorJoystick.GetRawButtonReleased(4))
     {
         scoringAssembly.SetWantedState(WantedState::WANT_TO_SCORE_MID);
     }
-    else if (operatorJoystick->GetRisingEdge(COREJoystick::JoystickButton::Y_BUTTON))
+    else if (m_operatorJoystick.GetRawButtonReleased(6))
     {
         scoringAssembly.SetWantedState(WantedState::WANT_TO_SCORE_HIGH);
     }

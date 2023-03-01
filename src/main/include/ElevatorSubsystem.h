@@ -49,12 +49,13 @@ private:
     
     COREConstant<double> m_pickUpHeight, m_mediumHeight, m_highHeight, m_safeRotateHeight;
     COREConstant<double> m_ticksPerMeter;
-    COREConstant<double> m_liftUpSpeedMod, m_liftDownSpeedMod;
+    COREConstant<double> m_liftUpSpeedMod, m_liftDownSpeedMod, m_liftHoldSpeed;
     COREConstant<double> m_bottomLimit, m_topLimit;
     COREConstant<int> m_cruiseVel, m_maxAcel;
 
     int m_requestedPosition;
     double m_requestedSpeed;
+    bool m_holdPosition;
 
     // ArmSubsystem* m_armSubsystem;
 };

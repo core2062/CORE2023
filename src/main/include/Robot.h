@@ -44,6 +44,6 @@ class Robot : public CORERobot {
   ElevatorSubsystem elevatorSubsystem;
   
  private:
- 
+  Joystick m_operatorJoystick;
   static Robot * m_instance;
 };

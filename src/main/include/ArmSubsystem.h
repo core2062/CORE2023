@@ -25,6 +25,7 @@ public:
     void SetHighDist();
     void SetMediumDist();
     void SetArmIn();
+    void SetRotUp();
     void SetRotDown();
 
     int GetArmDist();
@@ -43,6 +44,8 @@ public:
 private:
     TalonSRX m_telescopeMotorL, m_telescopeMotorR;
     DoubleSolenoid m_armPiston;
+
+    DigitalInput m_topLimitSwitch;
 
     Joystick m_operatorJoystick;
     
