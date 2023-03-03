@@ -12,13 +12,16 @@ ElevatorSubsystem::ElevatorSubsystem() :
         m_highHeight("Elevator High-Level Height"),
         m_safeRotateHeight("Safe rotation height",0.49541015982),
         m_ticksPerMeter("Elevator Ticks Per Meter",27343), 
-        m_liftUpSpeedMod("Elevator Up Speed ", 0.5),
-        m_liftDownSpeedMod("Elevator Down Speed ", 0.3),
+        m_liftUpSpeedMod("Elevator Up Speed ", 1),
+        m_liftDownSpeedMod("Elevator Down Speed ", 1),
         m_liftHoldSpeed("Elevator Hold Speed ", 0.17),
         m_bottomLimit("Elevator Bottom Limit",0),
         m_topLimit("Elevator Top Limit",0.586757),
-        m_cruiseVel("Elevator Cruise Velocity",1),
-        m_maxAcel("Elevator Max Acceleration",1)
+        m_liftkP("Lift kP",0.5),
+        m_liftkI("Lift kI",0),
+        m_liftkD("Lift kD",0),
+        m_cruiseVel("Elevator Cruise Velocity",1000),
+        m_maxAcel("Elevator Max Acceleration",1000)
 {
     m_rightLiftMotor.SetInverted(true);
 }
@@ -38,6 +41,22 @@ void ElevatorSubsystem::robotInit()
 
     m_leftLiftMotor.SetSensorPhase(true);
     
+    m_leftLiftMotor.SetStatusFramePeriod(StatusFrameEnhanced::Status_13_Base_PIDF0, 10);
+    m_leftLiftMotor.SetStatusFramePeriod(StatusFrameEnhanced::Status_10_MotionMagic, 10);
+
+    m_leftLiftMotor.ConfigNominalOutputForward(0);
+    m_leftLiftMotor.ConfigNominalOutputReverse(0);
+    m_leftLiftMotor.ConfigPeakOutputForward(1);
+    m_leftLiftMotor.ConfigPeakOutputReverse(-1);
+
+    m_leftLiftMotor.SelectProfileSlot(0,0);
+    m_leftLiftMotor.Config_kF(0,0,0);
+    m_leftLiftMotor.Config_kP(0,m_liftkP.Get(),0);
+    m_leftLiftMotor.Config_kI(0,m_liftkI.Get(),0);
+    m_leftLiftMotor.Config_kD(0,m_liftkD.Get(),0);
+
+    m_leftLiftMotor.ConfigMotionCruiseVelocity(m_cruiseVel.Get(), 0);
+    m_leftLiftMotor.ConfigMotionAcceleration(m_maxAcel.Get(), 0);
     // operatorJoystick->RegisterAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
 
 }
@@ -45,8 +64,6 @@ void ElevatorSubsystem::robotInit()
 void ElevatorSubsystem::teleopInit(){
     m_holdPosition = false;
     SetRequestedPosition(GetElevatorMeters()); // Sets requested position to current position
-    m_leftLiftMotor.ConfigMotionCruiseVelocity(m_cruiseVel.Get(), 0);
-    m_leftLiftMotor.ConfigMotionAcceleration(m_maxAcel.Get(), 0);
 }
 
 void ElevatorSubsystem::teleop(){}
@@ -102,7 +119,10 @@ void ElevatorSubsystem::PostLoopTask(){
 
     if (m_holdPosition)
     {
-        m_requestedSpeed = m_liftHoldSpeed.Get();
+        double throttleValue = abs(m_operatorJoystick.GetRawAxis(3)-1)*.25;
+        SmartDashboard::PutNumber("Throttle Value",throttleValue);
+        m_requestedSpeed = throttleValue;
+        // m_requestedSpeed = m_liftHoldSpeed.Get();
     }
 
     // Sets the motors, if requested speed is within deadbands will move manually else motionmagic will move it to the requested position

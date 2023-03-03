@@ -8,36 +8,55 @@
 // Pad W awrist
 
 ArmSubsystem::ArmSubsystem() : 
-        m_telescopeMotorL(LEFT_ARM_MOTOR),
-        m_telescopeMotorR(RIGHT_ARM_MOTOR),
+        m_leftArmMotor(LEFT_ARM_MOTOR),
+        m_rightArmMotor(RIGHT_ARM_MOTOR),
         m_armPiston(frc::PneumaticsModuleType::REVPH, ARM_IN_PORT, ARM_OUT_PORT),
-        m_topLimitSwitch(ARM_IN_LIMIT_SWITCH_PORT),
+        m_armLimitSwitch(ARM_IN_LIMIT_SWITCH_PORT),
         m_operatorJoystick(OPERATOR_JOYSTICK),
+        m_armSpeed("Arm Speed", 0.7),
         m_mediumDist("Arm Mid-Level Distance In Ticks",12000),
         m_highDist("Arm High-Level Distance In Ticks",23000),
-        m_outerLimit("Arm Outer Limit In Ticks",24054),
-        m_cruiseTelescopeVel("Telescope Arm Cruise Velocity",4),
-        m_maxTelescopeAcel("Telescope Arm Max Acceleration",5),
-        m_armSpeed("Arm Speed", 0.7)
+        m_outerLimit("Arm Outer Limit In Ticks",18600),
+        m_cruiseVel("Telescope Arm Cruise Velocity",1000),
+        m_maxAcel("Telescope Arm Max Acceleration",1000)
 {}
 
 void ArmSubsystem::robotInit()
 {
     m_wristUp = true;
-    m_telescopeMotorL.SetInverted(true);
+    m_rightArmMotor.SetInverted(true);
 
-    m_telescopeMotorR.Set(ControlMode::PercentOutput, 0);
-    m_telescopeMotorL.Set(ControlMode::PercentOutput, 0);
+    m_rightArmMotor.Set(ControlMode::PercentOutput, 0);
+    m_leftArmMotor.Set(ControlMode::PercentOutput, 0);
 
-    m_telescopeMotorR.SetNeutralMode(NeutralMode::Brake);
-    m_telescopeMotorL.SetNeutralMode(NeutralMode::Brake);
+    m_rightArmMotor.SetNeutralMode(NeutralMode::Brake);
+    m_leftArmMotor.SetNeutralMode(NeutralMode::Brake);
 
-    m_telescopeMotorR.Follow(m_telescopeMotorL);
+    m_rightArmMotor.Follow(m_leftArmMotor);
 
-    m_telescopeMotorL.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, 0, 0);
-    m_telescopeMotorL.SetSelectedSensorPosition(0, 0, 0);
+    m_leftArmMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, 0, 0);
+    // m_leftArmMotor.SetSelectedSensorPosition(0, 0, 0);
 
-    m_telescopeMotorL.SetSensorPhase(true);
+    m_leftArmMotor.SetSensorPhase(true);
+
+    m_leftArmMotor.SetStatusFramePeriod(StatusFrameEnhanced::Status_13_Base_PIDF0, 10);
+    m_leftArmMotor.SetStatusFramePeriod(StatusFrameEnhanced::Status_10_MotionMagic, 10);
+
+    m_leftArmMotor.ConfigNominalOutputForward(0);
+    m_leftArmMotor.ConfigNominalOutputReverse(0);
+    m_leftArmMotor.ConfigPeakOutputForward(1);
+    m_leftArmMotor.ConfigPeakOutputReverse(-1);
+
+    m_leftArmMotor.SelectProfileSlot(0,0);
+    m_leftArmMotor.Config_kF(0,0,0);
+    m_leftArmMotor.Config_kP(0,0,0);
+    m_leftArmMotor.Config_kI(0,0,0);
+    m_leftArmMotor.Config_kD(0,0,0);
+
+    m_leftArmMotor.ConfigMotionCruiseVelocity(m_cruiseVel.Get(), 0);
+    m_leftArmMotor.ConfigMotionAcceleration(m_maxAcel.Get(), 0);
+    
+
 
     // operatorJoystick->RegisterAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_Y);
     // operatorJoystick->RegisterButton(CORE::COREJoystick::JoystickButton::BACK_BUTTON);
@@ -47,8 +66,6 @@ void ArmSubsystem::robotInit()
 void ArmSubsystem::teleopInit()
 {
     SetRequestedPosition(GetArmDist()); // Sets requested position to current position
-    m_telescopeMotorL.ConfigMotionCruiseVelocity(m_cruiseTelescopeVel.Get(), 0);
-    m_telescopeMotorL.ConfigMotionAcceleration(m_maxTelescopeAcel.Get(), 0);
 }
 
 void ArmSubsystem::teleop()
@@ -63,12 +80,13 @@ void ArmSubsystem::teleop()
 // Will probably run after PostLoopTask() in scoring assembly
 void ArmSubsystem::PostLoopTask()
 {
-    SmartDashboard::PutNumber("Arm Telescope Position", m_telescopeMotorL.GetSelectedSensorPosition(0));
-    SmartDashboard::PutNumber("Arm Telescope LEFT Velocity", m_telescopeMotorL.GetSelectedSensorVelocity(0));
-    SmartDashboard::PutNumber("Arm Telescope RIGHT Velocity", m_telescopeMotorR.GetSelectedSensorVelocity(0));
+    SmartDashboard::PutNumber("Arm Telescope Position", m_leftArmMotor.GetSelectedSensorPosition(0));
+    SmartDashboard::PutNumber("Arm Telescope LEFT Velocity", m_leftArmMotor.GetSelectedSensorVelocity(0));
+    SmartDashboard::PutNumber("Arm Telescope RIGHT Velocity", m_rightArmMotor.GetSelectedSensorVelocity(0));
     SmartDashboard::PutNumber("Arm Telescope Requested Position", m_requestedDist);
 
     SmartDashboard::PutBoolean("Arm Rotation Out", IsArmUp());
+    SmartDashboard::PutBoolean("Arm FUlly In", IsArmIn());
     SmartDashboard::PutBoolean("Arm Rotation Requested Position", m_requestedRotUp);
 
     double telescopePosition = GetArmDist();
@@ -88,12 +106,12 @@ void ArmSubsystem::PostLoopTask()
     }
 
     // Softstop for telescoping arm extend & rotation
-    if(m_requestedTelescopeSpeed > 0 && (IsArmIn()/* || (GetArmDist() - m_outerLimit.Get()) > 100*/))
+    if(m_requestedTelescopeSpeed > 0 && (GetArmDist() - m_outerLimit.Get()) > 100)
     {
         std::cout << "Softstopping arm out" << endl;
         m_requestedTelescopeSpeed = 0;
         SetRequestedPosition(m_outerLimit.Get());
-    } else if(GetArmDist() < 100)
+    } else if(IsArmIn())
     {
         if (m_requestedTelescopeSpeed < 0)
         {
@@ -101,13 +119,14 @@ void ArmSubsystem::PostLoopTask()
             m_requestedTelescopeSpeed = 0;
             SetRequestedPosition(0);
         }
+        ResetEncoders();
     }
 
     if(m_requestedTelescopeSpeed < -0.1 || m_requestedTelescopeSpeed > 0.1)
     {
-        m_telescopeMotorL.Set(ControlMode::PercentOutput,m_requestedTelescopeSpeed);
+        m_leftArmMotor.Set(ControlMode::PercentOutput,m_requestedTelescopeSpeed);
     } else {
-        m_telescopeMotorL.Set(ControlMode::MotionMagic,m_requestedDist);
+        m_leftArmMotor.Set(ControlMode::MotionMagic,m_requestedDist);
     }
 
     if(m_requestedRotUp)
@@ -164,7 +183,7 @@ void ArmSubsystem::SetRotDown()
 
 int ArmSubsystem::GetArmDist()
 {
-    return m_telescopeMotorL.GetSelectedSensorPosition(0);
+    return m_leftArmMotor.GetSelectedSensorPosition(0);
 }
 
 
@@ -185,10 +204,10 @@ bool ArmSubsystem::IsArmUp()
 
 bool ArmSubsystem::IsArmIn()
 {
-    return !m_topLimitSwitch.Get();
+    return !m_armLimitSwitch.Get();
 }
 
 void ArmSubsystem::ResetEncoders()
 {
-    m_telescopeMotorL.SetSelectedSensorPosition(0,0,0);
+    m_leftArmMotor.SetSelectedSensorPosition(0,0,0);
 }

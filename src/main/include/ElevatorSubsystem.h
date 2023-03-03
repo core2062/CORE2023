@@ -8,7 +8,6 @@
 #include "Config.h"
 #include "ArmSubsystem.h"
 
-
 using namespace CORE;
 using namespace frc;
 
@@ -51,6 +50,7 @@ private:
     COREConstant<double> m_ticksPerMeter;
     COREConstant<double> m_liftUpSpeedMod, m_liftDownSpeedMod, m_liftHoldSpeed;
     COREConstant<double> m_bottomLimit, m_topLimit;
+    COREConstant<double> m_liftkP, m_liftkI, m_liftkD;
     COREConstant<int> m_cruiseVel, m_maxAcel;
 
     int m_requestedPosition;
