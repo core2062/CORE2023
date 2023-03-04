@@ -73,6 +73,7 @@ void ArmSubsystem::teleop()
     {
         m_requestedRotUp = !m_requestedRotUp;
         m_wristUp = !m_wristUp;
+        Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
     }
 }
 
@@ -89,12 +90,14 @@ void ArmSubsystem::PostLoopTask()
     SmartDashboard::PutBoolean("Requested Wrist Up", m_requestedRotUp);
 
     double telescopePosition = GetArmDist();
-    
+
     if (m_operatorJoystick.GetPOV() == 0)
     {
+        Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
         SetDistRequestedSpeed(1);
     } else if (m_operatorJoystick.GetPOV() == 180)
     {
+        Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
         SetDistRequestedSpeed(-1);
     } else {
         SetDistRequestedSpeed(0);
@@ -106,14 +109,13 @@ void ArmSubsystem::PostLoopTask()
     SmartDashboard::PutNumber("Requested Telescope Speed", m_requestedTelescopeSpeed);
 
     // Deadbands joystick input
-    if(m_requestedTelescopeSpeed < -0.1 || m_requestedTelescopeSpeed > 0.1)
-    {
-        // m_requestedTelescopeSpeed *= 0.5;
-        SetRequestedPosition(telescopePosition);
-        Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
-    } else {
-        m_requestedTelescopeSpeed = 0;
-    }
+    // if(m_requestedTelescopeSpeed < -0.1 || m_requestedTelescopeSpeed > 0.1)
+    // {
+    //     // m_requestedTelescopeSpeed *= 0.5;
+    //     SetRequestedPosition(telescopePosition);
+    // } else {
+    //     m_requestedTelescopeSpeed = 0;
+    // }
 
     // Softstop for telescoping arm extend & rotation
     if(m_requestedTelescopeSpeed > 0 && (GetArmDist() - m_outerLimit.Get()) > 100)
@@ -132,10 +134,11 @@ void ArmSubsystem::PostLoopTask()
         ResetEncoders();
     }
 
+    std::cout << "Curr wanted state: " << Robot::GetInstance()->scoringAssembly.GetWantedState() << endl;
     if(m_requestedTelescopeSpeed < -0.1 || m_requestedTelescopeSpeed > 0.1)
     {
         m_leftArmMotor.Set(ControlMode::PercentOutput,m_requestedTelescopeSpeed);
-    } else if (m_requestedDist != GetArmDist()) {
+    } else if (Robot::GetInstance()->scoringAssembly.GetWantedState() != WantedState::MANUAL) {
         m_leftArmMotor.Set(ControlMode::MotionMagic,m_requestedDist);
     } else {
         m_leftArmMotor.Set(ControlMode::PercentOutput,0);

@@ -7,9 +7,9 @@ ElevatorSubsystem::ElevatorSubsystem() :
         m_bottomLimitSwitch(ELEVATOR_BOTTOM_LIMIT_SWITCH_PORT),
         m_topLimitSwitch(ELEVATOR_TOP_LIMIT_SWITCH_PORT),
         m_operatorJoystick(OPERATOR_JOYSTICK),
-        m_pickUpHeight("Elevator Pick Up Height"),
-        m_mediumHeight("Elevator Mid-Level Height"),
-        m_highHeight("Elevator High-Level Height"),
+        m_pickUpHeight("Elevator Pick Up Height",0),
+        m_mediumHeight("Elevator Mid-Level Height",0.1),
+        m_highHeight("Elevator High-Level Height",0.2),
         m_safeRotateHeight("Safe rotation height",0.49541015982),
         m_ticksPerMeter("Elevator Ticks Per Meter",27343), 
         m_liftUpSpeedMod("Elevator Up Speed ", 1),
@@ -80,10 +80,10 @@ void ElevatorSubsystem::PostLoopTask(){
 
     SetRequestedSpeed(-m_operatorJoystick.GetRawAxis(1));
 
-    SmartDashboard::PutNumber("Elevator Speed", m_requestedSpeed);
+    SmartDashboard::PutNumber("Elevator Requested Speed", m_requestedSpeed);
 
     // Deadbands joystick input
-    if(m_requestedSpeed < -0.01 || m_requestedSpeed > 0.1)
+    if(m_requestedSpeed < -0.1 || m_requestedSpeed > 0.1)
     {
         if(m_requestedSpeed < 0)
             m_requestedSpeed *= m_liftDownSpeedMod.Get();
@@ -91,10 +91,12 @@ void ElevatorSubsystem::PostLoopTask(){
             m_requestedSpeed *= m_liftUpSpeedMod.Get();
         SetRequestedPosition(elevatorPosition);
         Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
+    } else {
+        m_requestedSpeed = 0;
     }
 
     // Softstops the elevator
-    if(m_requestedSpeed > 0.0 && (ElevatorUp() || GetElevatorMeters() > m_topLimit.Get()))
+    if(m_requestedSpeed > 0.0 && (ElevatorUp() || GetElevatorMeters() >= m_topLimit.Get()))
     {
 	    // std::cout << "Softstopped" << endl;
         m_requestedSpeed = 0;
@@ -110,24 +112,24 @@ void ElevatorSubsystem::PostLoopTask(){
         ResetEncoders();
     }
     // std::cout << "Button 2: " << m_operatorJoystick.GetRawButton(2) << endl;
-    if (m_operatorJoystick.GetRawButtonPressed(2))
-    {
-        m_holdPosition = true;
-    } else if (m_operatorJoystick.GetRawButtonReleased(2))
-    {
-        m_holdPosition = false;
-    }
+    // if (m_operatorJoystick.GetRawButtonPressed(2))
+    // {
+    //     m_holdPosition = true;
+    // } else if (m_operatorJoystick.GetRawButtonReleased(2))
+    // {
+    //     m_holdPosition = false;
+    // }
 
-    if (m_holdPosition)
-    {
-        double throttleValue = abs(m_operatorJoystick.GetRawAxis(3)-1)*.25;
-        SmartDashboard::PutNumber("Throttle Value",throttleValue);
-        m_requestedSpeed = throttleValue;
-        // m_requestedSpeed = m_liftHoldSpeed.Get();
-    }
+    // if (m_holdPosition)
+    // {
+    //     double throttleValue = abs(m_operatorJoystick.GetRawAxis(3)-1)*.25;
+    //     SmartDashboard::PutNumber("Throttle Value",throttleValue);
+    //     m_requestedSpeed = throttleValue;
+    //     // m_requestedSpeed = m_liftHoldSpeed.Get();
+    // }
 
     // Sets the motors, if requested speed is within deadbands will move manually else motionmagic will move it to the requested position
-    if (m_requestedSpeed < -0.01 || m_requestedSpeed > 0.1)
+    if (m_requestedSpeed < -0.1 || m_requestedSpeed > 0.1)
     {
         m_leftLiftMotor.Set(ControlMode::PercentOutput, m_requestedSpeed);
     } else

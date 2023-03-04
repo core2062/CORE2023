@@ -28,6 +28,8 @@ public:
 
     void SetWantedState(WantedState wantedState);
 
+    WantedState GetWantedState();
+
 private:
     enum SystemState {
         TRANSIT,

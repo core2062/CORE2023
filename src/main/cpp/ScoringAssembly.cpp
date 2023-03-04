@@ -1,7 +1,7 @@
 #include "ScoringAssembly.h"
 #include "Robot.h"
 
-ScoringAssembly::ScoringAssembly() : m_transitTransitionTimeout("Transit Transition Timeout",1000),
+ScoringAssembly::ScoringAssembly() : m_transitTransitionTimeout("Transit Transition Timeout",10),
                                     m_armThreshold("Arm Threshold")
 {}
 
@@ -62,6 +62,10 @@ void ScoringAssembly::PostLoopTask()
 
 void ScoringAssembly::SetWantedState(WantedState wantedState){
     m_wantedState = wantedState;
+}
+
+WantedState ScoringAssembly::GetWantedState(){
+    return m_wantedState;
 }
 
 /*  
@@ -130,7 +134,7 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
             break;
     }
     double timer = m_timeoutTimer.Get();
-    std::cout << "Assembly timeout timer: " << timer << endl;
+    // std::cout << "Assembly timeout timer: " << timer << endl;
     reachedTarget = reachedTarget || (timer > m_transitTransitionTimeout.Get()); // Checks timeout
 
     SmartDashboard::PutBoolean("Reached Target",reachedTarget);
