@@ -87,6 +87,7 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
             }
             
             SmartDashboard::PutBoolean("In second phase",(m_armSubsystem->IsArmInRange() && m_elevatorSubsystem->ElevatorUp()) || m_armInElevatorUp);
+            std::cout << "Entering second phase: " << (m_armSubsystem->IsArmInRange() && m_elevatorSubsystem->ElevatorUp()) << endl;
             reachedTarget = (!m_armSubsystem->IsWristUp() && m_elevatorSubsystem->IsPickupHeight() && m_armSubsystem->IsArmIn()); // Checks if the individual subsystems have reached their destination.
             std::cout << "Reached target: " << reachedTarget << endl;
             break;
@@ -125,10 +126,12 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
             reachedTarget = (m_armSubsystem->IsHighDist() && m_elevatorSubsystem->IsHighHeight());
             break;
         case WantedState::MANUAL: // In case you wanted to manually move the scoring assembly
+            m_armInElevatorUp = false;
             break;
     }
-
-    reachedTarget = reachedTarget || m_timeoutTimer.Get() > m_transitTransitionTimeout.Get(); // Checks timeout
+    double timer = m_timeoutTimer.Get();
+    std::cout << "Assembly timeout timer: " << timer << endl;
+    reachedTarget = reachedTarget || (timer > m_transitTransitionTimeout.Get()); // Checks timeout
 
     SmartDashboard::PutBoolean("Reached Target",reachedTarget);
 

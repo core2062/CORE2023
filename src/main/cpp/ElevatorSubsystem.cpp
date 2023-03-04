@@ -142,7 +142,7 @@ void ElevatorSubsystem::SetRequestedPosition(double positionInMeters)
 {
     // Sets the requested position after converting to ticks; Used for moving manually
     auto position = (int)(positionInMeters * m_ticksPerMeter.Get());
-    std::cout << "Position: " << position << endl;
+    // std::cout << "Position: " << position << endl;
     position = max(position,0);
     position = min(position, (int)(m_topLimit.Get()*m_ticksPerMeter.Get()));
     m_requestedPosition = position;
@@ -178,7 +178,7 @@ double ElevatorSubsystem::GetElevatorMeters(){
 }
 
 bool ElevatorSubsystem::ElevatorDown(){
-    return !m_bottomLimitSwitch.Get() || GetElevatorPosition() < 0;
+    return !m_bottomLimitSwitch.Get();// || GetElevatorPosition() < 0;
 }
 
 bool ElevatorSubsystem::ElevatorUp(){

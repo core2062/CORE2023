@@ -89,10 +89,21 @@ void ArmSubsystem::PostLoopTask()
     SmartDashboard::PutBoolean("Requested Wrist Up", m_requestedRotUp);
 
     double telescopePosition = GetArmDist();
+    
+    if (m_operatorJoystick.GetPOV() == 0)
+    {
+        SetDistRequestedSpeed(1);
+    } else if (m_operatorJoystick.GetPOV() == 180)
+    {
+        SetDistRequestedSpeed(-1);
+    } else {
+        SetDistRequestedSpeed(0);
+    }
+    
+    
+    // SetDistRequestedSpeed(m_operatorJoystick.GetRawAxis(0));
 
-    SetDistRequestedSpeed(m_operatorJoystick.GetRawAxis(0));
-
-    SmartDashboard::PutNumber("Requested Telescope Speed",m_requestedTelescopeSpeed);
+    SmartDashboard::PutNumber("Requested Telescope Speed", m_requestedTelescopeSpeed);
 
     // Deadbands joystick input
     if(m_requestedTelescopeSpeed < -0.1 || m_requestedTelescopeSpeed > 0.1)
@@ -107,14 +118,14 @@ void ArmSubsystem::PostLoopTask()
     // Softstop for telescoping arm extend & rotation
     if(m_requestedTelescopeSpeed > 0 && (GetArmDist() - m_outerLimit.Get()) > 100)
     {
-        std::cout << "Softstopping arm out" << endl;
+        // std::cout << "Softstopping arm out" << endl;
         m_requestedTelescopeSpeed = 0;
         SetRequestedPosition(m_outerLimit.Get());
     } else if(IsArmIn())
     {
         if (m_requestedTelescopeSpeed < 0)
         {
-            std::cout << "Softstopping arm in" << endl;
+            // std::cout << "Softstopping arm in" << endl;
             m_requestedTelescopeSpeed = 0;
             SetRequestedPosition(0);
         }
@@ -124,8 +135,10 @@ void ArmSubsystem::PostLoopTask()
     if(m_requestedTelescopeSpeed < -0.1 || m_requestedTelescopeSpeed > 0.1)
     {
         m_leftArmMotor.Set(ControlMode::PercentOutput,m_requestedTelescopeSpeed);
-    } else {
+    } else if (m_requestedDist != GetArmDist()) {
         m_leftArmMotor.Set(ControlMode::MotionMagic,m_requestedDist);
+    } else {
+        m_leftArmMotor.Set(ControlMode::PercentOutput,0);
     }
 
     if(m_requestedRotUp)
