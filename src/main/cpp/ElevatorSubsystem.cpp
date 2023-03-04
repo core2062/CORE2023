@@ -167,7 +167,7 @@ void ElevatorSubsystem::SetMediumHeight(){
 }
 
 void ElevatorSubsystem::SetPickupHeight(){
-    std::cout << "Setting Pickup ";
+    // std::cout << "Setting Pickup ";
     SetRequestedPosition(m_pickUpHeight.Get());
 }
 

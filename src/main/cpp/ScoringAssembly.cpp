@@ -131,6 +131,7 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
             break;
         case WantedState::MANUAL: // In case you wanted to manually move the scoring assembly
             m_armInElevatorUp = false;
+            reachedTarget = false;
             break;
     }
     double timer = m_timeoutTimer.Get();

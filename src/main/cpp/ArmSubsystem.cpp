@@ -71,7 +71,6 @@ void ArmSubsystem::teleop()
 {
     if(m_operatorJoystick.GetRawButtonReleased(3))
     {
-        m_requestedRotUp = !m_requestedRotUp;
         m_wristUp = !m_wristUp;
         Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
     }
@@ -87,7 +86,6 @@ void ArmSubsystem::PostLoopTask()
 
     SmartDashboard::PutBoolean("Wrist Up", IsWristUp());
     SmartDashboard::PutBoolean("Arm Fully In", IsArmIn());
-    SmartDashboard::PutBoolean("Requested Wrist Up", m_requestedRotUp);
 
     double telescopePosition = GetArmDist();
 
@@ -134,7 +132,7 @@ void ArmSubsystem::PostLoopTask()
         ResetEncoders();
     }
 
-    std::cout << "Curr wanted state: " << Robot::GetInstance()->scoringAssembly.GetWantedState() << endl;
+    // std::cout << "Curr wanted state: " << Robot::GetInstance()->scoringAssembly.GetWantedState() << endl;
     if(m_requestedTelescopeSpeed < -0.1 || m_requestedTelescopeSpeed > 0.1)
     {
         m_leftArmMotor.Set(ControlMode::PercentOutput,m_requestedTelescopeSpeed);
@@ -144,13 +142,12 @@ void ArmSubsystem::PostLoopTask()
         m_leftArmMotor.Set(ControlMode::PercentOutput,0);
     }
 
-    if(m_requestedRotUp)
+    if(m_wristUp)
     {
         m_armPiston.Set(DoubleSolenoid::kReverse);
     } else {
         m_armPiston.Set(DoubleSolenoid::kForward);
     }
-    m_wristUp = m_requestedRotUp;
 }
 
 void ArmSubsystem::SetRequestedPosition(int position)
@@ -163,7 +160,7 @@ void ArmSubsystem::SetRequestedPosition(int position)
 
 void ArmSubsystem::SetRequestedRotation(bool rot)
 {
-    m_requestedRotUp = rot;
+    m_wristUp = rot;
 }
 
 void ArmSubsystem::SetDistRequestedSpeed(double speed)
@@ -225,7 +222,7 @@ bool ArmSubsystem::IsArmIn()
 
 bool ArmSubsystem::IsArmInRange()
 {
-    return IsArmIn() || GetArmDist() < 200;
+    return IsArmIn();// || GetArmDist() < 200;
 }
 
 void ArmSubsystem::ResetEncoders()
