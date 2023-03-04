@@ -6,8 +6,8 @@ IntakeSubsystem::IntakeSubsystem() :
         m_rightIntakeMotor(RIGHT_INTAKE),
         m_intake(frc::PneumaticsModuleType::REVPH, INTAKE_IN_PORT, INTAKE_OUT_PORT),
         m_operatorJoystick(OPERATOR_JOYSTICK),
-        m_intakeConeSpeed("Intake Speed", 0.4),
-        m_intakeCubeSpeed("Intake Cube Speed", 0.3),
+        m_intakeConeSpeed("Intake Cone Speed", 0.65),
+        m_intakeCubeSpeed("Intake Cube Speed", 0.4),
         m_intakeTimeSet("Intake timer set time", 2){
 }
 
@@ -17,35 +17,28 @@ void IntakeSubsystem::robotInit(){
     driverJoystick->RegisterButton(CORE::COREJoystick::A_BUTTON);
     driverJoystick->RegisterButton(CORE::COREJoystick::RIGHT_BUTTON);
     driverJoystick->RegisterButton(CORE::COREJoystick::RIGHT_TRIGGER);
-    // m_intake.Set(DoubleSolenoid::kForward);
+    driverJoystick->RegisterButton(CORE::COREJoystick::LEFT_TRIGGER);
+    m_intake.Set(DoubleSolenoid::kForward);
 }
 
 
-void IntakeSubsystem::teleopInit() {
+void IntakeSubsystem::teleopInit() {}
 
-}
-
-void IntakeSubsystem::teleop(){
-    if(driverJoystick->GetButton(CORE::COREJoystick::JoystickButton::RIGHT_TRIGGER)) {
-        if (m_intake.Get() == DoubleSolenoid::kForward){
-            SetIntake(0.0);
-        } else{
+void IntakeSubsystem::teleop()
+{
+    if(m_intakeActive)
+    {
+        if(driverJoystick->GetButton(CORE::COREJoystick::JoystickButton::RIGHT_TRIGGER)) {
             SetIntake(-m_intakeConeSpeed.Get());
-        }
-     } else if (driverJoystick->GetButton(CORE::COREJoystick::JoystickButton::RIGHT_BUTTON)) {
-        if (m_intake.Get() == DoubleSolenoid::kForward){
-            SetIntake(0.0);
-        } else{
+        } else if (driverJoystick->GetButton(CORE::COREJoystick::JoystickButton::RIGHT_BUTTON)) {
             SetIntake(m_intakeConeSpeed.Get());
-        }
         } else if (driverJoystick->GetButton(CORE::COREJoystick::JoystickButton::LEFT_TRIGGER)) {
-        if (m_intake.Get() == DoubleSolenoid::kForward){
-            SetIntake(0.0);
-        } else{
             SetIntake(-m_intakeCubeSpeed.Get());
+        } else {
+            SetIntake(0);
         }
-        } else{
-        SetIntake(0.0);
+    } else {
+        SetIntake(0);    
     }
 
     if (driverJoystick->GetRisingEdge(CORE::COREJoystick::JoystickButton::A_BUTTON) && m_intakeActive == false){
@@ -62,10 +55,15 @@ void IntakeSubsystem::teleop(){
         m_intakeTimer.Reset();
         m_intakeTimer.Stop();
     }
-    // std::cout << "time is " << m_intakeTimer.Get() << endl;
 }
 
 void IntakeSubsystem::SetIntake(double intakeSpeed) {
     m_leftIntakeMotor.Set(ControlMode::PercentOutput, -intakeSpeed);
     m_rightIntakeMotor.Set(ControlMode::PercentOutput, intakeSpeed);
+}
+void IntakeSubsystem::SetIntakeForward() {
+    SetIntake(m_intakeConeSpeed.Get());
+}
+void IntakeSubsystem::SetIntakeReverse() {
+    SetIntake(-m_intakeConeSpeed.Get());
 }

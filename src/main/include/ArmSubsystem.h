@@ -25,6 +25,7 @@ public:
     void SetHighDist();
     void SetMediumDist();
     void SetArmIn();
+    void SetRotUp();
     void SetRotDown();
 
     int GetArmDist();
@@ -41,14 +42,17 @@ public:
     void ResetEncoders();
 
 private:
-    TalonSRX m_telescopeMotorL, m_telescopeMotorR;
+    TalonSRX m_leftArmMotor, m_rightArmMotor;
     DoubleSolenoid m_armPiston;
+
+    DigitalInput m_armLimitSwitch;
 
     Joystick m_operatorJoystick;
     
+    COREConstant<double> m_armSpeed;
     COREConstant<double> m_mediumDist, m_highDist;
     COREConstant<int> m_outerLimit;
-    COREConstant<int> m_cruiseTelescopeVel, m_maxTelescopeAcel;
+    COREConstant<int> m_cruiseVel, m_maxAcel;
 
     int m_requestedDist;
     double m_requestedTelescopeSpeed;

@@ -11,10 +11,10 @@ using namespace frc;
 
 enum WantedState
 {
+    MANUAL, // We want manual control
     WANT_TO_PICKUP, // We want to pick up a gamepiece
     WANT_TO_SCORE_MID, // We want to score on the mid level
-    WANT_TO_SCORE_HIGH, // We want to score on the high level
-    MANUAL // We want manual control
+    WANT_TO_SCORE_HIGH // We want to score on the high level
 };
 
 

@@ -5,6 +5,8 @@
 #include "auton/ScoreHighAction.h"
 #include "auton/GrabberAction.h"
 #include "auton/DelayAction.h"
+#include "auton/PickupAction.h"
+#include "auton/DriveAction.h"
 
 using namespace CORE;
 using namespace std;
@@ -14,18 +16,13 @@ public:
     ScoreHighRoutine();
     void AddNodes() override;
 private:
-    //Pickup prep
-    Node * wristNode;
+    Node * pickupPositionNode;
     Node * delayNode;
-    Node * intakeNode;
-    Node * delayNode;
-    Node * autonPickupNode;
-    Node * delayNode2;
-    //pickup and score
     Node * grabNode;
-    Node * delayNode3;
+    Node * delayNode2;
     Node * scoreHighNode;
+    Node * delayNode3;
+    Node * releaseNode;
     Node * delayNode4;
-    Node * dropNode;
-    Node * delayNode5;
+    Node * driveNode;
 };

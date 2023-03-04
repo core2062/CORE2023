@@ -50,6 +50,6 @@ class Robot : public CORERobot {
   DriveRoutine driveRoutine;
   
  private:
- 
+  Joystick m_operatorJoystick;
   static Robot * m_instance;
 };

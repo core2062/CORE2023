@@ -9,7 +9,6 @@ void ScoringAssembly::RobotInitTask()
 {
     m_armSubsystem = &Robot::GetInstance()->armSubsystem;
     m_elevatorSubsystem = &Robot::GetInstance()->elevatorSubsystem;
-
     m_armInElevatorUp = false;
 }
 
@@ -74,12 +73,14 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
     switch (m_wantedState)
     {
         case WantedState::WANT_TO_PICKUP:
-            m_armSubsystem->SetRotDown(); // To pickup gamepieces, the arm had to be fully retracted and rotated down
             if ((m_armSubsystem->IsArmIn() && m_elevatorSubsystem->ElevatorUp()) || m_armInElevatorUp)
             {
+                std::cout << "At second phase" << endl;
                 m_armInElevatorUp = true;
+                m_armSubsystem->SetRotDown(); // To pickup gamepieces, the arm had to be fully retracted and rotated down
                 m_elevatorSubsystem->SetPickupHeight(); // Sets the requested height of the elevator to the lowest level
             } else {
+                m_armSubsystem->SetRotUp(); // To pickup gamepieces, the arm had to be fully retracted and rotated down
                 m_elevatorSubsystem->SetMaxHeight();
                 m_armSubsystem->SetArmIn();
             }
