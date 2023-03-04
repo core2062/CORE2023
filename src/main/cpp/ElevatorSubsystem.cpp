@@ -37,7 +37,6 @@ void ElevatorSubsystem::robotInit()
     m_rightLiftMotor.Follow(m_leftLiftMotor);
 
     m_leftLiftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, 0, 0);
-    m_leftLiftMotor.SetSelectedSensorPosition(0, 0, 0);
 
     m_leftLiftMotor.SetSensorPhase(true);
     
@@ -73,7 +72,9 @@ void ElevatorSubsystem::PostLoopTask(){
     SmartDashboard::PutNumber("Elevator Position Meters", GetElevatorMeters());
     SmartDashboard::PutNumber("Elevator Velocity", m_leftLiftMotor.GetSelectedSensorVelocity(0));
     SmartDashboard::PutNumber("Requested Elevator Position", m_requestedPosition);
-    SmartDashboard::PutBoolean("Elevator safe rotation height", IsSafeRotateHeight());
+
+    SmartDashboard::PutBoolean("Elevator Down",ElevatorDown());
+    SmartDashboard::PutBoolean("Elevator Up",ElevatorUp());
 
     double elevatorPosition = GetElevatorMeters();
 
@@ -97,7 +98,7 @@ void ElevatorSubsystem::PostLoopTask(){
     {
 	    // std::cout << "Softstopped" << endl;
         m_requestedSpeed = 0;
-        SetRequestedPosition(m_topLimit.Get());
+        SetRequestedPosition(GetElevatorMeters());
     } 
     else if(ElevatorDown())
     {
@@ -128,7 +129,6 @@ void ElevatorSubsystem::PostLoopTask(){
     // Sets the motors, if requested speed is within deadbands will move manually else motionmagic will move it to the requested position
     if (m_requestedSpeed < -0.01 || m_requestedSpeed > 0.1)
     {
-        
         m_leftLiftMotor.Set(ControlMode::PercentOutput, m_requestedSpeed);
     } else
     {
@@ -136,13 +136,13 @@ void ElevatorSubsystem::PostLoopTask(){
     }
     
     m_requestedSpeed = 0;
-    SmartDashboard::PutNumber("Elevator", elevatorPosition);
 }
 
 void ElevatorSubsystem::SetRequestedPosition(double positionInMeters)
 {
     // Sets the requested position after converting to ticks; Used for moving manually
     auto position = (int)(positionInMeters * m_ticksPerMeter.Get());
+    std::cout << "Position: " << position << endl;
     position = max(position,0);
     position = min(position, (int)(m_topLimit.Get()*m_ticksPerMeter.Get()));
     m_requestedPosition = position;
@@ -165,6 +165,7 @@ void ElevatorSubsystem::SetMediumHeight(){
 }
 
 void ElevatorSubsystem::SetPickupHeight(){
+    std::cout << "Setting Pickup ";
     SetRequestedPosition(m_pickUpHeight.Get());
 }
 
@@ -177,7 +178,7 @@ double ElevatorSubsystem::GetElevatorMeters(){
 }
 
 bool ElevatorSubsystem::ElevatorDown(){
-    return !m_bottomLimitSwitch.Get();
+    return !m_bottomLimitSwitch.Get() || GetElevatorPosition() < 0;
 }
 
 bool ElevatorSubsystem::ElevatorUp(){
@@ -194,11 +195,6 @@ bool ElevatorSubsystem::IsMediumHeight(){
 
 bool ElevatorSubsystem::IsPickupHeight(){
     return abs(GetElevatorMeters() - m_pickUpHeight.Get()) < 2;
-}
-
-bool ElevatorSubsystem::IsSafeRotateHeight(){
-    // return GetElevatorMeters() >= m_safeRotateHeight.Get();
-    return true;
 }
 
 void ElevatorSubsystem::ResetEncoders(){

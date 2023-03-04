@@ -1,7 +1,7 @@
 #include "ScoringAssembly.h"
 #include "Robot.h"
 
-ScoringAssembly::ScoringAssembly() : m_transitTransitionTimeout("Transit Transition Timeout"),
+ScoringAssembly::ScoringAssembly() : m_transitTransitionTimeout("Transit Transition Timeout",1000),
                                     m_armThreshold("Arm Threshold")
 {}
 
@@ -74,18 +74,21 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
     switch (m_wantedState)
     {
         case WantedState::WANT_TO_PICKUP:
-            if ((m_armSubsystem->IsArmIn() && m_elevatorSubsystem->ElevatorUp()) || m_armInElevatorUp)
+            if ((m_armSubsystem->IsArmInRange() && m_elevatorSubsystem->ElevatorUp()) || m_armInElevatorUp)
             {
                 std::cout << "At second phase" << endl;
                 m_armInElevatorUp = true;
-                m_armSubsystem->SetRotDown(); // To pickup gamepieces, the arm had to be fully retracted and rotated down
+                m_armSubsystem->SetWristDown(); // To pickup gamepieces, the arm had to be fully retracted and rotated down
                 m_elevatorSubsystem->SetPickupHeight(); // Sets the requested height of the elevator to the lowest level
             } else {
-                m_armSubsystem->SetRotUp(); // To pickup gamepieces, the arm had to be fully retracted and rotated down
+                m_armSubsystem->SetWristUp(); // To pickup gamepieces, the arm had to be fully retracted and rotated down
                 m_elevatorSubsystem->SetMaxHeight();
                 m_armSubsystem->SetArmIn();
             }
-            reachedTarget = (!m_armSubsystem->IsArmUp() && m_elevatorSubsystem->IsPickupHeight() && m_armSubsystem->IsArmIn()); // Checks if the individual subsystems have reached their destination.
+            
+            SmartDashboard::PutBoolean("In second phase",(m_armSubsystem->IsArmInRange() && m_elevatorSubsystem->ElevatorUp()) || m_armInElevatorUp);
+            reachedTarget = (!m_armSubsystem->IsWristUp() && m_elevatorSubsystem->IsPickupHeight() && m_armSubsystem->IsArmIn()); // Checks if the individual subsystems have reached their destination.
+            std::cout << "Reached target: " << reachedTarget << endl;
             break;
         case WantedState::WANT_TO_SCORE_MID:
             if (m_armSubsystem->GetArmDist() < m_armThreshold.Get())
@@ -127,6 +130,8 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
 
     reachedTarget = reachedTarget || m_timeoutTimer.Get() > m_transitTransitionTimeout.Get(); // Checks timeout
 
+    SmartDashboard::PutBoolean("Reached Target",reachedTarget);
+
     if (reachedTarget)
     {
         m_armInElevatorUp = false;
@@ -162,7 +167,8 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
 
 ScoringAssembly::SystemState ScoringAssembly::HandleGrabbing()
 {
-    m_armSubsystem->SetRotDown();
+    // std::cout << "Handle Grabbing called" << endl;
+    m_armSubsystem->SetWristDown();
     m_elevatorSubsystem->SetPickupHeight();
     switch (m_wantedState)
     {

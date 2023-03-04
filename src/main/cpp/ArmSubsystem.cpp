@@ -49,14 +49,13 @@ void ArmSubsystem::robotInit()
 
     m_leftArmMotor.SelectProfileSlot(0,0);
     m_leftArmMotor.Config_kF(0,0,0);
-    m_leftArmMotor.Config_kP(0,0,0);
+    m_leftArmMotor.Config_kP(0,0.75,0);
     m_leftArmMotor.Config_kI(0,0,0);
     m_leftArmMotor.Config_kD(0,0,0);
 
     m_leftArmMotor.ConfigMotionCruiseVelocity(m_cruiseVel.Get(), 0);
     m_leftArmMotor.ConfigMotionAcceleration(m_maxAcel.Get(), 0);
     
-
 
     // operatorJoystick->RegisterAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_Y);
     // operatorJoystick->RegisterButton(CORE::COREJoystick::JoystickButton::BACK_BUTTON);
@@ -85,9 +84,9 @@ void ArmSubsystem::PostLoopTask()
     SmartDashboard::PutNumber("Arm Telescope RIGHT Velocity", m_rightArmMotor.GetSelectedSensorVelocity(0));
     SmartDashboard::PutNumber("Arm Telescope Requested Position", m_requestedDist);
 
-    SmartDashboard::PutBoolean("Arm Rotation Out", IsArmUp());
-    SmartDashboard::PutBoolean("Arm FUlly In", IsArmIn());
-    SmartDashboard::PutBoolean("Arm Rotation Requested Position", m_requestedRotUp);
+    SmartDashboard::PutBoolean("Wrist Up", IsWristUp());
+    SmartDashboard::PutBoolean("Arm Fully In", IsArmIn());
+    SmartDashboard::PutBoolean("Requested Wrist Up", m_requestedRotUp);
 
     double telescopePosition = GetArmDist();
 
@@ -135,6 +134,7 @@ void ArmSubsystem::PostLoopTask()
     } else {
         m_armPiston.Set(DoubleSolenoid::kForward);
     }
+    m_wristUp = m_requestedRotUp;
 }
 
 void ArmSubsystem::SetRequestedPosition(int position)
@@ -171,12 +171,12 @@ void ArmSubsystem::SetArmIn(){
     SetRequestedPosition(0);
 }
 
-void ArmSubsystem::SetRotUp()
+void ArmSubsystem::SetWristUp()
 {
     SetRequestedRotation(true);
 }
 
-void ArmSubsystem::SetRotDown()
+void ArmSubsystem::SetWristDown()
 {
     SetRequestedRotation(false);
 }
@@ -197,7 +197,7 @@ bool ArmSubsystem::IsMediumDist()
     return abs(GetArmDist() - m_mediumDist.Get()) < 2;
 }
 
-bool ArmSubsystem::IsArmUp()
+bool ArmSubsystem::IsWristUp()
 {
     return m_wristUp;
 }
@@ -205,6 +205,11 @@ bool ArmSubsystem::IsArmUp()
 bool ArmSubsystem::IsArmIn()
 {
     return !m_armLimitSwitch.Get();
+}
+
+bool ArmSubsystem::IsArmInRange()
+{
+    return IsArmIn() || GetArmDist() < 200;
 }
 
 void ArmSubsystem::ResetEncoders()

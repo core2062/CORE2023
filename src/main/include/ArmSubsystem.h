@@ -25,19 +25,20 @@ public:
     void SetHighDist();
     void SetMediumDist();
     void SetArmIn();
-    void SetRotUp();
-    void SetRotDown();
+    void SetWristUp();
+    void SetWristDown();
 
     int GetArmDist();
     double GetTelescopeArmMeters();
     
     bool ArmIn();
-    bool ArmDown();
+    bool IsArmInRange();
+    bool WristDown();
 
     bool IsHighDist();
     bool IsMediumDist();
-    bool IsArmUp();
     bool IsArmIn();
+    bool IsWristUp();
 
     void ResetEncoders();
 
