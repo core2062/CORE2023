@@ -12,10 +12,10 @@ void GrabberAction::ActionInit() {
 CORE::COREAutonAction::actionStatus GrabberAction::Action() {
     switch(m_grabberAction) {
         case GRABBER_GRAB:
-            Robot::GetInstance()->grabberSubsystem.setGrabber(true);
+            Robot::GetInstance()->grabberSubsystem.SetClaw(true);
             break;
         case GRABBER_RELEASE:
-            Robot::GetInstance()->grabberSubsystem.setGrabber(false);
+            Robot::GetInstance()->grabberSubsystem.SetClaw(false);
             break;
     }
     return COREAutonAction::actionStatus::END;
@@ -23,15 +23,4 @@ CORE::COREAutonAction::actionStatus GrabberAction::Action() {
 
 void GrabberAction::ActionEnd() {
     
-}
-
-void GrabberSubsystem::setGrabber(bool set) {
-	if (set)
-	{
-		m_clawActuator.Set(DoubleSolenoid::kForward);
-		m_clawActive = true;
-	} else {
-		m_clawActuator.Set(DoubleSolenoid::kReverse);
-		m_clawActive = false;
-	}
 }

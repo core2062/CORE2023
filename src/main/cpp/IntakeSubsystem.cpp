@@ -6,8 +6,8 @@ IntakeSubsystem::IntakeSubsystem() :
         m_rightIntakeMotor(RIGHT_INTAKE),
         m_intake(frc::PneumaticsModuleType::REVPH, INTAKE_IN_PORT, INTAKE_OUT_PORT),
         m_operatorJoystick(OPERATOR_JOYSTICK),
-        m_intakeConeSpeed("Intake Cone Speed", 0.65),
-        m_intakeCubeSpeed("Intake Cube Speed", 0.4),
+        m_intakeConeSpeed("Intake Cone Speed", 0.55),
+        m_intakeCubeSpeed("Intake Cube Speed", 0.425),
         m_intakeTimeSet("Intake timer set time", 2){
 }
 

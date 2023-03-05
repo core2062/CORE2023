@@ -14,8 +14,22 @@ void GrabberSubsystem::teleopInit() {
 
 void GrabberSubsystem::teleop(){   
     if (m_operatorJoystick.GetRawButtonReleased(1)){
-		m_clawActuator.Toggle();
-		m_clawActive = !m_clawActive;
+		if (m_clawActive)
+		{
+			SetClaw(false);
+		} else {
+			SetClaw(true);
+		}
 	} 
 	SmartDashboard::PutBoolean("Claw Open", m_clawActive);
+}
+
+void GrabberSubsystem::SetClaw(bool open){
+	if(open)
+	{
+		m_clawActuator.Set(DoubleSolenoid::kReverse);
+	} else {
+		m_clawActuator.Set(DoubleSolenoid::kForward);
+	}
+	m_clawActive = open;
 }

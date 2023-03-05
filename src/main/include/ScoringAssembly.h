@@ -5,6 +5,7 @@
 
 #include "ArmSubsystem.h"
 #include "ElevatorSubsystem.h"
+#include "GrabberSubsystem.h"
 
 using namespace CORE;
 using namespace frc;
@@ -28,6 +29,8 @@ public:
 
     void SetWantedState(WantedState wantedState);
 
+    WantedState GetWantedState();
+
 private:
     enum SystemState {
         TRANSIT,
@@ -43,6 +46,7 @@ private:
 
     ArmSubsystem* m_armSubsystem;
     ElevatorSubsystem* m_elevatorSubsystem;
+    GrabberSubsystem* m_grabberSubsystem;
 
     WantedState m_wantedState;
     SystemState m_systemState;

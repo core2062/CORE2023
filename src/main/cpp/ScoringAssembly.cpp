@@ -1,7 +1,7 @@
 #include "ScoringAssembly.h"
 #include "Robot.h"
 
-ScoringAssembly::ScoringAssembly() : m_transitTransitionTimeout("Transit Transition Timeout"),
+ScoringAssembly::ScoringAssembly() : m_transitTransitionTimeout("Transit Transition Timeout",4),
                                     m_armThreshold("Arm Threshold")
 {}
 
@@ -9,6 +9,8 @@ void ScoringAssembly::RobotInitTask()
 {
     m_armSubsystem = &Robot::GetInstance()->armSubsystem;
     m_elevatorSubsystem = &Robot::GetInstance()->elevatorSubsystem;
+    m_grabberSubsystem = &Robot::GetInstance()->grabberSubsystem;
+
     m_armInElevatorUp = false;
 }
 
@@ -26,7 +28,6 @@ void ScoringAssembly::TeleopInitTask()
     m_wantedState = WantedState::MANUAL;
     m_systemState = SystemState::TRANSIT;
     m_timeoutTimer.Reset();
-    m_timeoutTimer.Start();
 }
 
 /* If this actually runs, I believe it runs after the teleop() calls
@@ -61,6 +62,12 @@ void ScoringAssembly::PostLoopTask()
 
 void ScoringAssembly::SetWantedState(WantedState wantedState){
     m_wantedState = wantedState;
+    m_timeoutTimer.Reset();
+    m_timeoutTimer.Start();
+}
+
+WantedState ScoringAssembly::GetWantedState(){
+    return m_wantedState;
 }
 
 /*  
@@ -73,23 +80,28 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
     switch (m_wantedState)
     {
         case WantedState::WANT_TO_PICKUP:
-            if ((m_armSubsystem->IsArmIn() && m_elevatorSubsystem->ElevatorUp()) || m_armInElevatorUp)
+            m_grabberSubsystem->SetClaw(true);
+            if ((m_armSubsystem->IsArmIn() && m_elevatorSubsystem->IsMaxAutoExtension()) || m_armInElevatorUp)
             {
                 std::cout << "At second phase" << endl;
                 m_armInElevatorUp = true;
-                m_armSubsystem->SetRotDown(); // To pickup gamepieces, the arm had to be fully retracted and rotated down
+                m_armSubsystem->SetWristDown(); // To pickup gamepieces, the arm had to be fully retracted and rotated down
                 m_elevatorSubsystem->SetPickupHeight(); // Sets the requested height of the elevator to the lowest level
+                reachedTarget = (!m_armSubsystem->IsWristUp() && m_elevatorSubsystem->IsPickupHeight() && m_armSubsystem->IsArmIn()); // Checks if the individual subsystems have reached their destination.
             } else {
-                m_armSubsystem->SetRotUp(); // To pickup gamepieces, the arm had to be fully retracted and rotated down
+                m_armSubsystem->SetWristUp(); // To pickup gamepieces, the arm had to be fully retracted and rotated down
                 m_elevatorSubsystem->SetMaxHeight();
                 m_armSubsystem->SetArmIn();
             }
-            reachedTarget = (!m_armSubsystem->IsArmUp() && m_elevatorSubsystem->IsPickupHeight() && m_armSubsystem->IsArmIn()); // Checks if the individual subsystems have reached their destination.
+            
+            SmartDashboard::PutBoolean("In second phase",(m_armSubsystem->IsArmIn() && m_elevatorSubsystem->IsMaxAutoExtension()) || m_armInElevatorUp);
+            // std::cout << "Entering second phase: " << (m_armSubsystem->IsArmIn() && m_elevatorSubsystem->IsMaxAutoExtension()) << endl;
+            // std::cout << "Reached target: " << reachedTarget << endl;
             break;
         case WantedState::WANT_TO_SCORE_MID:
             if (m_armSubsystem->GetArmDist() < m_armThreshold.Get())
             {
-                if ((m_armSubsystem->IsArmIn() && m_elevatorSubsystem->ElevatorUp()) || m_armInElevatorUp)
+                if ((m_armSubsystem->IsArmIn() && m_elevatorSubsystem->IsMaxAutoExtension()) || m_armInElevatorUp)
                 {
                     m_armInElevatorUp = true;
                     m_elevatorSubsystem->SetMediumHeight(); // Sets the requested height of the elevator to the lowest level
@@ -106,7 +118,7 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
         case WantedState::WANT_TO_SCORE_HIGH:
             if (m_armSubsystem->GetArmDist() < m_armThreshold.Get())
             {
-                if ((m_armSubsystem->IsArmIn() && m_elevatorSubsystem->ElevatorUp()) || m_armInElevatorUp)
+                if ((m_armSubsystem->IsArmIn() && m_elevatorSubsystem->IsMaxAutoExtension()) || m_armInElevatorUp)
                 {
                     m_armInElevatorUp = true;
                     m_elevatorSubsystem->SetHighHeight(); // Sets the requested height of the elevator to the lowest level
@@ -121,10 +133,15 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
             reachedTarget = (m_armSubsystem->IsHighDist() && m_elevatorSubsystem->IsHighHeight());
             break;
         case WantedState::MANUAL: // In case you wanted to manually move the scoring assembly
+            m_armInElevatorUp = false;
+            reachedTarget = false;
             break;
     }
+    double timer = m_timeoutTimer.Get();
+            SmartDashboard::PutBoolean("Timed out",timer > m_transitTransitionTimeout.Get());
+    reachedTarget = reachedTarget || (timer > m_transitTransitionTimeout.Get()); // Checks timeout
 
-    reachedTarget = reachedTarget || m_timeoutTimer.Get() > m_transitTransitionTimeout.Get(); // Checks timeout
+    SmartDashboard::PutBoolean("Reached Target",reachedTarget);
 
     if (reachedTarget)
     {
@@ -161,7 +178,8 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
 
 ScoringAssembly::SystemState ScoringAssembly::HandleGrabbing()
 {
-    m_armSubsystem->SetRotDown();
+    // std::cout << "Handle Grabbing called" << endl;
+    m_armSubsystem->SetWristDown();
     m_elevatorSubsystem->SetPickupHeight();
     switch (m_wantedState)
     {
