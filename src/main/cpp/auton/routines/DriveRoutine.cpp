@@ -16,13 +16,13 @@ void DriveRoutine::AddNodes() {
     balanceNode = new Node(5, new AutoBalanceAction(AUTO_BALANCE, 5));
     AddFirstNode(driveNode);
     driveNode -> AddNext(delayNode);
-    delayNode -> AddNext(driveNode2);
-    driveNode2 -> AddNext(delayNode2);
-    delayNode2 -> AddNext(driveNode3);
-    driveNode3 -> AddNext(delayNode3);
-    delayNode3 -> AddNext(driveNode4);
-    driveNode4 -> AddNext(delayNode4);
-    delayNode4 -> AddNext(driveNode5);
-    driveNode5 -> AddNext(delayNode5);
-    delayNode5 -> AddNext(balanceNode);
+    // delayNode -> AddNext(driveNode2);
+    // driveNode2 -> AddNext(delayNode2);
+    // delayNode2 -> AddNext(driveNode3);
+    // driveNode3 -> AddNext(delayNode3);
+    // delayNode3 -> AddNext(driveNode4);
+    // driveNode4 -> AddNext(delayNode4);
+    // delayNode4 -> AddNext(driveNode5);
+    // driveNode5 -> AddNext(delayNode5);
+    // delayNode5 -> AddNext(balanceNode);
 }
