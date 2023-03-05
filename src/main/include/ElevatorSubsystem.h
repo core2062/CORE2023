@@ -30,9 +30,10 @@ public:
 
     int GetElevatorPosition();
     double GetElevatorMeters();
-    bool ElevatorDown();
-    bool ElevatorUp();
+    bool IsElevatorDown();
+    bool IsElevatorUp();
 
+    bool IsMaxAutoExtension();
     bool IsHighHeight();
     bool IsMediumHeight();
     bool IsPickupHeight();
@@ -49,7 +50,7 @@ private:
     COREConstant<double> m_pickUpHeight, m_mediumHeight, m_highHeight, m_safeRotateHeight;
     COREConstant<double> m_ticksPerMeter;
     COREConstant<double> m_liftUpSpeedMod, m_liftDownSpeedMod, m_liftHoldSpeed;
-    COREConstant<double> m_bottomLimit, m_topLimit;
+    COREConstant<double> m_bottomLimit, m_topManualLimit, m_topAutoLimit;
     COREConstant<double> m_liftkP, m_liftkI, m_liftkD;
     COREConstant<int> m_cruiseVel, m_maxAcel;
 

@@ -1,21 +1,20 @@
 #include "ArmSubsystem.h"
 #include "Robot.h"
 
-//TODO: Ask Sid which button he wants to actuate the wrist & implement
-// 5 Pcikup
-// 6 high
-// 4 Med
-// Pad W awrist
-
 ArmSubsystem::ArmSubsystem() : 
         m_leftArmMotor(LEFT_ARM_MOTOR),
         m_rightArmMotor(RIGHT_ARM_MOTOR),
         m_armPiston(frc::PneumaticsModuleType::REVPH, ARM_IN_PORT, ARM_OUT_PORT),
-        m_armLimitSwitch(ARM_IN_LIMIT_SWITCH_PORT),
+        m_armPotentiometer(ARM_POTENTIOMETER_PORT),
         m_operatorJoystick(OPERATOR_JOYSTICK),
         m_armSpeed("Arm Speed", 0.7),
         m_mediumDist("Arm Mid-Level Distance In Ticks",12000),
         m_highDist("Arm High-Level Distance In Ticks",23000),
+        m_inPotentiometer("Arm in potentiometer value",1),
+        m_outPotentiometer("Arm out potentiometer value",4),
+        m_armkP("Arm kP",0.9),
+        m_armkI("Arm kI",0),
+        m_armkD("Arm kD",0),
         m_outerLimit("Arm Outer Limit In Ticks",18600),
         m_cruiseVel("Telescope Arm Cruise Velocity",1000),
         m_maxAcel("Telescope Arm Max Acceleration",1000)
@@ -42,16 +41,18 @@ void ArmSubsystem::robotInit()
     m_leftArmMotor.SetStatusFramePeriod(StatusFrameEnhanced::Status_13_Base_PIDF0, 10);
     m_leftArmMotor.SetStatusFramePeriod(StatusFrameEnhanced::Status_10_MotionMagic, 10);
 
-    m_leftArmMotor.ConfigNominalOutputForward(0);
-    m_leftArmMotor.ConfigNominalOutputReverse(0);
+    m_leftArmMotor.ConfigNominalOutputForward(0.15);
+    m_leftArmMotor.ConfigNominalOutputReverse(-0.15);
     m_leftArmMotor.ConfigPeakOutputForward(1);
     m_leftArmMotor.ConfigPeakOutputReverse(-1);
 
+    m_leftArmMotor.ConfigMotionSCurveStrength(0);
+
     m_leftArmMotor.SelectProfileSlot(0,0);
     m_leftArmMotor.Config_kF(0,0,0);
-    m_leftArmMotor.Config_kP(0,0.75,0);
-    m_leftArmMotor.Config_kI(0,0,0);
-    m_leftArmMotor.Config_kD(0,0,0);
+    m_leftArmMotor.Config_kP(0,m_armkP.Get(),0);
+    m_leftArmMotor.Config_kI(0,m_armkI.Get(),0);
+    m_leftArmMotor.Config_kD(0,m_armkD.Get(),0);
 
     m_leftArmMotor.ConfigMotionCruiseVelocity(m_cruiseVel.Get(), 0);
     m_leftArmMotor.ConfigMotionAcceleration(m_maxAcel.Get(), 0);
@@ -79,13 +80,14 @@ void ArmSubsystem::teleop()
 // Will probably run after PostLoopTask() in scoring assembly
 void ArmSubsystem::PostLoopTask()
 {
-    SmartDashboard::PutNumber("Arm Telescope Position", m_leftArmMotor.GetSelectedSensorPosition(0));
+    SmartDashboard::PutNumber("Arm Telescope Potentiometer", GetArmDist());
     SmartDashboard::PutNumber("Arm Telescope LEFT Velocity", m_leftArmMotor.GetSelectedSensorVelocity(0));
     SmartDashboard::PutNumber("Arm Telescope RIGHT Velocity", m_rightArmMotor.GetSelectedSensorVelocity(0));
     SmartDashboard::PutNumber("Arm Telescope Requested Position", m_requestedDist);
 
     SmartDashboard::PutBoolean("Wrist Up", IsWristUp());
-    SmartDashboard::PutBoolean("Arm Fully In", IsArmIn());
+    SmartDashboard::PutBoolean("Arm In", IsArmIn());
+    SmartDashboard::PutBoolean("Arm Out", IsArmOut());
 
     double telescopePosition = GetArmDist();
 
@@ -101,7 +103,6 @@ void ArmSubsystem::PostLoopTask()
         SetDistRequestedSpeed(0);
     }
     
-    
     // SetDistRequestedSpeed(m_operatorJoystick.GetRawAxis(0));
 
     SmartDashboard::PutNumber("Requested Telescope Speed", m_requestedTelescopeSpeed);
@@ -116,7 +117,7 @@ void ArmSubsystem::PostLoopTask()
     // }
 
     // Softstop for telescoping arm extend & rotation
-    if(m_requestedTelescopeSpeed > 0 && (GetArmDist() - m_outerLimit.Get()) > 100)
+    if(m_requestedTelescopeSpeed > 0 && IsArmOut())
     {
         // std::cout << "Softstopping arm out" << endl;
         m_requestedTelescopeSpeed = 0;
@@ -131,6 +132,7 @@ void ArmSubsystem::PostLoopTask()
         }
         ResetEncoders();
     }
+
 
     // std::cout << "Curr wanted state: " << Robot::GetInstance()->scoringAssembly.GetWantedState() << endl;
     if(m_requestedTelescopeSpeed < -0.1 || m_requestedTelescopeSpeed > 0.1)
@@ -194,11 +196,10 @@ void ArmSubsystem::SetWristDown()
     SetRequestedRotation(false);
 }
 
-int ArmSubsystem::GetArmDist()
+double ArmSubsystem::GetArmDist()
 {
-    return m_leftArmMotor.GetSelectedSensorPosition(0);
+    return m_armPotentiometer.GetVoltage();
 }
-
 
 bool ArmSubsystem::IsHighDist()
 {
@@ -217,12 +218,12 @@ bool ArmSubsystem::IsWristUp()
 
 bool ArmSubsystem::IsArmIn()
 {
-    return !m_armLimitSwitch.Get();
+    return GetArmDist() < m_inPotentiometer.Get();
 }
 
-bool ArmSubsystem::IsArmInRange()
+bool ArmSubsystem::IsArmOut()
 {
-    return IsArmIn();// || GetArmDist() < 200;
+    return GetArmDist() > m_outPotentiometer.Get();
 }
 
 void ArmSubsystem::ResetEncoders()

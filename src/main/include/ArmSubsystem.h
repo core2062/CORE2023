@@ -1,6 +1,6 @@
 #pragma once
 
-#include <frc/DigitalInput.h>
+#include <frc/AnalogInput.h>
 #include <frc/DoubleSolenoid.h>
 #include <ctre/Phoenix.h>
 #include <CORERobotLib.h>
@@ -28,16 +28,15 @@ public:
     void SetWristUp();
     void SetWristDown();
 
-    int GetArmDist();
+    double GetArmDist();
     double GetTelescopeArmMeters();
     
-    bool ArmIn();
-    bool IsArmInRange();
     bool WristDown();
 
     bool IsHighDist();
     bool IsMediumDist();
     bool IsArmIn();
+    bool IsArmOut();
     bool IsWristUp();
 
     void ResetEncoders();
@@ -46,12 +45,14 @@ private:
     TalonSRX m_leftArmMotor, m_rightArmMotor;
     DoubleSolenoid m_armPiston;
 
-    DigitalInput m_armLimitSwitch;
+    AnalogInput m_armPotentiometer;
 
     Joystick m_operatorJoystick;
     
     COREConstant<double> m_armSpeed;
     COREConstant<double> m_mediumDist, m_highDist;
+    COREConstant<double> m_inPotentiometer, m_outPotentiometer;
+    COREConstant<double> m_armkP, m_armkI, m_armkD;
     COREConstant<int> m_outerLimit;
     COREConstant<int> m_cruiseVel, m_maxAcel;
 
@@ -59,7 +60,7 @@ private:
     double m_requestedTelescopeSpeed;
 
     bool m_requestedRotUp;
-    bool m_wristUp;    
+    bool m_wristUp;
 
     // ElevatorSubsystem* m_elevatorSubsystem;
 

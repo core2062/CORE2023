@@ -16,8 +16,9 @@ ElevatorSubsystem::ElevatorSubsystem() :
         m_liftDownSpeedMod("Elevator Down Speed ", 1),
         m_liftHoldSpeed("Elevator Hold Speed ", 0.17),
         m_bottomLimit("Elevator Bottom Limit",0),
-        m_topLimit("Elevator Top Limit",0.586757),
-        m_liftkP("Lift kP",0.5),
+        m_topManualLimit("Elevator Manual Top Limit",0.586757),
+        m_topAutoLimit("Elevator Auto Top Limit",0.486757),
+        m_liftkP("Lift kP",0.9),
         m_liftkI("Lift kI",0),
         m_liftkD("Lift kD",0),
         m_cruiseVel("Elevator Cruise Velocity",1000),
@@ -43,10 +44,12 @@ void ElevatorSubsystem::robotInit()
     m_leftLiftMotor.SetStatusFramePeriod(StatusFrameEnhanced::Status_13_Base_PIDF0, 10);
     m_leftLiftMotor.SetStatusFramePeriod(StatusFrameEnhanced::Status_10_MotionMagic, 10);
 
-    m_leftLiftMotor.ConfigNominalOutputForward(0);
+    m_leftLiftMotor.ConfigNominalOutputForward(0.23);
     m_leftLiftMotor.ConfigNominalOutputReverse(0);
     m_leftLiftMotor.ConfigPeakOutputForward(1);
     m_leftLiftMotor.ConfigPeakOutputReverse(-1);
+
+    m_leftLiftMotor.ConfigMotionSCurveStrength(0);
 
     m_leftLiftMotor.SelectProfileSlot(0,0);
     m_leftLiftMotor.Config_kF(0,0,0);
@@ -70,11 +73,12 @@ void ElevatorSubsystem::teleop(){}
 // Will probably run after PostLoopTask() in scoring assembly
 void ElevatorSubsystem::PostLoopTask(){
     SmartDashboard::PutNumber("Elevator Position Meters", GetElevatorMeters());
+    SmartDashboard::PutNumber("Elevator Position Ticks", GetElevatorPosition());
     SmartDashboard::PutNumber("Elevator Velocity", m_leftLiftMotor.GetSelectedSensorVelocity(0));
     SmartDashboard::PutNumber("Requested Elevator Position", m_requestedPosition);
 
-    SmartDashboard::PutBoolean("Elevator Down",ElevatorDown());
-    SmartDashboard::PutBoolean("Elevator Up",ElevatorUp());
+    SmartDashboard::PutBoolean("Elevator Down",IsElevatorDown());
+    SmartDashboard::PutBoolean("Elevator Up",IsElevatorUp());
 
     double elevatorPosition = GetElevatorMeters();
 
@@ -96,13 +100,13 @@ void ElevatorSubsystem::PostLoopTask(){
     }
 
     // Softstops the elevator
-    if(m_requestedSpeed > 0.0 && (ElevatorUp() || GetElevatorMeters() >= m_topLimit.Get()))
+    if(m_requestedSpeed > 0.0 && IsElevatorUp())
     {
 	    // std::cout << "Softstopped" << endl;
         m_requestedSpeed = 0;
         SetRequestedPosition(GetElevatorMeters());
     } 
-    else if(ElevatorDown())
+    else if(IsElevatorDown())
     {
         if(m_requestedSpeed < 0)
         {
@@ -112,17 +116,17 @@ void ElevatorSubsystem::PostLoopTask(){
         ResetEncoders();
     }
     // std::cout << "Button 2: " << m_operatorJoystick.GetRawButton(2) << endl;
-    // if (m_operatorJoystick.GetRawButtonPressed(2))
-    // {
-    //     m_holdPosition = true;
-    // } else if (m_operatorJoystick.GetRawButtonReleased(2))
-    // {
-    //     m_holdPosition = false;
-    // }
+    if (m_operatorJoystick.GetRawButtonPressed(2))
+    {
+        m_holdPosition = true;
+    } else if (m_operatorJoystick.GetRawButtonReleased(2))
+    {
+        m_holdPosition = false;
+    }
 
     // if (m_holdPosition)
     // {
-    //     double throttleValue = abs(m_operatorJoystick.GetRawAxis(3)-1)*.25;
+    //     double throttleValue = abs(m_operatorJoystick.GetRawAxis(3)-1);
     //     SmartDashboard::PutNumber("Throttle Value",throttleValue);
     //     m_requestedSpeed = throttleValue;
     //     // m_requestedSpeed = m_liftHoldSpeed.Get();
@@ -144,9 +148,13 @@ void ElevatorSubsystem::SetRequestedPosition(double positionInMeters)
 {
     // Sets the requested position after converting to ticks; Used for moving manually
     auto position = (int)(positionInMeters * m_ticksPerMeter.Get());
-    // std::cout << "Position: " << position << endl;
     position = max(position,0);
-    position = min(position, (int)(m_topLimit.Get()*m_ticksPerMeter.Get()));
+    if(Robot::GetInstance()->scoringAssembly.GetWantedState() != WantedState::MANUAL)
+    {
+        position = min(position, (int)(m_topAutoLimit.Get()*m_ticksPerMeter.Get()));
+    } else {
+        position = min(position, (int)(m_topManualLimit.Get()*m_ticksPerMeter.Get()));
+    }
     m_requestedPosition = position;
 }
 
@@ -155,7 +163,7 @@ void ElevatorSubsystem::SetRequestedSpeed(double speed){
 }
 
 void ElevatorSubsystem::SetMaxHeight(){
-    SetRequestedPosition(m_topLimit.Get());
+    SetRequestedPosition(m_topAutoLimit.Get());
 }
 
 void ElevatorSubsystem::SetHighHeight(){
@@ -176,15 +184,20 @@ int ElevatorSubsystem::GetElevatorPosition(){
 }
 
 double ElevatorSubsystem::GetElevatorMeters(){
-    return GetElevatorPosition() / m_ticksPerMeter.Get();
+    return (double)(GetElevatorPosition() / m_ticksPerMeter.Get());
 }
 
-bool ElevatorSubsystem::ElevatorDown(){
+bool ElevatorSubsystem::IsElevatorDown(){
     return !m_bottomLimitSwitch.Get();// || GetElevatorPosition() < 0;
 }
 
-bool ElevatorSubsystem::ElevatorUp(){
+bool ElevatorSubsystem::IsElevatorUp(){
     return !m_topLimitSwitch.Get();
+}
+
+bool ElevatorSubsystem::IsMaxAutoExtension()
+{
+    return GetElevatorPosition() >= (m_topAutoLimit.Get()-200);
 }
 
 bool ElevatorSubsystem::IsHighHeight(){

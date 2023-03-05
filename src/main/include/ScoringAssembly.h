@@ -5,6 +5,7 @@
 
 #include "ArmSubsystem.h"
 #include "ElevatorSubsystem.h"
+#include "GrabberSubsystem.h"
 
 using namespace CORE;
 using namespace frc;
@@ -45,6 +46,7 @@ private:
 
     ArmSubsystem* m_armSubsystem;
     ElevatorSubsystem* m_elevatorSubsystem;
+    GrabberSubsystem* m_grabberSubsystem;
 
     WantedState m_wantedState;
     SystemState m_systemState;
