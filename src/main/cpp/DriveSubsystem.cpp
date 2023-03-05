@@ -13,7 +13,7 @@ DriveSubsystem::DriveSubsystem() :
 		m_balanceMaxSpeed("Max speed of Balance", 0.75),
 		m_balanceCalibration("Robot Pitch", 2.5),
 		m_balanceMaxCalibration("max proportion of robot", 0.50),
-		m_driveSpeedModifier("Drive speed Modifier", 0.5),
+		m_driveSpeedModifier("Drive speed Modifier", 0.75),
 		m_driveSpeedModifierSlow("Drive speed Modifier slowed", 0.25),
 		m_compressor(frc::PneumaticsModuleType::REVPH) {
 }
