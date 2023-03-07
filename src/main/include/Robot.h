@@ -22,6 +22,7 @@
 
 //Routines
 #include "auton/routines/DriveRoutine.h"
+#include "auton/routines/ScoreMidBalanceRoutine.h"
 
 using namespace CORE;
 using namespace std;
@@ -48,6 +49,7 @@ class Robot : public CORERobot {
   ElevatorSubsystem elevatorSubsystem;
 
   DriveRoutine driveRoutine;
+  ScoreMidBalanceRoutine scoreMidBalanceRoutine;
   
  private:
   Joystick m_operatorJoystick;

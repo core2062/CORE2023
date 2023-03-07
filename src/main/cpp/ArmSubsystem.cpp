@@ -22,7 +22,7 @@ ArmSubsystem::ArmSubsystem() :
 
 void ArmSubsystem::robotInit()
 {
-    m_wristUp = true;
+    m_wristUp = false;
     m_rightArmMotor.SetInverted(true);
 
     m_rightArmMotor.Set(ControlMode::PercentOutput, 0);
@@ -74,6 +74,17 @@ void ArmSubsystem::teleop() {
         m_wristUp = !m_wristUp;
         Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
     }
+    if (m_operatorJoystick.GetPOV() == 0)
+    {
+        Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
+        SetDistRequestedSpeed(1);
+    } else if (m_operatorJoystick.GetPOV() == 180)
+    {
+        Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
+        SetDistRequestedSpeed(-1);
+    } else {
+        SetDistRequestedSpeed(0);
+    }
 }
 
 // Will probably run after PostLoopTask() in scoring assembly
@@ -90,17 +101,6 @@ void ArmSubsystem::PostLoopTask()
 
     double telescopePosition = GetArmDist();
 
-    if (m_operatorJoystick.GetPOV() == 0)
-    {
-        Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
-        SetDistRequestedSpeed(1);
-    } else if (m_operatorJoystick.GetPOV() == 180)
-    {
-        Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
-        SetDistRequestedSpeed(-1);
-    } else {
-        SetDistRequestedSpeed(0);
-    }
     
     // SetDistRequestedSpeed(m_operatorJoystick.GetRawAxis(0));
 

@@ -12,10 +12,10 @@ void GrabberAction::ActionInit() {
 CORE::COREAutonAction::actionStatus GrabberAction::Action() {
     switch(m_grabberAction) {
         case GRABBER_GRAB:
-            Robot::GetInstance()->grabberSubsystem.SetClaw(true);
+            Robot::GetInstance()->grabberSubsystem.SetClaw(false);
             break;
         case GRABBER_RELEASE:
-            Robot::GetInstance()->grabberSubsystem.SetClaw(false);
+            Robot::GetInstance()->grabberSubsystem.SetClaw(true);
             break;
     }
     return COREAutonAction::actionStatus::END;
