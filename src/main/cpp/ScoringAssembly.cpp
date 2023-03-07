@@ -2,7 +2,9 @@
 #include "Robot.h"
 
 ScoringAssembly::ScoringAssembly() : m_transitTransitionTimeout("Transit Transition Timeout",4),
-                                    m_armThreshold("Arm Threshold")
+                                    m_scoreMidTransitionTimeout("Score Mid Transition Timeout",4),
+                                    m_armThreshold("Arm Threshold",2),
+                                    m_elevatorThreshold("Elevator Threshold",2)
 {}
 
 void ScoringAssembly::RobotInitTask()
@@ -10,6 +12,7 @@ void ScoringAssembly::RobotInitTask()
     m_armSubsystem = &Robot::GetInstance()->armSubsystem;
     m_elevatorSubsystem = &Robot::GetInstance()->elevatorSubsystem;
     m_grabberSubsystem = &Robot::GetInstance()->grabberSubsystem;
+    m_intakeSubsystem = &Robot::GetInstance()->intakeSubsystem;
 
     m_armInElevatorUp = false;
 }
@@ -81,31 +84,30 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
     {
         case WantedState::WANT_TO_PICKUP:
             m_grabberSubsystem->SetClaw(true);
+            m_intakeSubsystem->SetIntakeActive(true);
             if ((m_armSubsystem->IsArmIn() && m_elevatorSubsystem->IsMaxAutoExtension()) || m_armInElevatorUp)
             {
                 std::cout << "At second phase" << endl;
                 m_armInElevatorUp = true;
                 m_armSubsystem->SetWristDown(); // To pickup gamepieces, the arm had to be fully retracted and rotated down
                 m_elevatorSubsystem->SetPickupHeight(); // Sets the requested height of the elevator to the lowest level
-                reachedTarget = (!m_armSubsystem->IsWristUp() && m_elevatorSubsystem->IsPickupHeight() && m_armSubsystem->IsArmIn()); // Checks if the individual subsystems have reached their destination.
+                reachedTarget = (!m_armSubsystem->IsWristUp() && m_elevatorSubsystem->IsPickupHeight() && m_armSubsystem->IsArmIn()) || (m_timeoutTimer.Get() > m_transitTransitionTimeout.Get()); // Checks if the individual subsystems have reached their destination.
             } else {
                 m_armSubsystem->SetWristUp(); // To pickup gamepieces, the arm had to be fully retracted and rotated down
                 m_elevatorSubsystem->SetMaxHeight();
                 m_armSubsystem->SetArmIn();
             }
             
-            SmartDashboard::PutBoolean("In second phase",(m_armSubsystem->IsArmIn() && m_elevatorSubsystem->IsMaxAutoExtension()) || m_armInElevatorUp);
+            // SmartDashboard::PutBoolean("In second phase",(m_armSubsystem->IsArmIn() && m_elevatorSubsystem->IsMaxAutoExtension()) || m_armInElevatorUp);
             // std::cout << "Entering second phase: " << (m_armSubsystem->IsArmIn() && m_elevatorSubsystem->IsMaxAutoExtension()) << endl;
             // std::cout << "Reached target: " << reachedTarget << endl;
             break;
         case WantedState::WANT_TO_SCORE_MID:
-            if (m_armSubsystem->GetArmDist() < m_armThreshold.Get())
+            if (m_armSubsystem->GetArmDist() < m_armThreshold.Get() && !m_armSubsystem->IsWristUp())
             {
-                if ((m_armSubsystem->IsArmIn() && m_elevatorSubsystem->IsMaxAutoExtension()) || m_armInElevatorUp)
+                if (m_elevatorSubsystem->IsMaxAutoExtension())
                 {
-                    m_armInElevatorUp = true;
-                    m_elevatorSubsystem->SetMediumHeight(); // Sets the requested height of the elevator to the lowest level
-                    m_armSubsystem->SetMediumDist();
+                    m_armSubsystem->SetWristUp();
                 } else {
                     m_elevatorSubsystem->SetMaxHeight();
                 } 
@@ -113,16 +115,14 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
                 m_armSubsystem->SetMediumDist(); // To score at the mid level, the arm had to rotate up and extend partially
                 m_elevatorSubsystem->SetMediumHeight(); // Set the requested
             }
-            reachedTarget = (m_armSubsystem->IsMediumDist() && m_elevatorSubsystem->IsMediumHeight());
+            reachedTarget = (m_armSubsystem->IsMediumDist() && m_elevatorSubsystem->IsMediumHeight()) || (m_timeoutTimer.Get() > m_scoreMidTransitionTimeout.Get());
             break;
         case WantedState::WANT_TO_SCORE_HIGH:
-            if (m_armSubsystem->GetArmDist() < m_armThreshold.Get())
+            if (m_armSubsystem->GetArmDist() < m_armThreshold.Get() && !m_armSubsystem->IsWristUp())
             {
-                if ((m_armSubsystem->IsArmIn() && m_elevatorSubsystem->IsMaxAutoExtension()) || m_armInElevatorUp)
+                if (m_elevatorSubsystem->IsMaxAutoExtension())
                 {
-                    m_armInElevatorUp = true;
-                    m_elevatorSubsystem->SetHighHeight(); // Sets the requested height of the elevator to the lowest level
-                    m_armSubsystem->SetHighDist();
+                    m_armSubsystem->SetWristUp();
                 } else {
                     m_elevatorSubsystem->SetMaxHeight();
                 } 
@@ -130,17 +130,13 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
                 m_armSubsystem->SetHighDist(); // To score at the mid level, the arm had to rotate up and extend partially
                 m_elevatorSubsystem->SetHighHeight(); // Set the requested
             }
-            reachedTarget = (m_armSubsystem->IsHighDist() && m_elevatorSubsystem->IsHighHeight());
+            reachedTarget = (m_armSubsystem->IsHighDist() && m_elevatorSubsystem->IsHighHeight()) || (m_timeoutTimer.Get() > m_scoreMidTransitionTimeout.Get());
             break;
         case WantedState::MANUAL: // In case you wanted to manually move the scoring assembly
             m_armInElevatorUp = false;
             reachedTarget = false;
             break;
     }
-    double timer = m_timeoutTimer.Get();
-            SmartDashboard::PutBoolean("Timed out",timer > m_transitTransitionTimeout.Get());
-    reachedTarget = reachedTarget || (timer > m_transitTransitionTimeout.Get()); // Checks timeout
-
     SmartDashboard::PutBoolean("Reached Target",reachedTarget);
 
     if (reachedTarget)

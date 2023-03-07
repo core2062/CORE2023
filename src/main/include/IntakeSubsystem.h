@@ -20,6 +20,8 @@ public:
     void SetIntakeForward();
     void SetIntakeReverse();
 
+    void SetIntakeActive(bool active);
+
 private:
     TalonSRX m_leftIntakeMotor, m_rightIntakeMotor;
     DoubleSolenoid m_intake;
