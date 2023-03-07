@@ -9,7 +9,7 @@ ElevatorSubsystem::ElevatorSubsystem() :
         m_operatorJoystick(OPERATOR_JOYSTICK),
         m_pickUpHeight("Elevator Pick Up Height",0),
         m_mediumHeight("Elevator Mid-Level Height",0.1),
-        m_highHeight("Elevator High-Level Height",0.2),
+        m_highHeight("Elevator High-Level Height",0.4),
         m_safeRotateHeight("Safe rotation height",0.49541015982),
         m_ticksPerMeter("Elevator Ticks Per Meter",27343), 
         m_liftUpSpeedMod("Elevator Up Speed ", 1),
@@ -21,8 +21,8 @@ ElevatorSubsystem::ElevatorSubsystem() :
         m_liftkP("Lift kP",0.9),
         m_liftkI("Lift kI",0),
         m_liftkD("Lift kD",0),
-        m_cruiseVel("Elevator Cruise Velocity",1000),
-        m_maxAcel("Elevator Max Acceleration",1000)
+        m_cruiseVel("Elevator Cruise Velocity",3000),
+        m_maxAcel("Elevator Max Acceleration",3000)
 {
     m_rightLiftMotor.SetInverted(true);
 }

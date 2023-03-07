@@ -42,13 +42,9 @@ void IntakeSubsystem::teleop()
     }
 
     if (driverJoystick->GetRisingEdge(CORE::COREJoystick::JoystickButton::A_BUTTON) && m_intakeActive == false){
-		m_intake.Set(DoubleSolenoid::kReverse);
-		m_intakeActive = true;
-        m_intakeTimer.Reset();
-        m_intakeTimer.Start();
+		SetIntakeActive(true);
 	} else if (driverJoystick->GetRisingEdge(CORE::COREJoystick::JoystickButton::A_BUTTON) && m_intakeActive == true){
-		m_intake.Set(DoubleSolenoid::kForward);
-		m_intakeActive = false;
+		SetIntakeActive(false);
     }
     if (m_intakeTimer.Get() > m_intakeTimeSet.Get() && m_intakeActive) {
         m_intake.Set(DoubleSolenoid::kOff);
@@ -60,4 +56,16 @@ void IntakeSubsystem::teleop()
 void IntakeSubsystem::SetIntake(double intakeSpeed) {
     m_leftIntakeMotor.Set(ControlMode::PercentOutput, -intakeSpeed);
     m_rightIntakeMotor.Set(ControlMode::PercentOutput, intakeSpeed);
+}
+
+void IntakeSubsystem::SetIntakeActive(bool active){
+    if (active && m_intakeActive == false){
+		m_intake.Set(DoubleSolenoid::kReverse);
+		m_intakeActive = true;
+        m_intakeTimer.Reset();
+        m_intakeTimer.Start();
+	} else if (!active && m_intakeActive == true){
+		m_intake.Set(DoubleSolenoid::kForward);
+		m_intakeActive = false;
+    }
 }

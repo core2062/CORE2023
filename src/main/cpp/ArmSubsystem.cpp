@@ -10,7 +10,7 @@ ArmSubsystem::ArmSubsystem() :
         m_armSpeed("Arm Speed", 0.7),
         m_mediumDist("Arm Mid-Level Distance In Ticks",12000),
         m_highDist("Arm High-Level Distance In Ticks",23000),
-        m_inPotentiometer("Arm in potentiometer value",1),
+        m_inPotentiometer("Arm in potentiometer value",0.9),
         m_outPotentiometer("Arm out potentiometer value",4),
         m_armkP("Arm kP",0.9),
         m_armkI("Arm kI",0),
@@ -81,6 +81,7 @@ void ArmSubsystem::teleop()
 void ArmSubsystem::PostLoopTask()
 {
     SmartDashboard::PutNumber("Arm Telescope Potentiometer", GetArmDist());
+    SmartDashboard::PutNumber("Arm Telescope Position Ticks", m_leftArmMotor.GetSelectedSensorPosition(0));
     SmartDashboard::PutNumber("Arm Telescope LEFT Velocity", m_leftArmMotor.GetSelectedSensorVelocity(0));
     SmartDashboard::PutNumber("Arm Telescope RIGHT Velocity", m_rightArmMotor.GetSelectedSensorVelocity(0));
     SmartDashboard::PutNumber("Arm Telescope Requested Position", m_requestedDist);
@@ -203,12 +204,12 @@ double ArmSubsystem::GetArmDist()
 
 bool ArmSubsystem::IsHighDist()
 {
-    return abs(GetArmDist() - m_highDist.Get()) < 2;
+    return abs(GetArmDist() - m_highDist.Get()) < 100;
 }
 
 bool ArmSubsystem::IsMediumDist()
 {
-    return abs(GetArmDist() - m_mediumDist.Get()) < 2;
+    return abs(GetArmDist() - m_mediumDist.Get()) < 100;
 }
 
 bool ArmSubsystem::IsWristUp()
@@ -218,7 +219,7 @@ bool ArmSubsystem::IsWristUp()
 
 bool ArmSubsystem::IsArmIn()
 {
-    return GetArmDist() < m_inPotentiometer.Get();
+    return GetArmDist() < m_inPotentiometer.Get() + 0.1;
 }
 
 bool ArmSubsystem::IsArmOut()

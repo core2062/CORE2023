@@ -18,6 +18,8 @@ public:
     void teleop() override;
     void SetIntake(double intakeSpeed);
 
+    void SetIntakeActive(bool active);
+
 private:
     TalonSRX m_leftIntakeMotor, m_rightIntakeMotor;
     DoubleSolenoid m_intake;

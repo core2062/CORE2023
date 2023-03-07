@@ -6,6 +6,7 @@
 #include "ArmSubsystem.h"
 #include "ElevatorSubsystem.h"
 #include "GrabberSubsystem.h"
+#include "IntakeSubsystem.h"
 
 using namespace CORE;
 using namespace frc;
@@ -47,13 +48,14 @@ private:
     ArmSubsystem* m_armSubsystem;
     ElevatorSubsystem* m_elevatorSubsystem;
     GrabberSubsystem* m_grabberSubsystem;
+    IntakeSubsystem* m_intakeSubsystem;
 
     WantedState m_wantedState;
     SystemState m_systemState;
 
     bool m_armInElevatorUp;
 
-    COREConstant<double> m_transitTransitionTimeout;
-    COREConstant<double> m_armThreshold;
+    COREConstant<double> m_transitTransitionTimeout,m_scoreMidTransitionTimeout;
+    COREConstant<double> m_armThreshold,m_elevatorThreshold;
     CORETimer m_timeoutTimer;
 };
