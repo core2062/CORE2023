@@ -26,5 +26,4 @@ void ScoreMidRoutine::AddNodes() {
     delayNode4 -> AddNext(armInNode);
     armInNode -> AddNext(delayNode5);
     delayNode5 -> AddNext(wristNode2);
-    wristNode2 -> AddNext(delayNode6);
 }

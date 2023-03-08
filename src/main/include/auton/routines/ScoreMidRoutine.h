@@ -27,5 +27,4 @@ private:
     Node * armInNode;
     Node * delayNode5;
     Node * wristNode2;
-    Node * delayNode6;
 };
