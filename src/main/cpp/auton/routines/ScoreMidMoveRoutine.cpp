@@ -1,8 +1,8 @@
-#include "auton/routines/ScoreMidBalanceRoutine.h"
+#include "auton/routines/ScoreMidMoveRoutine.h"
 
-ScoreMidBalanceRoutine::ScoreMidBalanceRoutine() : COREAuton("Score Mid Balance Routine") {}
+ScoreMidMoveRoutine::ScoreMidMoveRoutine() : COREAuton("Score Mid Move Routine") {}
 
-void ScoreMidBalanceRoutine::AddNodes() {
+void ScoreMidMoveRoutine::AddNodes() {
     wristNode = new Node(1, new ArmAction(WRIST_UP));
     delayNode = new Node(0, new DelayAction());
     armOutNode = new Node(2, new ArmAction(ARM_OUT_MID));
@@ -16,8 +16,6 @@ void ScoreMidBalanceRoutine::AddNodes() {
     wristNode2 = new Node(1, new ArmAction(WRIST_DOWN));
     delayNode6 = new Node(0, new DelayAction());
     driveNode = new Node(5, new DriveAction(BACKWARD, 24));
-    delayNode7 = new Node(5, new DelayAction());
-    balanceNode = new Node(5, new AutoBalanceAction(AUTO_BALANCE, 10));
     AddFirstNode(wristNode);
     wristNode -> AddNext(delayNode);
     delayNode -> AddNext(armOutNode);
@@ -30,8 +28,5 @@ void ScoreMidBalanceRoutine::AddNodes() {
     armInNode -> AddNext(delayNode5);
     delayNode5 -> AddNext(wristNode2);
     wristNode2 -> AddNext(delayNode6);
-
     delayNode6 -> AddNext(driveNode);
-    driveNode -> AddNext(delayNode7);
-    delayNode7 -> AddNext(balanceNode);
 }

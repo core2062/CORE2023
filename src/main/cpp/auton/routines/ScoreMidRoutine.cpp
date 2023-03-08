@@ -1,6 +1,6 @@
 #include "auton/routines/ScoreMidRoutine.h"
 
-ScoreMidRoutine::ScoreMidRoutine() : COREAuton("Mid Score Routine") {}
+ScoreMidRoutine::ScoreMidRoutine() : COREAuton("Score Mid Routine") {}
 
 void ScoreMidRoutine::AddNodes() {
     wristNode = new Node(1, new ArmAction(WRIST_UP));
