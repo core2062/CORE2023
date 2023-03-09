@@ -133,7 +133,8 @@ void ArmSubsystem::PostLoopTask()
         ResetEncoders();
     }
 
-
+    if(GetArmDist() > (m_outPotentiometer.Get()-0.2) && m_requestedTelescopeSpeed > 0)
+        m_requestedTelescopeSpeed *= 0.5;
     // std::cout << "Curr wanted state: " << Robot::GetInstance()->scoringAssembly.GetWantedState() << endl;
     if(m_requestedTelescopeSpeed < -0.1 || m_requestedTelescopeSpeed > 0.1)
     {
