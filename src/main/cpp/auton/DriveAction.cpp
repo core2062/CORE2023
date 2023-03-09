@@ -43,7 +43,7 @@ CORE::COREAutonAction::actionStatus DriveAction::Action() {
             cout <<"Encoder Value " << m_encoderValue << ", ";
             cout <<"Encoder start up position " << m_encoderStartUpPosition << endl;    
             if (abs(m_encoderValue - m_encoderStartUpPosition) < m_requestedDriveDistance) {
-                driveSubsystem->setMotorSpeed(0.4, DriveSide::BOTH);
+                driveSubsystem->setMotorSpeed(0.6, DriveSide::BOTH);
                 return COREAutonAction::actionStatus::CONTINUE;
             } else {
                 cout << "Stopping forward" << endl;
@@ -55,7 +55,7 @@ CORE::COREAutonAction::actionStatus DriveAction::Action() {
             cout << "Start position: "   << m_encoderStartUpPosition << ", "; 
             cout << "Movement setting: " << m_requestedDriveDistance << endl;
             if (abs(m_encoderValue - m_encoderStartUpPosition) < m_requestedDriveDistance) {
-                driveSubsystem->setMotorSpeed(-0.4, DriveSide::BOTH);
+                driveSubsystem->setMotorSpeed(-0.6, DriveSide::BOTH);
                 return COREAutonAction::actionStatus::CONTINUE;
             } else {
                 cout << "Stopping backup" << endl;
@@ -69,8 +69,8 @@ CORE::COREAutonAction::actionStatus DriveAction::Action() {
             } 
             m_currentHeading = driveSubsystem->ahrs.GetFusedHeading();
             if (m_currentHeading != (m_requestedHeading-5) || m_currentHeading != (m_requestedHeading+5)) { // Deadband of 5°
-                driveSubsystem->setMotorSpeed(0.2, DriveSide::LEFT);
-                driveSubsystem->setMotorSpeed(-0.2, DriveSide::RIGHT);
+                driveSubsystem->setMotorSpeed(0.4, DriveSide::LEFT);
+                driveSubsystem->setMotorSpeed(-0.4, DriveSide::RIGHT);
                 return COREAutonAction::actionStatus::CONTINUE;
             } else {
                 driveSubsystem->setMotorSpeed(0.0, DriveSide::BOTH);

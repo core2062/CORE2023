@@ -52,7 +52,7 @@ class Robot : public CORERobot {
 
   //Routines
   DriveRoutine driveRoutine;
-  ScoreMidBalanceRoutine scoreMidBalanceRoutine;
+  // ScoreMidBalanceRoutine scoreMidBalanceRoutine;
   ScoreMidRoutine scoreMidRoutine;
   ScoreMidMoveRoutine scoreMidMoveRoutine;
   
