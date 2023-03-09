@@ -97,10 +97,6 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
                 m_elevatorSubsystem->SetMaxHeight();
                 m_armSubsystem->SetArmIn();
             }
-            
-            // SmartDashboard::PutBoolean("In second phase",(m_armSubsystem->IsArmIn() && m_elevatorSubsystem->IsMaxAutoExtension()) || m_armInElevatorUp);
-            // std::cout << "Entering second phase: " << (m_armSubsystem->IsArmIn() && m_elevatorSubsystem->IsMaxAutoExtension()) << endl;
-            // std::cout << "Reached target: " << reachedTarget << endl;
             break;
         case WantedState::WANT_TO_SCORE_MID:
             if (m_armSubsystem->GetArmDist() < m_armThreshold.Get() && !m_armSubsystem->IsWristUp())
@@ -132,6 +128,10 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
             }
             reachedTarget = (m_armSubsystem->IsHighDist() && m_elevatorSubsystem->IsHighHeight()) || (m_timeoutTimer.Get() > m_scoreMidTransitionTimeout.Get());
             break;
+        case WANT_STARTING_HEIGHT:
+            m_elevatorSubsystem->SetStartingHeight();
+            m_armInElevatorUp = false;
+            reachedTarget = m_elevatorSubsystem->IsStartingHeight() || (m_timeoutTimer.Get() > m_scoreMidTransitionTimeout.Get());
         case WantedState::MANUAL: // In case you wanted to manually move the scoring assembly
             m_armInElevatorUp = false;
             reachedTarget = false;
@@ -207,6 +207,18 @@ ScoringAssembly::SystemState ScoringAssembly::HandleScoringMid()
     {
     case WantedState::WANT_TO_SCORE_MID:
         return SystemState::SCORING_MID;
+    default:
+        return SystemState::TRANSIT;
+    }
+}
+
+ScoringAssembly::SystemState ScoringAssembly::HandleStartingHeight()
+{
+    m_elevatorSubsystem->SetStartingHeight();
+    switch (m_wantedState)
+    {
+    case WantedState::WANT_STARTING_HEIGHT:
+        return SystemState::STARTING_HEIGHT;
     default:
         return SystemState::TRANSIT;
     }

@@ -10,6 +10,7 @@ ElevatorSubsystem::ElevatorSubsystem() :
         m_pickUpHeight("Elevator Pick Up Height",0),
         m_mediumHeight("Elevator Mid-Level Height",0.1),
         m_highHeight("Elevator High-Level Height",0.4),
+        m_startingHeight("Elevator Starting Height",0.8),
         m_safeRotateHeight("Safe rotation height",0.49541015982),
         m_ticksPerMeter("Elevator Ticks Per Meter",27343), 
         m_liftUpSpeedMod("Elevator Up Speed ", 1),
@@ -179,6 +180,10 @@ void ElevatorSubsystem::SetPickupHeight(){
     SetRequestedPosition(m_pickUpHeight.Get());
 }
 
+void ElevatorSubsystem::SetStartingHeight() {
+    SetRequestedPosition(m_startingHeight.Get());
+}
+
 int ElevatorSubsystem::GetElevatorPosition(){
     return m_leftLiftMotor.GetSelectedSensorPosition();
 }
@@ -210,6 +215,11 @@ bool ElevatorSubsystem::IsMediumHeight(){
 
 bool ElevatorSubsystem::IsPickupHeight(){
     return abs(GetElevatorMeters() - m_pickUpHeight.Get()) < 2;
+}
+
+bool ElevatorSubsystem::IsStartingHeight()
+{
+    return abs(GetElevatorMeters() - m_startingHeight.Get()) < 2;
 }
 
 void ElevatorSubsystem::ResetEncoders(){

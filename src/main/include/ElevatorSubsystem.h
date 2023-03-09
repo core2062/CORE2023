@@ -27,6 +27,7 @@ public:
     void SetHighHeight();
     void SetMediumHeight();
     void SetPickupHeight();
+    void SetStartingHeight();
 
     int GetElevatorPosition();
     double GetElevatorMeters();
@@ -37,6 +38,7 @@ public:
     bool IsHighHeight();
     bool IsMediumHeight();
     bool IsPickupHeight();
+    bool IsStartingHeight();
     bool IsSafeRotateHeight();
 
     void ResetEncoders();
@@ -47,7 +49,7 @@ private:
 
     Joystick m_operatorJoystick;
     
-    COREConstant<double> m_pickUpHeight, m_mediumHeight, m_highHeight, m_safeRotateHeight;
+    COREConstant<double> m_pickUpHeight, m_mediumHeight, m_highHeight, m_startingHeight, m_safeRotateHeight;
     COREConstant<double> m_ticksPerMeter;
     COREConstant<double> m_liftUpSpeedMod, m_liftDownSpeedMod, m_liftHoldSpeed;
     COREConstant<double> m_bottomLimit, m_topManualLimit, m_topAutoLimit;

@@ -16,7 +16,8 @@ enum WantedState
     MANUAL, // We want manual control
     WANT_TO_PICKUP, // We want to pick up a gamepiece
     WANT_TO_SCORE_MID, // We want to score on the mid level
-    WANT_TO_SCORE_HIGH // We want to score on the high level
+    WANT_TO_SCORE_HIGH, // We want to score on the high level
+    WANT_STARTING_HEIGHT //TODO: Add descriptive comment here
 };
 
 
@@ -36,14 +37,16 @@ private:
     enum SystemState {
         TRANSIT,
         GRABBING,
+        SCORING_MID,
         SCORING_HIGH,
-        SCORING_MID
+        STARTING_HEIGHT
     };
 
     SystemState HandleTransit();
     SystemState HandleGrabbing();
     SystemState HandleScoringHigh();
     SystemState HandleScoringMid();
+    SystemState HandleStartingHeight();
 
     ArmSubsystem* m_armSubsystem;
     ElevatorSubsystem* m_elevatorSubsystem;

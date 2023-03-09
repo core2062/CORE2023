@@ -33,6 +33,10 @@ void Robot::teleop() {
     {
         scoringAssembly.SetWantedState(WantedState::WANT_TO_SCORE_HIGH);
     }
+    else if (m_operatorJoystick.GetRawButtonReleased(7))
+    {
+        scoringAssembly.SetWantedState(WantedState::WANT_STARTING_HEIGHT);
+    }
     
 }
 
