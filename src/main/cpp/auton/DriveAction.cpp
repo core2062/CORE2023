@@ -31,7 +31,7 @@ void DriveAction::ActionInit() {
     m_encoderStartUpPosition =  driveSubsystem->getRobotPosition();
     std::cout << m_requestedDriveDistance << " Requested tick distance" << endl; // should be zero
     std::cout << m_encoderStartUpPosition << " right encoder at startup" << endl; // should be zero
-    m_navXStartingHeading = driveSubsystem->ahrs.GetFusedHeading(); //Starting heading of NavX; Used for TURN_RIGHT and TURN_LEFT
+    m_navXStartingHeading = driveSubsystem->ahrs->GetFusedHeading(); //Starting heading of NavX; Used for TURN_RIGHT and TURN_LEFT
 }
 
 CORE::COREAutonAction::actionStatus DriveAction::Action() {
@@ -67,7 +67,7 @@ CORE::COREAutonAction::actionStatus DriveAction::Action() {
             if (m_requestedHeading >= 360) { // If Requested heading is not in a possible range of movement, subtracts 360 to loop it back between 0-359
                 m_requestedHeading -= 360;
             } 
-            m_currentHeading = driveSubsystem->ahrs.GetFusedHeading();
+            m_currentHeading = driveSubsystem->ahrs->GetFusedHeading();
             if (m_currentHeading != (m_requestedHeading-5) || m_currentHeading != (m_requestedHeading+5)) { // Deadband of 5°
                 driveSubsystem->setMotorSpeed(0.4, DriveSide::LEFT);
                 driveSubsystem->setMotorSpeed(-0.4, DriveSide::RIGHT);
@@ -81,7 +81,7 @@ CORE::COREAutonAction::actionStatus DriveAction::Action() {
             if (m_requestedHeading < 0) { // If Requested heading is not in a possible range of movement, adds 360 to loop it back between 0-359
                 m_requestedHeading += 360;
             } 
-            m_currentHeading = driveSubsystem->ahrs.GetFusedHeading();
+            m_currentHeading = driveSubsystem->ahrs->GetFusedHeading();
             if (m_currentHeading != (m_requestedHeading-5) || m_currentHeading != (m_requestedHeading+5)) { // Deadband of 5°
                 driveSubsystem->setMotorSpeed(-0.4, DriveSide::LEFT);
                 driveSubsystem->setMotorSpeed(0.4, DriveSide::RIGHT);

@@ -56,6 +56,8 @@ void ArmSubsystem::robotInit()
 
     m_leftArmMotor.ConfigMotionCruiseVelocity(m_cruiseVel.Get(), 0);
     m_leftArmMotor.ConfigMotionAcceleration(m_maxAcel.Get(), 0);
+
+    m_overspoolButton = false;
     
 
     // operatorJoystick->RegisterAxis(CORE::COREJoystick::JoystickAxis::RIGHT_STICK_Y);
@@ -84,6 +86,16 @@ void ArmSubsystem::teleop() {
         SetDistRequestedSpeed(-1);
     } else {
         SetDistRequestedSpeed(0);
+    }
+
+    if (m_operatorJoystick.GetRawButtonPressed(11))
+    {
+       m_overspoolButton = true;
+    } else if (m_operatorJoystick.GetRawButtonReleased(11))
+    {
+       m_overspoolButton = false;
+    } else {
+       m_overspoolButton = false;
     }
 }
 
@@ -116,8 +128,16 @@ void ArmSubsystem::PostLoopTask()
     //     m_requestedTelescopeSpeed = 0;
     // }
 
+    // if (m_operatorJoystick.GetRawButtonPressed(11))
+    // {
+    //     m_overspoolButton = true;
+    // } else if (m_operatorJoystick.GetRawButtonReleased(11))
+    // {
+    //     m_overspoolButton = false;
+    // }
+
     // Softstop for telescoping arm extend & rotation
-    if(m_requestedTelescopeSpeed > 0 && IsArmOut())
+    if(m_requestedTelescopeSpeed > 0 && IsArmOut() && !m_overspoolButton)
     {
         // std::cout << "Softstopping arm out" << endl;
         m_requestedTelescopeSpeed = 0;

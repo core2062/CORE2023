@@ -24,7 +24,7 @@ CORE::COREAutonAction::actionStatus ArmAction::Action() {
                 m_armSubsystem->SetDistRequestedSpeed(0.0);
                 break;
             } else {
-                m_armSubsystem->SetDistRequestedSpeed(0.7);
+                m_armSubsystem->SetDistRequestedSpeed(0.6);
                 return COREAutonAction::actionStatus::CONTINUE;
             }
             break;

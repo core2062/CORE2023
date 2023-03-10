@@ -61,6 +61,7 @@ private:
 
     bool m_requestedRotUp;
     bool m_wristUp;
+    bool m_overspoolButton;
 
     // ElevatorSubsystem* m_elevatorSubsystem;
 

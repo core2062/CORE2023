@@ -1,7 +1,6 @@
 #include "DriveSubsystem.h"
 
 DriveSubsystem::DriveSubsystem() :
-		ahrs(SerialPort::kUSB),
 		m_leftPrimary(LEFT_FRONT_PORT),
 		m_rightPrimary(RIGHT_FRONT_PORT),
 		m_leftSecondary(LEFT_BACK_PORT),
@@ -16,6 +15,18 @@ DriveSubsystem::DriveSubsystem() :
 		m_driveSpeedModifier("Drive speed Modifier", 0.75),
 		m_driveSpeedModifierSlow("Drive speed Modifier slowed", 0.25),
 		m_compressor(frc::PneumaticsModuleType::REVPH) {
+	try
+	{
+		ahrs = new AHRS(SerialPort::kUSB);
+		m_navXWorking = true;
+	}
+	catch(const std::exception& e)
+	{
+		m_navXWorking = false;
+		
+		std::cerr << e.what() << '\n';
+	}
+	
 }
 
 void DriveSubsystem::robotInit() {
@@ -56,8 +67,10 @@ void DriveSubsystem::teleop() {
 	SmartDashboard::PutNumber("Left side encoder", m_leftPrimary.GetSelectedSensorPosition(0));
 	SmartDashboard::PutNumber("Right side encoder", m_rightPrimary.GetSelectedSensorPosition(0));
 
-	SmartDashboard::PutNumber("Robot Heading", ahrs.GetFusedHeading());
-	
+	if (m_navXWorking)
+	{
+		SmartDashboard::PutNumber("Robot Heading", ahrs->GetFusedHeading());
+	}
 	// SmartDashboard::PutNumber("Pressure", (250* (m_analogPressureInput.GetdriverVoltage()/m_analogSupplyVoltage.GetVoltage())-25));
 	// SetTalonMode(NeutralMode::Coast);
 	if (driverJoystick->GetRisingEdge(CORE::COREJoystick::START_BUTTON)){
@@ -65,7 +78,11 @@ void DriveSubsystem::teleop() {
 	}
 	if (driverJoystick->GetButton(CORE::COREJoystick::B_BUTTON)){
 		SetTalonMode(NeutralMode::Brake);
-		Balance();
+		if (m_navXWorking)
+		{
+			Balance();
+		}
+		
 	}
 }
 
@@ -139,7 +156,7 @@ void DriveSubsystem::SetTalonMode(NeutralMode mode){
 
 
 void DriveSubsystem::Balance(){
-	m_currentPitch = ahrs.GetPitch() + m_balanceCalibration.Get(); 
+	m_currentPitch = ahrs->GetPitch() + m_balanceCalibration.Get(); 
 	std::cout << "the pitch is: " << m_currentPitch << endl;
 	if (abs(m_currentPitch) >= 1.6){
 	double Proportion = m_currentPitch/15.0;

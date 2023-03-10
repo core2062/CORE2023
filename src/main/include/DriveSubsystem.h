@@ -29,7 +29,7 @@ public:
 	void resetEncoder();
 	void SetTalonMode(NeutralMode mode);
 	void Balance();
-	AHRS ahrs;
+	AHRS* ahrs;
 
 private:
 	//m_analogSupplyVoltage used in calculation to get current PSI
@@ -40,4 +40,6 @@ private:
 
 	// CORETimer m_timeoutTimer;
     Compressor m_compressor;
+
+	bool m_navXWorking;
 };
