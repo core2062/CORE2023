@@ -10,7 +10,7 @@ ElevatorSubsystem::ElevatorSubsystem() :
         m_pickUpHeight("Elevator Pick Up Height",0),
         m_mediumHeight("Elevator Mid-Level Height",0.1),
         m_highHeight("Elevator High-Level Height",0.4),
-        m_startingHeight("Elevator Starting Height",0.8),
+        m_startingHeight("Elevator Starting Height",0.08),
         m_safeRotateHeight("Safe rotation height",0.49541015982),
         m_ticksPerMeter("Elevator Ticks Per Meter",27343), 
         m_liftUpSpeedMod("Elevator Up Speed ", 1),
