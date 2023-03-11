@@ -39,6 +39,8 @@ public:
     bool IsArmOut();
     bool IsWristUp();
 
+    bool AutonIsArmMedDist();
+
     void ResetEncoders();
 
 private:
@@ -50,7 +52,7 @@ private:
     Joystick m_operatorJoystick;
     
     COREConstant<double> m_armSpeed;
-    COREConstant<double> m_mediumDist, m_highDist;
+    COREConstant<double> m_mediumDist, m_highDist, m_autonMediumDist;
     COREConstant<double> m_inPotentiometer, m_outPotentiometer;
     COREConstant<double> m_armkP, m_armkI, m_armkD;
     COREConstant<int> m_outerLimit;

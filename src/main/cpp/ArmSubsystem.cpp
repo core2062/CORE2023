@@ -8,8 +8,9 @@ ArmSubsystem::ArmSubsystem() :
         m_armPotentiometer(ARM_POTENTIOMETER_PORT),
         m_operatorJoystick(OPERATOR_JOYSTICK),
         m_armSpeed("Arm Speed", 0.7),
-        m_mediumDist("Arm Mid-Level Distance In Ticks",12000),
-        m_highDist("Arm High-Level Distance In Ticks",23000),
+        m_mediumDist("Arm Mid-Level Distance In Ticks",3.55),
+        m_highDist("Arm High-Level Distance In Ticks",2),
+        m_autonMediumDist("Arm Extend Distance In Auton",2),
         m_inPotentiometer("Arm in potentiometer value",0.9),
         m_outPotentiometer("Arm out potentiometer value",3.55),
         m_armkP("Arm kP",0.9),
@@ -245,6 +246,11 @@ bool ArmSubsystem::IsArmIn()
 bool ArmSubsystem::IsArmOut()
 {
     return GetArmDist() > m_outPotentiometer.Get();
+}
+
+bool ArmSubsystem::AutonIsArmMedDist()
+{
+    return abs(GetArmDist() - m_autonMediumDist.Get()) < 0.1;
 }
 
 void ArmSubsystem::ResetEncoders()

@@ -19,7 +19,7 @@ CORE::COREAutonAction::actionStatus ArmAction::Action() {
             m_armSubsystem->SetWristDown();
             break;
         case ARM_OUT_MID: 
-            if (m_armSubsystem->IsArmOut()) {
+            if (m_armSubsystem->AutonIsArmMedDist()) {
                 cout << "Stopping Movement" << endl;
                 m_armSubsystem->SetDistRequestedSpeed(0.0);
                 break;

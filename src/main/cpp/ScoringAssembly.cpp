@@ -131,7 +131,7 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
         case WANT_STARTING_HEIGHT:
             m_elevatorSubsystem->SetStartingHeight();
             m_armInElevatorUp = false;
-            reachedTarget = m_elevatorSubsystem->IsStartingHeight() || (m_timeoutTimer.Get() > m_scoreMidTransitionTimeout.Get());
+            reachedTarget = (m_elevatorSubsystem->IsStartingHeight() || (m_timeoutTimer.Get() > m_scoreMidTransitionTimeout.Get()));
         case WantedState::MANUAL: // In case you wanted to manually move the scoring assembly
             m_armInElevatorUp = false;
             reachedTarget = false;
