@@ -4,7 +4,7 @@ ScoreMidMoveRoutine::ScoreMidMoveRoutine() : COREAuton("Score Mid Move Routine")
 
 void ScoreMidMoveRoutine::AddNodes() {
     wristNode = new Node(1, new ArmAction(WRIST_UP));
-    delayNode = new Node(0, new DelayAction());
+    delayNode = new Node(1, new DelayAction());
     armOutNode = new Node(2, new ArmAction(ARM_OUT_MID));
     delayNode2 = new Node(0.2, new DelayAction());
     dropNode = new Node(1, new GrabberAction(GRABBER_RELEASE));
