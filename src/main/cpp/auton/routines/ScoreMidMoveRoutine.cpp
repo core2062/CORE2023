@@ -15,7 +15,7 @@ void ScoreMidMoveRoutine::AddNodes() {
     delayNode5 = new Node(0, new DelayAction());
     wristNode2 = new Node(1, new ArmAction(WRIST_DOWN));
     delayNode6 = new Node(0, new DelayAction());
-    driveNode = new Node(10, new DriveAction(BACKWARD, 60));
+    driveNode = new Node(10, new DriveAction(BACKWARD, 120));
     AddFirstNode(wristNode);
     wristNode -> AddNext(delayNode);
     delayNode -> AddNext(armOutNode);

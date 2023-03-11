@@ -11,7 +11,7 @@ ArmSubsystem::ArmSubsystem() :
         m_mediumDist("Arm Mid-Level Distance In Ticks",12000),
         m_highDist("Arm High-Level Distance In Ticks",23000),
         m_inPotentiometer("Arm in potentiometer value",0.9),
-        m_outPotentiometer("Arm out potentiometer value",3.6),
+        m_outPotentiometer("Arm out potentiometer value",3.55),
         m_armkP("Arm kP",0.9),
         m_armkI("Arm kI",0),
         m_armkD("Arm kD",0),
@@ -137,12 +137,12 @@ void ArmSubsystem::PostLoopTask()
     // }
 
     // Softstop for telescoping arm extend & rotation
-    if(m_requestedTelescopeSpeed > 0 && IsArmOut() && !m_overspoolButton)
+    if(m_requestedTelescopeSpeed > 0 && IsArmOut())
     {
         // std::cout << "Softstopping arm out" << endl;
         m_requestedTelescopeSpeed = 0;
         SetRequestedPosition(m_outerLimit.Get());
-    } else if(IsArmIn())
+    } else if(IsArmIn() && !m_overspoolButton)
     {
         if (m_requestedTelescopeSpeed < 0)
         {
