@@ -9,7 +9,7 @@ void GrabberSubsystem::robotInit(){
 }
 
 void GrabberSubsystem::teleopInit() {
-	m_clawActuator.Set(DoubleSolenoid::kForward);
+	m_clawActuator.Set(DoubleSolenoid::kReverse);
 }
 
 void GrabberSubsystem::teleop(){   

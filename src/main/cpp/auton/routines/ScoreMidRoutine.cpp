@@ -10,9 +10,9 @@ void ScoreMidRoutine::AddNodes() {
     dropNode = new Node(1, new GrabberAction(GRABBER_RELEASE));
     delayNode3 = new Node(1, new DelayAction());
     clawCloseNode = new Node(1, new GrabberAction(GRABBER_GRAB));
-    delayNode4 = new Node(0, new DelayAction());
+    delayNode4 = new Node(1, new DelayAction());
     armInNode = new Node(2, new ArmAction(ARM_IN));
-    delayNode5 = new Node(0, new DelayAction());
+    delayNode5 = new Node(1, new DelayAction());
     wristNode2 = new Node(1, new ArmAction(WRIST_DOWN));
 
     AddFirstNode(wristNode);
