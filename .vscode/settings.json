@@ -17,6 +17,7 @@
   "C_Cpp.default.configurationProvider": "vscode-wpilib",
   "files.associations": {
     "bitset": "cpp",
-    "*.inc": "cpp"
+    "*.inc": "cpp",
+    "ostream": "cpp"
   }
 }
