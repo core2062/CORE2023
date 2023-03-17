@@ -159,11 +159,11 @@ void DriveSubsystem::SetTalonMode(NeutralMode mode){
 void DriveSubsystem::Balance(){
 	m_currentPitch = ahrs->GetRoll() + m_balanceCalibration.Get();
 	if (m_currentPitch >= 1.6) {
-		double proportion = m_currentPitch/5.0;
+		double proportion = m_currentPitch/15.0;
 		proportion = max(-proportion,-m_balanceMaxSpeed.Get());
 		setMotorSpeed(proportion,DriveSide::BOTH);
 	} else if (m_currentPitch <= -1.6) {
-		double proportion = -m_currentPitch/5.0;
+		double proportion = -m_currentPitch/15.0;
 		proportion = min(proportion,m_balanceMaxSpeed.Get());
 		setMotorSpeed(proportion,DriveSide::BOTH);
 	} else {
