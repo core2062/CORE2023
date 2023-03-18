@@ -29,14 +29,19 @@ public:
 	void resetEncoder();
 	void SetTalonMode(NeutralMode mode);
 	void Balance();
+	void BalanceInit();
 	AHRS* ahrs;
 
 private:
 	//m_analogSupplyVoltage used in calculation to get current PSI
 	// AnalogInput m_analogPressureInput, m_analogSupplyVoltage;
     TalonFX m_leftPrimary, m_rightPrimary, m_leftSecondary, m_rightSecondary;
+	double m_startingEncoderValueBalance, m_currentEncoderValueBalance, m_targetEncoderValueBalance;
 	double m_currentPitch;
-    COREConstant<double> m_etherAValue, m_etherBValue, m_etherQuickTurnValue, m_ticksPerInch, m_driveSpeedModifier, m_driveSpeedModifierSlow, m_balanceMaxSpeed, m_balanceCalibration, m_balanceMaxCalibration;
+    COREConstant<double> m_etherAValue, m_etherBValue, m_etherQuickTurnValue, m_ticksPerInch,
+						 m_driveSpeedModifier, m_driveSpeedModifierSlow,
+						 m_balanceMaxSpeed, m_balanceCalibration, m_balanceMaxCalibration, 
+						 m_balanceDistInch, m_autoBalanceMaxSpeed, m_autoBalanceDeadband;
 
 	// CORETimer m_timeoutTimer;
     Compressor m_compressor;
