@@ -28,6 +28,16 @@ CORE::COREAutonAction::actionStatus ArmAction::Action() {
                 return COREAutonAction::actionStatus::CONTINUE;
             }
             break;
+        case ARM_OUT_HIGH: 
+            if (m_armSubsystem->IsArmOut()) {
+                cout << "Stopping Movement" << endl;
+                m_armSubsystem->SetDistRequestedSpeed(0.0);
+                break;
+            } else {
+                m_armSubsystem->SetDistRequestedSpeed(0.6);
+                return COREAutonAction::actionStatus::CONTINUE;
+            }
+            break;
         case ARM_IN:
             if (m_armSubsystem->IsArmIn()) {
                 cout << "Stopping Movement" << endl;

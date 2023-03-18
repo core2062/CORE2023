@@ -3,7 +3,7 @@
 DriveRoutine::DriveRoutine() : COREAuton("Drive Routine") {}
 
 void DriveRoutine::AddNodes() {
-    driveNode = new Node(5, new DriveAction(FORWARD, 65));
+    driveNode = new Node(5, new DriveAction(FORWARD, 120));
     delayNode = new Node(5, new DelayAction());
     AddFirstNode(driveNode);
     driveNode -> AddNext(delayNode);

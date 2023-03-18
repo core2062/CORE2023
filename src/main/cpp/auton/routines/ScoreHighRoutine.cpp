@@ -3,11 +3,11 @@
 ScoreHighRoutine::ScoreHighRoutine() : COREAuton("Score High Routine") {}
 
 void ScoreHighRoutine::AddNodes() {
-    elevatorUpNode = new Node(1, new ElevatorAction(ELEVATOR_UP, 0));
-    delayNode1 = new Node(1, new DelayAction());
+    elevatorUpNode = new Node(4, new ElevatorAction(ELEVATOR_UP, 0));
+    delayNode1 = new Node(4, new DelayAction());
     wristNode = new Node(1, new ArmAction(WRIST_UP));
     delayNode2 = new Node(1, new DelayAction());
-    armOutNode = new Node(2, new ArmAction(ARM_OUT_MID));
+    armOutNode = new Node(2, new ArmAction(ARM_OUT_HIGH));
     delayNode3 = new Node(0.2, new DelayAction());
     dropNode = new Node(1, new GrabberAction(GRABBER_RELEASE));
     delayNode4 = new Node(1, new DelayAction());
@@ -17,7 +17,7 @@ void ScoreHighRoutine::AddNodes() {
     delayNode6 = new Node(1, new DelayAction());
     wristNode2 = new Node(1, new ArmAction(WRIST_DOWN));
     delayNode7 = new Node(1, new DelayAction());
-    elevatorDownNode = new Node(1, new ElevatorAction(ELEVATOR_DOWN, 0));
+    elevatorDownNode = new Node(5, new ElevatorAction(ELEVATOR_DOWN, 0));
 
     AddFirstNode(elevatorUpNode);
     elevatorUpNode -> AddNext(delayNode1);

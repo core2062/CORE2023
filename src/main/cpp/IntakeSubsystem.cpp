@@ -12,7 +12,7 @@ IntakeSubsystem::IntakeSubsystem() :
         m_lowerIntakeConeSpeed("Low Bar Intake Cone Speed", 0.4),
         m_lowerIntakeCubeSpeed("Low Bar Intake Cube Speed", 0.3),
         m_intakeTimeSet("Intake timer set time", 0.5),
-        m_turnTableSpeed("Turn Table Speed", 0.6){
+        m_turnTableSpeed("Turn Table Speed", 0.25){
 }
 
 void IntakeSubsystem::robotInit(){

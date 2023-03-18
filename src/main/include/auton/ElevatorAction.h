@@ -20,4 +20,5 @@ class ElevatorAction : public COREAutonAction {
     private:
         elevatorAction m_elevatorAction;
         double m_elevatorPosition;
+        ElevatorSubsystem* m_elevatorSubsystem;
 };

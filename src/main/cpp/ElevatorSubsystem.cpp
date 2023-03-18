@@ -25,14 +25,15 @@ ElevatorSubsystem::ElevatorSubsystem() :
         m_cruiseVel("Elevator Cruise Velocity",3000),
         m_maxAcel("Elevator Max Acceleration",3000)
 {
-    m_rightLiftMotor.SetInverted(true);
 }
 
 void ElevatorSubsystem::robotInit()
 {
+    m_rightLiftMotor.SetInverted(true);
+
     m_leftLiftMotor.Set(ControlMode::PercentOutput, 0);
     m_rightLiftMotor.Set(ControlMode::PercentOutput, 0);
-
+    
     m_leftLiftMotor.SetNeutralMode(NeutralMode::Brake);
     m_rightLiftMotor.SetNeutralMode(NeutralMode::Brake);
 
@@ -61,7 +62,7 @@ void ElevatorSubsystem::robotInit()
     m_leftLiftMotor.ConfigMotionCruiseVelocity(m_cruiseVel.Get(), 0);
     m_leftLiftMotor.ConfigMotionAcceleration(m_maxAcel.Get(), 0);
     // operatorJoystick->RegisterAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
-
+    // SetRequestedPosition(GetElevatorMeters());
 }
 
 void ElevatorSubsystem::teleopInit(){
@@ -69,10 +70,15 @@ void ElevatorSubsystem::teleopInit(){
     SetRequestedPosition(GetElevatorMeters()); // Sets requested position to current position
 }
 
-void ElevatorSubsystem::teleop(){}
+void ElevatorSubsystem::teleop(){
+    SetRequestedSpeed(-m_operatorJoystick.GetRawAxis(1));
+}
 
 // Will probably run after PostLoopTask() in scoring assembly
 void ElevatorSubsystem::PostLoopTask(){
+    
+        std::cout << "3" << endl;
+    // std::cout << "Post Loop Task Ran" << endl;
     SmartDashboard::PutNumber("Elevator Position Meters", GetElevatorMeters());
     SmartDashboard::PutNumber("Elevator Position Ticks", GetElevatorPosition());
     SmartDashboard::PutNumber("Elevator Velocity", m_leftLiftMotor.GetSelectedSensorVelocity(0));
@@ -83,8 +89,7 @@ void ElevatorSubsystem::PostLoopTask(){
 
     double elevatorPosition = GetElevatorMeters();
 
-    SetRequestedSpeed(-m_operatorJoystick.GetRawAxis(1));
-
+    // std::cout << "speed plz " << m_requestedSpeed << endl;
     SmartDashboard::PutNumber("Elevator Requested Speed", m_requestedSpeed);
 
     // Deadbands joystick input
@@ -142,7 +147,7 @@ void ElevatorSubsystem::PostLoopTask(){
         m_leftLiftMotor.Set(ControlMode::MotionMagic, m_requestedPosition);
     }
     
-    m_requestedSpeed = 0;
+    // m_requestedSpeed = 0;
 }
 
 void ElevatorSubsystem::SetRequestedPosition(double positionInMeters)
@@ -228,5 +233,5 @@ void ElevatorSubsystem::ResetEncoders(){
 
 void ElevatorSubsystem::MoveElevator(){
     m_leftLiftMotor.Set(ControlMode::PercentOutput, m_requestedSpeed);
-    m_rightLiftMotor.Set(ControlMode::PercentOutput, m_requestedSpeed);
+    // m_rightLiftMotor.Set(ControlMode::PercentOutput, m_requestedSpeed);
 }

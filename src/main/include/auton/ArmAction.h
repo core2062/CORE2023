@@ -9,6 +9,7 @@ enum armAction{
     WRIST_UP,
     WRIST_DOWN,
     ARM_OUT_MID,
+    ARM_OUT_HIGH,
     ARM_IN
 };
 
