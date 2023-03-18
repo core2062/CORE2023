@@ -18,7 +18,7 @@ CORE::COREAutonAction::actionStatus IntakeAction::Action() {
             Robot::GetInstance()->intakeSubsystem.SetIntakeReverse();
             break;
         case INTAKE_STOP:
-            Robot::GetInstance()->intakeSubsystem.SetIntake(0);
+            Robot::GetInstance()->intakeSubsystem.SetIntake(0, 0);
             break;
     }
     return COREAutonAction::actionStatus::END;

@@ -25,6 +25,9 @@
 #include "auton/routines/ScoreMidBalanceRoutine.h"
 #include "auton/routines/ScoreMidRoutine.h"
 #include "auton/routines/ScoreMidMoveRoutine.h"
+#include "auton/routines/ScoreHighBalanceRoutine.h"
+#include "auton/routines/ScoreHighRoutine.h"
+#include "auton/routines/ScoreHighMoveRoutine.h"
 
 using namespace CORE;
 using namespace std;
@@ -55,6 +58,9 @@ class Robot : public CORERobot {
   // ScoreMidBalanceRoutine scoreMidBalanceRoutine;
   ScoreMidRoutine scoreMidRoutine;
   ScoreMidMoveRoutine scoreMidMoveRoutine;
+    // ScoreHighBalanceRoutine scoreHighBalanceRoutine;
+  ScoreHighRoutine scoreHighRoutine;
+  ScoreHighMoveRoutine scoreHighMoveRoutine;
   
  private:
   Joystick m_operatorJoystick;

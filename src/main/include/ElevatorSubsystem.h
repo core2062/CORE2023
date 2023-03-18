@@ -43,6 +43,8 @@ public:
 
     void ResetEncoders();
 
+    void MoveElevator();
+
 private:
 	TalonSRX m_leftLiftMotor, m_rightLiftMotor;
     DigitalInput m_bottomLimitSwitch, m_topLimitSwitch;

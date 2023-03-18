@@ -12,6 +12,7 @@
 /* Intake Ports */
 #define RIGHT_INTAKE 5
 #define LEFT_INTAKE 6
+#define TURNTABLE 11
 
 /* Elevator Ports */
 #define LEFT_LIFT_PORT 7

@@ -225,3 +225,8 @@ bool ElevatorSubsystem::IsStartingHeight()
 void ElevatorSubsystem::ResetEncoders(){
     m_leftLiftMotor.SetSelectedSensorPosition(0,0,0);
 }
+
+void ElevatorSubsystem::MoveElevator(){
+    m_leftLiftMotor.Set(ControlMode::PercentOutput, m_requestedSpeed);
+    m_rightLiftMotor.Set(ControlMode::PercentOutput, m_requestedSpeed);
+}

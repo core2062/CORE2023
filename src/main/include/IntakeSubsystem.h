@@ -16,19 +16,23 @@ public:
     void robotInit() override;
     void teleopInit() override;
     void teleop() override; 
-    void SetIntake(double intakeSpeed);
+    void SetIntake(double upperIntakeSpeed, double lowerIntakeSpeed);
     void SetIntakeForward();
     void SetIntakeReverse();
+    void SetTurnTable(double turnTableSpeed);
 
     void SetIntakeActive(bool active);
 
 private:
     TalonSRX m_leftIntakeMotor, m_rightIntakeMotor;
+    TalonSRX m_turnTableMotor;
     DoubleSolenoid m_intake;
 
     Joystick m_operatorJoystick;
     
-    COREConstant<double> m_intakeConeSpeed, m_intakeCubeSpeed, m_intakeTimeSet;
+    COREConstant<double> m_intakeConeSpeed, m_intakeCubeSpeed, m_lowerIntakeConeSpeed, m_lowerIntakeCubeSpeed;
+    COREConstant<double> m_turnTableSpeed;
+    COREConstant<double> m_intakeTimeSet;
     bool m_intakeActive;
     CORETimer m_intakeTimer;
 };
