@@ -52,6 +52,9 @@ void ScoringAssembly::PostLoopTask()
         case SystemState::SCORING_MID:
             newState = HandleScoringMid();
             break;
+        case SystemState::STARTING_HEIGHT:
+            newState = HandleStartingHeight();
+            break;
     }
 
     if (newState != m_systemState)
@@ -132,6 +135,7 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
             m_elevatorSubsystem->SetStartingHeight();
             m_armInElevatorUp = false;
             reachedTarget = (m_elevatorSubsystem->IsStartingHeight() || (m_timeoutTimer.Get() > m_scoreMidTransitionTimeout.Get()));
+            break;
         case WantedState::MANUAL: // In case you wanted to manually move the scoring assembly
             m_armInElevatorUp = false;
             reachedTarget = false;

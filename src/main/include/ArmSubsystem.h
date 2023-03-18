@@ -18,7 +18,7 @@ public:
     void teleop() override;
     void PostLoopTask() override;
 
-    void SetRequestedPosition(int position);
+    void SetRequestedPosition(double position);
     void SetRequestedRotation(bool rot);
     void SetDistRequestedSpeed(double speed);
 
@@ -41,7 +41,7 @@ public:
 
     bool AutonIsArmMedDist();
 
-    void ResetEncoders();
+    // void ResetEncoders();
 
 private:
     TalonSRX m_leftArmMotor, m_rightArmMotor;
