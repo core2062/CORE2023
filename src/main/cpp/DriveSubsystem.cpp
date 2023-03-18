@@ -9,7 +9,7 @@ DriveSubsystem::DriveSubsystem() :
         m_etherBValue("Ether B Value", .4),
 		m_etherQuickTurnValue("Ether Quick Turn Value", .5),
         m_ticksPerInch("Ticks Per Inch", (4 * 3.1415) / 1024),
-		m_balanceMaxSpeed("Max speed of Balance", 0.15),
+		m_balanceMaxSpeed("Max speed of Balance", 0.75),
 		m_balanceCalibration("Robot Pitch", -2.56),
 		m_balanceMaxCalibration("max proportion of robot", 0.4),
 		m_driveSpeedModifier("Drive speed Modifier", 0.75),
@@ -157,19 +157,19 @@ void DriveSubsystem::SetTalonMode(NeutralMode mode){
 
 
 void DriveSubsystem::Balance(){
-	m_currentPitch = ahrs->GetRoll() + m_balanceCalibration.Get();
-	if (m_currentPitch >= 1.6) {
-		double proportion = m_currentPitch/15.0;
-		proportion = max(-proportion,-m_balanceMaxSpeed.Get());
-		setMotorSpeed(proportion,DriveSide::BOTH);
-	} else if (m_currentPitch <= -1.6) {
-		double proportion = -m_currentPitch/15.0;
-		proportion = min(proportion,m_balanceMaxSpeed.Get());
-		setMotorSpeed(proportion,DriveSide::BOTH);
-	} else {
-		setMotorSpeed(0,DriveSide::BOTH);
-	}
-	// std::cout << "The proportional value is: " << Proportion << endl;
-	// std::cout << "The motor is being set to: " << motorSpeed << endl;
+	m_currentPitch = ahrs->GetPitch() + m_balanceCalibration.Get(); 
 	std::cout << "the pitch is: " << m_currentPitch << endl;
+	if (abs(m_currentPitch) >= 1.6){
+	double Proportion = m_currentPitch/15.0;
+	if (Proportion >= m_balanceMaxCalibration.Get()){
+		Proportion = m_balanceMaxCalibration.Get();
+	} else if (Proportion <= -m_balanceMaxCalibration.Get()){
+		Proportion = -m_balanceMaxCalibration.Get();
+	}
+	std::cout << "The proportional value is: " << Proportion << endl;
+	double motorSpeed = m_balanceMaxSpeed.Get() * Proportion;
+	std::cout << "The motor is being set to: " << motorSpeed << endl;
+	std::cout << "balance max cal is: " << m_balanceMaxCalibration.Get() << endl;
+	setMotorSpeed(motorSpeed, motorSpeed);
+	}
 }
