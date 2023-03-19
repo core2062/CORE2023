@@ -43,9 +43,10 @@ void IntakeSubsystem::teleop()
         }
         if(m_operatorJoystick.GetPOV() == 90) {
             SetTurnTable(-m_turnTableSpeed.Get());
-        }
-        if(m_operatorJoystick.GetPOV() == 270) {
+        } else if(m_operatorJoystick.GetPOV() == 270) {
             SetTurnTable(m_turnTableSpeed.Get());
+        } else {
+            SetTurnTable(0);
         }
     } else {
         SetIntake(0, 0);    

@@ -76,8 +76,6 @@ void ElevatorSubsystem::teleop(){
 
 // Will probably run after PostLoopTask() in scoring assembly
 void ElevatorSubsystem::PostLoopTask(){
-    
-        std::cout << "3" << endl;
     // std::cout << "Post Loop Task Ran" << endl;
     SmartDashboard::PutNumber("Elevator Position Meters", GetElevatorMeters());
     SmartDashboard::PutNumber("Elevator Position Ticks", GetElevatorPosition());
