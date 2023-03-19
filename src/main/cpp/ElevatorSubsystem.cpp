@@ -62,7 +62,7 @@ void ElevatorSubsystem::robotInit()
     m_leftLiftMotor.ConfigMotionCruiseVelocity(m_cruiseVel.Get(), 0);
     m_leftLiftMotor.ConfigMotionAcceleration(m_maxAcel.Get(), 0);
     // operatorJoystick->RegisterAxis(CORE::COREJoystick::JoystickAxis::LEFT_STICK_Y);
-    // SetRequestedPosition(GetElevatorMeters());
+    SetRequestedPosition(GetElevatorMeters());
 }
 
 void ElevatorSubsystem::teleopInit(){
@@ -71,7 +71,6 @@ void ElevatorSubsystem::teleopInit(){
 }
 
 void ElevatorSubsystem::teleop(){
-    SetRequestedSpeed(-m_operatorJoystick.GetRawAxis(1));
 }
 
 // Will probably run after PostLoopTask() in scoring assembly
@@ -86,6 +85,7 @@ void ElevatorSubsystem::PostLoopTask(){
     SmartDashboard::PutBoolean("Elevator Up",IsElevatorUp());
 
     double elevatorPosition = GetElevatorMeters();
+    SetRequestedSpeed(-m_operatorJoystick.GetRawAxis(1));
 
     // std::cout << "speed plz " << m_requestedSpeed << endl;
     SmartDashboard::PutNumber("Elevator Requested Speed", m_requestedSpeed);
@@ -145,7 +145,7 @@ void ElevatorSubsystem::PostLoopTask(){
         m_leftLiftMotor.Set(ControlMode::MotionMagic, m_requestedPosition);
     }
     
-    // m_requestedSpeed = 0;
+    m_requestedSpeed = 0;
 }
 
 void ElevatorSubsystem::SetRequestedPosition(double positionInMeters)
@@ -229,7 +229,7 @@ void ElevatorSubsystem::ResetEncoders(){
     m_leftLiftMotor.SetSelectedSensorPosition(0,0,0);
 }
 
-void ElevatorSubsystem::MoveElevator(){
-    m_leftLiftMotor.Set(ControlMode::PercentOutput, m_requestedSpeed);
-    // m_rightLiftMotor.Set(ControlMode::PercentOutput, m_requestedSpeed);
-}
+// void ElevatorSubsystem::MoveElevator(){
+//     m_leftLiftMotor.Set(ControlMode::PercentOutput, m_requestedSpeed);
+//     // m_rightLiftMotor.Set(ControlMode::PercentOutput, m_requestedSpeed);
+// }

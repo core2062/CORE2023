@@ -11,14 +11,14 @@ ArmSubsystem::ArmSubsystem() :
         m_mediumDist("Arm Mid-Level Distance In Ticks",3.55),
         m_highDist("Arm High-Level Distance In Ticks",2),
         m_autonMediumDist("Arm Extend Distance In Auton",2),
-        m_inPotentiometer("Arm in potentiometer value",0.9),
+        m_inPotentiometer("Arm in potentiometer value",0.67),
         m_outPotentiometer("Arm out potentiometer value",3.55),
         m_armkP("Arm kP",0.9),
         m_armkI("Arm kI",0),
         m_armkD("Arm kD",0),
         m_outerLimit("Arm Outer Limit In Ticks",18600),
-        m_cruiseVel("Telescope Arm Cruise Velocity",1000),
-        m_maxAcel("Telescope Arm Max Acceleration",1000)
+        m_cruiseVel("Telescope Arm Cruise Velocity",1150),
+        m_maxAcel("Telescope Arm Max Acceleration",2300)
 {}
 
 void ArmSubsystem::robotInit()
@@ -129,13 +129,13 @@ void ArmSubsystem::PostLoopTask()
     //     m_requestedTelescopeSpeed = 0;
     // }
 
-    // if (m_operatorJoystick.GetRawButtonPressed(11))
-    // {
-    //     m_overspoolButton = true;
-    // } else if (m_operatorJoystick.GetRawButtonReleased(11))
-    // {
-    //     m_overspoolButton = false;
-    // }
+    if (m_operatorJoystick.GetRawButtonPressed(11))
+    {
+        m_overspoolButton = true;
+    } else if (m_operatorJoystick.GetRawButtonReleased(11))
+    {
+        m_overspoolButton = false;
+    }
 
     // Softstop for telescoping arm extend & rotation
     if(m_requestedTelescopeSpeed > 0 && IsArmOut())

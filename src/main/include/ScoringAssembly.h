@@ -31,6 +31,12 @@ public:
 
     void SetWantedState(WantedState wantedState);
 
+    bool IsTransit();
+    bool IsGrabbing();
+    bool IsScoringMid();
+    bool IsScoringHigh();
+    bool IsStartingHeight();
+
     WantedState GetWantedState();
 
 private:
@@ -56,7 +62,7 @@ private:
     WantedState m_wantedState;
     SystemState m_systemState;
 
-    bool m_armInElevatorUp;
+    bool m_armInElevatorUp, m_systemWithinThreshold;
 
     COREConstant<double> m_transitTransitionTimeout,m_scoreMidTransitionTimeout;
     COREConstant<double> m_armThreshold,m_elevatorThreshold;

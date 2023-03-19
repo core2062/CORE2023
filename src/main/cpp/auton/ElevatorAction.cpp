@@ -12,7 +12,6 @@ void ElevatorAction::ActionInit() {
 
 CORE::COREAutonAction::actionStatus ElevatorAction::Action() {
     
-    std::cout << "1" << endl;
     switch(m_elevatorAction) {
         case ELEVATOR_UP:
             if (m_elevatorSubsystem->IsElevatorUp()) {

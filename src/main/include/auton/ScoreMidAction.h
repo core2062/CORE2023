@@ -16,5 +16,6 @@ class ScoreMidAction : public COREAutonAction {
         CORE::COREAutonAction::actionStatus Action() override;
         void ActionEnd() override;
     private:
+        ScoringAssembly* m_scoringAssembly;
         scoreMidAction m_scoreMidAction;
 };

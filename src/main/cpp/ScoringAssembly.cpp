@@ -15,6 +15,7 @@ void ScoringAssembly::RobotInitTask()
     m_intakeSubsystem = &Robot::GetInstance()->intakeSubsystem;
 
     m_armInElevatorUp = false;
+    m_systemWithinThreshold = false;
 }
 
 void ScoringAssembly::AutonInitTask()
@@ -69,6 +70,26 @@ void ScoringAssembly::SetWantedState(WantedState wantedState){
     m_timeoutTimer.Start();
 }
 
+bool ScoringAssembly::IsTransit(){
+    return (m_systemState == SystemState::TRANSIT);
+}
+
+bool ScoringAssembly::IsGrabbing(){
+    return (m_systemState == SystemState::GRABBING);
+}
+
+bool ScoringAssembly::IsScoringMid(){
+    return (m_systemState == SystemState::SCORING_MID);
+}
+
+bool ScoringAssembly::IsScoringHigh(){
+    return (m_systemState == SystemState::SCORING_HIGH);
+}
+
+bool ScoringAssembly::IsStartingHeight(){
+    return (m_systemState == SystemState::STARTING_HEIGHT);
+}
+
 WantedState ScoringAssembly::GetWantedState(){
     return m_wantedState;
 }
@@ -114,15 +135,19 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
             reachedTarget = (m_armSubsystem->IsMediumDist() && m_elevatorSubsystem->IsMediumHeight()) || (m_timeoutTimer.Get() > m_scoreMidTransitionTimeout.Get());
             break;
         case WantedState::WANT_TO_SCORE_HIGH:
-            if (m_armSubsystem->GetArmDist() < m_armThreshold.Get() && !m_armSubsystem->IsWristUp())
+            std::cout << "scoring high!!!" << endl;
+            if ((m_armSubsystem->GetArmDist() < m_armThreshold.Get() && !m_armSubsystem->IsWristUp()) || m_systemWithinThreshold)
             {
+                m_systemWithinThreshold = true;
                 if (m_elevatorSubsystem->IsMaxAutoExtension())
                 {
                     m_armSubsystem->SetWristUp();
+                    m_systemWithinThreshold = false;
                 } else {
                     m_elevatorSubsystem->SetMaxHeight();
                 } 
             } else {
+                std::cout << "Else!!!!!1!!11!!1!" << endl;
                 m_armSubsystem->SetHighDist(); // To score at the mid level, the arm had to rotate up and extend partially
                 m_elevatorSubsystem->SetHighHeight(); // Set the requested
             }
@@ -131,9 +156,12 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
         case WANT_STARTING_HEIGHT:
             m_elevatorSubsystem->SetStartingHeight();
             m_armInElevatorUp = false;
+            m_systemWithinThreshold = false;
             reachedTarget = (m_elevatorSubsystem->IsStartingHeight() || (m_timeoutTimer.Get() > m_scoreMidTransitionTimeout.Get()));
+            break;
         case WantedState::MANUAL: // In case you wanted to manually move the scoring assembly
             m_armInElevatorUp = false;
+            m_systemWithinThreshold = false;
             reachedTarget = false;
             break;
     }
@@ -142,6 +170,7 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
     if (reachedTarget)
     {
         m_armInElevatorUp = false;
+        m_systemWithinThreshold = false;
     }
     
 

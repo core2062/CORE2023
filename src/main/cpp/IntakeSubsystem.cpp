@@ -9,10 +9,10 @@ IntakeSubsystem::IntakeSubsystem() :
         m_operatorJoystick(OPERATOR_JOYSTICK),
         m_intakeConeSpeed("Intake Cone Speed", 0.5),
         m_intakeCubeSpeed("Intake Cube Speed", 0.4),
-        m_lowerIntakeConeSpeed("Low Bar Intake Cone Speed", 0.4),
-        m_lowerIntakeCubeSpeed("Low Bar Intake Cube Speed", 0.3),
+        m_lowerIntakeConeSpeed("Low Bar Intake Cone Speed", 0.75),
+        m_lowerIntakeCubeSpeed("Low Bar Intake Cube Speed", 0.75),
         m_intakeTimeSet("Intake timer set time", 0.5),
-        m_turnTableSpeed("Turn Table Speed", 0.25){
+        m_turnTableSpeed("Turn Table Speed", 0.4){
 }
 
 void IntakeSubsystem::robotInit(){
