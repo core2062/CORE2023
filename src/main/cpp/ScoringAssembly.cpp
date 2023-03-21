@@ -42,6 +42,7 @@ void ScoringAssembly::PostLoopTask()
     switch (m_systemState)
     {
         case SystemState::TRANSIT:
+            // cout << "Handling transit" << endl;
             newState = HandleTransit();
             break;
         case SystemState::GRABBING:
@@ -52,6 +53,9 @@ void ScoringAssembly::PostLoopTask()
             break;
         case SystemState::SCORING_MID:
             newState = HandleScoringMid();
+            break;
+        case SystemState::STARTING_HEIGHT:
+            newState = HandleStartingHeight();
             break;
     }
 
@@ -112,27 +116,34 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
                 m_armInElevatorUp = true;
                 m_armSubsystem->SetWristDown(); // To pickup gamepieces, the arm had to be fully retracted and rotated down
                 m_elevatorSubsystem->SetPickupHeight(); // Sets the requested height of the elevator to the lowest level
-                reachedTarget = (!m_armSubsystem->IsWristUp() && m_elevatorSubsystem->IsPickupHeight() && m_armSubsystem->IsArmIn()) || (m_timeoutTimer.Get() > m_transitTransitionTimeout.Get()); // Checks if the individual subsystems have reached their destination.
+                reachedTarget = (!m_armSubsystem->IsWristUp() && m_elevatorSubsystem->IsPickupHeight() && m_armSubsystem->IsArmIn()); // Checks if the individual subsystems have reached their destination.
             } else {
                 m_armSubsystem->SetWristUp(); // To pickup gamepieces, the arm had to be fully retracted and rotated down
                 m_elevatorSubsystem->SetMaxHeight();
                 m_armSubsystem->SetArmIn();
             }
+            reachedTarget = reachedTarget || (m_timeoutTimer.Get() > m_transitTransitionTimeout.Get());
             break;
         case WantedState::WANT_TO_SCORE_MID:
-            if (m_armSubsystem->GetArmDist() < m_armThreshold.Get() && !m_armSubsystem->IsWristUp())
+        std::cout << "MiIIiiIIIiiiId!1!!!!!111!!!!1!!" << endl;
+            if ((m_armSubsystem->GetArmDist() < m_armThreshold.Get() && !m_armSubsystem->IsWristUp()) || m_systemWithinThreshold)
             {
+                m_systemWithinThreshold = true;
                 if (m_elevatorSubsystem->IsMaxAutoExtension())
                 {
                     m_armSubsystem->SetWristUp();
+                    m_systemWithinThreshold = false;
                 } else {
                     m_elevatorSubsystem->SetMaxHeight();
                 } 
             } else {
+                std::cout << "Else also!!!!!1!!11!!1!" << endl;
                 m_armSubsystem->SetMediumDist(); // To score at the mid level, the arm had to rotate up and extend partially
                 m_elevatorSubsystem->SetMediumHeight(); // Set the requested
+                m_armSubsystem->SetWristUp();
+                reachedTarget = (m_armSubsystem->IsMediumDist() && m_elevatorSubsystem->IsMediumHeight());
             }
-            reachedTarget = (m_armSubsystem->IsMediumDist() && m_elevatorSubsystem->IsMediumHeight()) || (m_timeoutTimer.Get() > m_scoreMidTransitionTimeout.Get());
+            reachedTarget = reachedTarget || (m_timeoutTimer.Get() > m_scoreMidTransitionTimeout.Get());
             break;
         case WantedState::WANT_TO_SCORE_HIGH:
             std::cout << "scoring high!!!" << endl;
@@ -150,8 +161,9 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
                 std::cout << "Else!!!!!1!!11!!1!" << endl;
                 m_armSubsystem->SetHighDist(); // To score at the mid level, the arm had to rotate up and extend partially
                 m_elevatorSubsystem->SetHighHeight(); // Set the requested
+                reachedTarget = (m_armSubsystem->IsHighDist() && m_elevatorSubsystem->IsHighHeight());
             }
-            reachedTarget = (m_armSubsystem->IsHighDist() && m_elevatorSubsystem->IsHighHeight()) || (m_timeoutTimer.Get() > m_scoreMidTransitionTimeout.Get());
+            reachedTarget = reachedTarget || (m_timeoutTimer.Get() > m_scoreMidTransitionTimeout.Get());
             break;
         case WANT_STARTING_HEIGHT:
             m_elevatorSubsystem->SetStartingHeight();

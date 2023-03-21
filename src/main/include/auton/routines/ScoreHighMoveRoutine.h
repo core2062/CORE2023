@@ -8,6 +8,7 @@
 #include "auton/AutoBalanceAction.h"
 #include "auton/ArmAction.h"
 #include "auton/ElevatorAction.h"
+#include "auton/ScoreHighAction.h"
 
 using namespace CORE;
 using namespace std;
@@ -17,20 +18,16 @@ public:
     ScoreHighMoveRoutine();
     void AddNodes() override;
 private:
-    Node * elevatorUpNode;
+    Node * scoreHighNode;
     Node * delayNode1;
-    Node * wristNode;
-    Node * delayNode2;
-    Node * armOutNode;
-    Node * delayNode3;
     Node * dropNode;
-    Node * delayNode4;
+    Node * delayNode2;
     Node * clawCloseNode;
-    Node * delayNode5;
+    Node * delayNode3;
     Node * armInNode;
-    Node * delayNode6;
+    Node * delayNode4;
     Node * wristNode2;
-    Node * delayNode7;
+    Node * delayNode5;
     Node * elevatorDownNode;
     Node * delayNode8;
     Node * driveNode;
