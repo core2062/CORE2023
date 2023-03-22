@@ -22,6 +22,7 @@ CORE::COREAutonAction::actionStatus ElevatorAction::Action() {
             } else {
                 m_elevatorSubsystem->SetRequestedSpeed(.6);
                 std::cout << "2" << endl;
+                Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
                 // Robot::GetInstance()->elevatorSubsystem.MoveElevator();
                 return COREAutonAction::actionStatus::CONTINUE;
             }
@@ -33,6 +34,7 @@ CORE::COREAutonAction::actionStatus ElevatorAction::Action() {
                 break;
             } else {
                 m_elevatorSubsystem->SetRequestedSpeed(-.6);
+                Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
                 // Robot::GetInstance()->elevatorSubsystem.MoveElevator();
                 return COREAutonAction::actionStatus::CONTINUE;
             }

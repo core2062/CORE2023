@@ -25,6 +25,7 @@ CORE::COREAutonAction::actionStatus ArmAction::Action() {
                 break;
             } else {
                 m_armSubsystem->SetDistRequestedSpeed(0.6);
+                Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
                 return COREAutonAction::actionStatus::CONTINUE;
             }
             break;
@@ -35,6 +36,7 @@ CORE::COREAutonAction::actionStatus ArmAction::Action() {
                 break;
             } else {
                 m_armSubsystem->SetDistRequestedSpeed(0.6);
+                Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
                 return COREAutonAction::actionStatus::CONTINUE;
             }
             break;
@@ -45,6 +47,7 @@ CORE::COREAutonAction::actionStatus ArmAction::Action() {
                 break;
             } else {
                 m_armSubsystem->SetDistRequestedSpeed(-0.7);
+                Robot::GetInstance()->scoringAssembly.SetWantedState(WantedState::MANUAL);
                 return COREAutonAction::actionStatus::CONTINUE;
             }
             break;

@@ -3,7 +3,7 @@
 
 ScoringAssembly::ScoringAssembly() : m_transitTransitionTimeout("Transit Transition Timeout",4),
                                     m_scoreMidTransitionTimeout("Score Mid Transition Timeout",4),
-                                    m_armThreshold("Arm Threshold",2),
+                                    m_armThreshold("Arm Threshold",1),
                                     m_elevatorThreshold("Elevator Threshold",2)
 {}
 
@@ -108,7 +108,7 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
     switch (m_wantedState)
     {
         case WantedState::WANT_TO_PICKUP:
-            m_grabberSubsystem->SetClaw(true);
+            m_grabberSubsystem->SetClaw(false);
             m_intakeSubsystem->SetIntakeActive(true);
             if ((m_armSubsystem->IsArmIn() && m_elevatorSubsystem->IsMaxAutoExtension()) || m_armInElevatorUp)
             {
@@ -146,15 +146,17 @@ ScoringAssembly::SystemState ScoringAssembly::HandleTransit()
             reachedTarget = reachedTarget || (m_timeoutTimer.Get() > m_scoreMidTransitionTimeout.Get());
             break;
         case WantedState::WANT_TO_SCORE_HIGH:
-            std::cout << "scoring high!!!" << endl;
+            // std::cout << "scoring high!!!" << endl;
             if ((m_armSubsystem->GetArmDist() < m_armThreshold.Get() && !m_armSubsystem->IsWristUp()) || m_systemWithinThreshold)
             {
                 m_systemWithinThreshold = true;
                 if (m_elevatorSubsystem->IsMaxAutoExtension())
                 {
+                    cout << "MAX!!!!!" << endl;
                     m_armSubsystem->SetWristUp();
                     m_systemWithinThreshold = false;
                 } else {
+                    cout << "not max" << endl;
                     m_elevatorSubsystem->SetMaxHeight();
                 } 
             } else {

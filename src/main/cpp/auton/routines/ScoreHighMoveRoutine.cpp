@@ -18,14 +18,14 @@ void ScoreHighMoveRoutine::AddNodes() {
     driveNode = new Node(7, new DriveAction(BACKWARD, 120));
 
     AddFirstNode(scoreHighNode);
-    scoreHighNode -> AddNext(delayNode1);
-    delayNode1 -> AddNext(dropNode);
-    dropNode -> AddNext(delayNode2);
-    delayNode2 -> AddNext(clawCloseNode);
-    clawCloseNode -> AddNext(delayNode3);
-    delayNode3 -> AddNext(armInNode);
-    armInNode -> AddNext(delayNode4);
-    delayNode4 -> AddNext(wristNode2);
-    wristNode2 -> AddNext(delayNode5);
-    delayNode8 -> AddNext(driveNode);
+    scoreHighNode->AddNext(delayNode1);
+    delayNode1->AddNext(dropNode);
+    dropNode->AddNext(delayNode2);
+    delayNode2->AddNext(clawCloseNode);
+    clawCloseNode->AddNext(delayNode3);
+    delayNode3->AddNext(armInNode);
+    armInNode->AddNext(delayNode4);
+    delayNode4->AddNext(wristNode2);
+    wristNode2->AddNext(delayNode5);
+    delayNode5->AddNext(driveNode);
 }
